@@ -1,0 +1,59 @@
+# === Python / FastAPI ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+*.log
+*.pot
+*.mo
+*.pyproj
+*.idea/
+*.vscode/
+*.DS_Store
+*.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+.eggs/
+.cache/
+.mypy_cache/
+.pytest_cache/
+.tox/
+venv/
+env/
+ENV/
+.venv/
+venv.bak/
+.venv.bak/
+
+# === uv package manager ===
+.uv/
+uv.lock
+
+# === Alembic migrations ===
+alembic/versions/__pycache__/
+# (alembic/versions samego nie ignoruj — chcesz mieć migracje w repo)
+# ale możesz ignorować wygenerowane backupy lub pliki testowe
+alembic/versions/*.bak
+
+# === Local configs ===
+.env
+.env.*
+!.env.example   # zostaw wzór pliku env w repo
+
+# === OS / systemowe ===
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# === Editors ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
