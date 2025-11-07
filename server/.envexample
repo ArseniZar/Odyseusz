@@ -1,0 +1,2 @@
+PROJECT_NAME='Odyseusz Backend'
+DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/odyseusz
