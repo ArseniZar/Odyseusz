@@ -16,7 +16,7 @@ logging.basicConfig(
 	force=True
 )
 
-logging.getLogger('sqlalchemy').setLevel(logging.WARNING)
+logging.getLogger('sqlalchemy').setLevel(logging.CRITICAL)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger('aiosqlite').setLevel(logging.WARNING)
 logging.getLogger('uvicorn.access').setLevel(logging.WARNING)

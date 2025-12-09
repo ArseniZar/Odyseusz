@@ -19,7 +19,7 @@ class Settings:
 	POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", "5432")
 
 	DEBUG: bool = os.getenv("DEBUG", "true").lower() == "true"
-	SECRET_KEY: str = os.getenv("SECRET", "secret")
+	SECRET_KEY: str = os.getenv("SECRET_KEY", "secret")
 
 	PROJECT_NAME: str = "Odysseus Backend"
 	VERSION: str = "0.1.0"
