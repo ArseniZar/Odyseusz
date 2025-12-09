@@ -1,2 +1,13 @@
-PROJECT_NAME='Odyseusz Backend'
-DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/odyseusz
+# Database Selection
+USE_SQLITE=true
+
+# Postgres
+POSTGRES_DB=db
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+
+# Environment
+DEBUG=true
+SECRET_KEY=secret
