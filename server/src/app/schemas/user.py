@@ -15,6 +15,11 @@ class TravelerProfileBase(BaseModel):
   national_id: str = Field(..., min_length=1, max_length=50)
 
 
+class EvacuationAssistantProfileBase(BaseModel):
+  phone_number: str = Field(..., min_length=1, max_length=20)
+  working_hours: str = Field(..., min_length=1, max_length=255)
+
+
 # Create schemas
 class UserCreate(UserBase):
   password: str = Field(..., min_length=8)
@@ -24,6 +29,19 @@ class UserCreate(UserBase):
 class TravelerCreate(UserCreate):
   role: UserRole = UserRole.TRAVELER
   traveler_profile: TravelerProfileBase
+
+
+class EditorCreate(UserCreate):
+  role: UserRole = UserRole.EDITOR
+
+
+class CoordinatorCreate(UserCreate):
+  role: UserRole = UserRole.COORDINATOR
+
+
+class EvacuationAssistantCreate(UserCreate):
+  role: UserRole = UserRole.EVACUATION_ASSISTANT
+  evacuation_assistant_profile: EvacuationAssistantProfileBase
 
 
 # Response schemas
@@ -46,8 +64,53 @@ class TravelerProfileResponse(TravelerProfileBase):
     from_attributes = True
 
 
+class EditorProfileResponse(BaseModel):
+  id: int
+  user_id: int
+
+  class Config:
+    from_attributes = True
+
+
+class CoordinatorProfileResponse(BaseModel):
+  id: int
+  user_id: int
+
+  class Config:
+    from_attributes = True
+
+
+class EvacuationAssistantProfileResponse(EvacuationAssistantProfileBase):
+  id: int
+  user_id: int
+
+  class Config:
+    from_attributes = True
+
+
 class TravelerResponse(UserResponse):
   traveler_profile: TravelerProfileResponse | None = None
+
+  class Config:
+    from_attributes = True
+
+
+class EditorResponse(UserResponse):
+  editor_profile: EditorProfileResponse | None = None
+
+  class Config:
+    from_attributes = True
+
+
+class CoordinatorResponse(UserResponse):
+  coordinator_profile: CoordinatorProfileResponse | None = None
+
+  class Config:
+    from_attributes = True
+
+
+class EvacuationAssistantResponse(UserResponse):
+  evacuation_assistant_profile: EvacuationAssistantProfileResponse | None = None
 
   class Config:
     from_attributes = True

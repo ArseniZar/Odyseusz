@@ -1,6 +1,4 @@
 from datetime import date, datetime
-from app.models.location import Location
-from app.models.user import TravelerProfile
 from sqlalchemy import Date, DateTime, Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.db import Base

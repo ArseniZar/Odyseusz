@@ -1,0 +1,252 @@
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from app.models.country import CountryProfile, Consulate
+from app.schemas.country import (
+  CountryProfileCreate,
+  CountryProfileUpdate,
+  ConsulateCreate,
+  ConsulateUpdate
+)
+
+
+# CountryProfile CRUD
+async def get_country_profile_by_id(
+  db: AsyncSession, 
+  country_id: int
+) -> CountryProfile | None:
+  """Get country profile by ID."""
+  result = await db.execute(
+    select(CountryProfile).where(CountryProfile.id == country_id)
+  )
+  return result.scalar_one_or_none()
+
+
+async def get_country_profile_by_name(
+  db: AsyncSession, 
+  name: str
+) -> CountryProfile | None:
+  """Get country profile by name."""
+  result = await db.execute(
+    select(CountryProfile).where(CountryProfile.name == name)
+  )
+  return result.scalar_one_or_none()
+
+
+async def get_country_profile_with_details(
+  db: AsyncSession, 
+  country_id: int
+) -> CountryProfile | None:
+  """Get country profile with consulates loaded."""
+  result = await db.execute(
+    select(CountryProfile)
+    .options(selectinload(CountryProfile.consulates))
+    .where(CountryProfile.id == country_id)
+  )
+  return result.scalar_one_or_none()
+
+
+async def get_all_country_profiles(
+  db: AsyncSession, 
+  skip: int = 0, 
+  limit: int = 100
+) -> list[CountryProfile]:
+  """Get all country profiles with pagination."""
+  result = await db.execute(
+    select(CountryProfile).offset(skip).limit(limit)
+  )
+  return list(result.scalars().all())
+
+
+async def get_country_profiles_by_danger_level(
+  db: AsyncSession,
+  danger_level: str,
+  skip: int = 0,
+  limit: int = 100
+) -> list[CountryProfile]:
+  """Get country profiles by danger level."""
+  result = await db.execute(
+    select(CountryProfile)
+    .where(CountryProfile.danger_level == danger_level)
+    .offset(skip)
+    .limit(limit)
+  )
+  return list(result.scalars().all())
+
+
+async def create_country_profile(
+  db: AsyncSession, 
+  country_create: CountryProfileCreate
+) -> CountryProfile:
+  """Create a new country profile."""
+  country = CountryProfile(
+    name=country_create.name,
+    description=country_create.description,
+    danger_level=country_create.danger_level,
+  )
+  db.add(country)
+  await db.commit()
+  await db.refresh(country)
+  return country
+
+
+async def update_country_profile(
+  db: AsyncSession,
+  country_id: int,
+  country_update: CountryProfileUpdate
+) -> CountryProfile | None:
+  """Update country profile."""
+  country = await get_country_profile_by_id(db, country_id)
+  if not country:
+    return None
+
+  update_data = country_update.model_dump(exclude_unset=True)
+  for key, value in update_data.items():
+    setattr(country, key, value)
+
+  await db.commit()
+  await db.refresh(country)
+  return country
+
+
+async def delete_country_profile(db: AsyncSession, country_id: int) -> bool:
+  """Delete a country profile."""
+  country = await get_country_profile_by_id(db, country_id)
+  if not country:
+    return False
+
+  await db.delete(country)
+  await db.commit()
+  return True
+
+
+# Consulate CRUD
+async def get_consulate_by_id(
+  db: AsyncSession, 
+  consulate_id: int
+) -> Consulate | None:
+  """Get consulate by ID."""
+  result = await db.execute(
+    select(Consulate).where(Consulate.id == consulate_id)
+  )
+  return result.scalar_one_or_none()
+
+
+async def get_consulates_by_country(
+  db: AsyncSession,
+  country_id: int,
+  skip: int = 0,
+  limit: int = 100
+) -> list[Consulate]:
+  """Get all consulates for a country."""
+  result = await db.execute(
+    select(Consulate)
+    .where(Consulate.country_profile_id == country_id)
+    .offset(skip)
+    .limit(limit)
+  )
+  return list(result.scalars().all())
+
+
+async def create_consulate(
+  db: AsyncSession, 
+  consulate_create: ConsulateCreate
+) -> Consulate:
+  """Create a new consulate."""
+  consulate = Consulate(
+    country_profile_id=consulate_create.country_profile_id,
+    address=consulate_create.address,
+    email=consulate_create.email,
+    phone_number=consulate_create.phone_number,
+    website=consulate_create.website,
+  )
+  db.add(consulate)
+  await db.commit()
+  await db.refresh(consulate)
+  return consulate
+
+
+async def update_consulate(
+  db: AsyncSession,
+  consulate_id: int,
+  consulate_update: ConsulateUpdate
+) -> Consulate | None:
+  """Update consulate."""
+  consulate = await get_consulate_by_id(db, consulate_id)
+  if not consulate:
+    return None
+
+  update_data = consulate_update.model_dump(exclude_unset=True)
+  for key, value in update_data.items():
+    setattr(consulate, key, value)
+
+  await db.commit()
+  await db.refresh(consulate)
+  return consulate
+
+
+async def delete_consulate(db: AsyncSession, consulate_id: int) -> bool:
+  """Delete a consulate."""
+  consulate = await get_consulate_by_id(db, consulate_id)
+  if not consulate:
+    return False
+
+  await db.delete(consulate)
+  await db.commit()
+  return True
+
+
+# Association operations
+async def link_editor_to_country(
+  db: AsyncSession,
+  editor_id: int,
+  country_id: int
+) -> bool:
+  """Link an editor to a country profile."""
+  from app.models.user import EditorProfile
+  
+  editor = await db.execute(
+    select(EditorProfile)
+    .options(selectinload(EditorProfile.country_profiles))
+    .where(EditorProfile.id == editor_id)
+  )
+  editor = editor.scalar_one_or_none()
+  
+  country = await get_country_profile_by_id(db, country_id)
+  
+  if not editor or not country:
+    return False
+  
+  if country not in editor.country_profiles:
+    editor.country_profiles.append(country)
+    await db.commit()
+  
+  return True
+
+
+async def unlink_editor_from_country(
+  db: AsyncSession,
+  editor_id: int,
+  country_id: int
+) -> bool:
+  """Unlink an editor from a country profile."""
+  from app.models.user import EditorProfile
+  
+  editor = await db.execute(
+    select(EditorProfile)
+    .options(selectinload(EditorProfile.country_profiles))
+    .where(EditorProfile.id == editor_id)
+  )
+  editor = editor.scalar_one_or_none()
+  
+  country = await get_country_profile_by_id(db, country_id)
+  
+  if not editor or not country:
+    return False
+  
+  if country in editor.country_profiles:
+    editor.country_profiles.remove(country)
+    await db.commit()
+  
+  return True
+  
