@@ -18,10 +18,10 @@ class Notification(Base):
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   notification_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
   content: Mapped[str] = mapped_column(Text, nullable=False)
-  date: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(datetime.timezone.utc), nullable=False, index=True)
+  date: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(datetime.timezone.utc), nullable=False, index=True)
   evacuation_id: Mapped[int] = mapped_column(Integer, ForeignKey("evacuations.id", ondelete="CASCADE"), nullable=False, index=True)
   traveler_profile_id: Mapped[int] = mapped_column(Integer, ForeignKey("traveler_profiles.id", ondelete="CASCADE"), nullable=False, index=True)
-  created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(datetime.timezone.utc), nullable=False)
+  created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(datetime.timezone.utc), nullable=False)
 
   # Relationships
   evacuation: Mapped["Evacuation"] = relationship(back_populates="notifications")

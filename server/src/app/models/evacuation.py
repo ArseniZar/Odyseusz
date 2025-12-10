@@ -11,7 +11,7 @@ evacuation_assistant_association = Table(
   Column('id', Integer, primary_key=True, autoincrement=True),
   Column('evacuation_id', Integer, ForeignKey('evacuations.id', ondelete='CASCADE'), nullable=False, index=True),
   Column('assistant_id', Integer, ForeignKey('evacuation_assistant_profiles.id', ondelete='CASCADE'), nullable=False, index=True),
-  column('created_at', DateTime, default=datetime.now(datetime.timezone.utc), nullable=False)
+  column('created_at', DateTime, default=lambda: datetime.now(datetime.timezone.utc), nullable=False)
 )
 
 
@@ -25,8 +25,8 @@ class Evacuation(Base):
   description: Mapped[str] = mapped_column(Text, nullable=False)
   active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
   coordinator_id: Mapped[int] = mapped_column(Integer, ForeignKey("coordinator_profiles.id"), nullable=False, index=True)
-  created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(datetime.timezone.utc), nullable=False)
-  updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(datetime.timezone.utc), onupdate=datetime.now(datetime.timezone.utc), nullable=False)
+  created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(datetime.timezone.utc), nullable=False)
+  updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(datetime.timezone.utc), onupdate=lambda: datetime.now(datetime.timezone.utc), nullable=False)
 
   # Relationships
   coordinator: Mapped["CoordinatorProfile"] = relationship(back_populates="evacuations")
@@ -50,7 +50,7 @@ class EvacuationArea(Base):
   evacuation_id: Mapped[int] = mapped_column(Integer, ForeignKey("evacuations.id", ondelete="CASCADE"), nullable=False, index=True)
   location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"), nullable=False)
   radius: Mapped[int] = mapped_column(Integer, nullable=False)  # in kilometers
-  created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(datetime.timezone.utc), nullable=False)
+  created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(datetime.timezone.utc), nullable=False)
 
   # Relationships
   evacuation: Mapped["Evacuation"] = relationship(back_populates="areas")
@@ -69,7 +69,7 @@ class AssemblyPoint(Base):
   location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"), nullable=False)
   name: Mapped[str] = mapped_column(String(255), nullable=False)
   description: Mapped[str | None] = mapped_column(Text, nullable=True)
-  created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now(datetime.timezone.utc), nullable=False)
+  created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(datetime.timezone.utc), nullable=False)
 
   # Relationships
   evacuation: Mapped["Evacuation"] = relationship(back_populates="assembly_points")
