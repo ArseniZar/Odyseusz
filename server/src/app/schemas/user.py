@@ -44,6 +44,24 @@ class EvacuationAssistantCreate(UserCreate):
   evacuation_assistant_profile: EvacuationAssistantProfileBase
 
 
+# Update schemas
+class UserUpdate(BaseModel):
+	email: EmailStr | None = None
+	password: str | None = Field(None, min_length=8)
+	first_name: str | None = Field(None, min_length=1, max_length=100)
+	last_name: str | None = Field(None, min_length=1, max_length=100)
+
+
+class TravelerProfileUpdate(BaseModel):
+	phone_number: str | None = Field(None, min_length=1, max_length=20)
+	national_id: str | None = Field(None, min_length=1, max_length=50)
+
+
+class EvacuationAssistantProfileUpdate(BaseModel):
+	phone_number: str | None = Field(None, min_length=1, max_length=20)
+	working_hours: str | None = Field(None, min_length=1, max_length=255)
+
+
 # Response schemas
 class UserResponse(UserBase):
   id: int

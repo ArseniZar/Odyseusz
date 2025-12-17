@@ -52,30 +52,31 @@ async def get_travels_by_traveler(
 
 
 async def create_travel(
-  db: AsyncSession, 
-  travel_create: TravelCreate
+	db: AsyncSession,
+	traveler_id: int,
+	stages: list[TravelStageCreate]
 ) -> Travel:
-  """Create a new travel with stages."""
-  travel = Travel(
-    traveler_id=travel_create.traveler_id,
-  )
-  db.add(travel)
-  await db.flush()  # Get travel.id without committing
-  
-  # Create stages
-  for stage_data in travel_create.stages:
-    stage = TravelStage(
-      travel_id=travel.id,
-      location_id=stage_data.location_id,
-      start_date=stage_data.start_date,
-      end_date=stage_data.end_date,
-      people_count=stage_data.people_count,
-    )
-    db.add(stage)
-  
-  await db.commit()
-  await db.refresh(travel)
-  return travel
+	"""Create a new travel with stages."""
+	travel = Travel(
+		traveler_id=traveler_id,
+	)
+	db.add(travel)
+	await db.flush()  # Get travel.id without committing
+	
+	# Create stages
+	for stage_data in stages:
+		stage = TravelStage(
+			travel_id=travel.id,
+			location_id=stage_data.location_id,
+			start_date=stage_data.start_date,
+			end_date=stage_data.end_date,
+			people_count=stage_data.people_count,
+		)
+		db.add(stage)
+	
+	await db.commit()
+	await db.refresh(travel)
+	return travel
 
 
 async def delete_travel(db: AsyncSession, travel_id: int) -> bool:

@@ -3,6 +3,9 @@ from fastapi import APIRouter
 
 from app.routes.health_router import router as health_router
 from app.routes.auth_router import router as auth_router
+from app.routes.country_router import router as country_router
+from app.routes.user_router import router as users_router
+from app.routes.travel_router import router as travel_router
 
 
 logger = logging.getLogger(__name__)
@@ -16,9 +19,27 @@ api_router.include_router(
 )
 
 api_router.include_router(
+	users_router,
+	prefix="/users",
+	tags=["users"]
+)
+
+api_router.include_router(
 	auth_router,
 	prefix="/auth",
 	tags=["authentication"]
+)
+
+api_router.include_router(
+	country_router,
+	prefix="/countries",
+	tags=["countries"]
+)
+
+api_router.include_router(
+	travel_router,
+	prefix="/travels",
+	tags=["travels"]
 )
 
 logger.debug("Main API router initialized with sub-routers")
