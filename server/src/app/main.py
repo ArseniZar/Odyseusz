@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.db import db_lifespan_context
 from app.routes.router import api_router
+from app.services.scheduler import start_scheduler, shutdown_scheduler
 
 logging.basicConfig(
 	level=logging.DEBUG if settings.DEBUG else logging.INFO,
@@ -20,6 +21,7 @@ logging.getLogger('sqlalchemy').setLevel(logging.CRITICAL)
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 logging.getLogger('aiosqlite').setLevel(logging.WARNING)
 logging.getLogger('uvicorn.access').setLevel(logging.WARNING)
+logging.getLogger('apscheduler').setLevel(logging.INFO)
 
 logger = logging.getLogger(__name__)
 
@@ -29,11 +31,17 @@ async def lifespan(app: FastAPI):
 	logger.info("Starting application lifespan")
 	async with db_lifespan_context():
 		logger.info("Database context initialized")
+		
+		# Start scheduler
+		start_scheduler()
+		
 		try:
 			yield
 		finally:
+			# Shutdown scheduler
+			shutdown_scheduler()
 			logger.info("Stopping application lifespan")
-				
+
 
 app = FastAPI(
 	title=settings.PROJECT_NAME,

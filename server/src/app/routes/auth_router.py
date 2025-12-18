@@ -31,9 +31,10 @@ from app.schemas.user import (
 )
 from app.core.dependencies import get_current_active_user
 from app.models.user import User
-
+import logging
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
 
 @router.post("/register/traveler", response_model=Token)
 async def register_traveler(
