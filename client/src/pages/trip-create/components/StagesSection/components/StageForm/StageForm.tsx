@@ -2,10 +2,10 @@ import { useState, type JSX } from "react";
 import { Controller } from "react-hook-form";
 
 import { StageHeader } from "../StageHeader/StageHeader";
-import { StageDayPicker } from "../StageDayPicker/StageDayPicker";
 
 import { iconTrash, iconOpen, iconClose } from "@/assets/";
 import { MapPicker } from "@/components/MapPicker/MapPicker";
+import { DayPicker } from "@/components/DayPicker/";
 import { Input } from "@/components/Input/Input";
 
 import type { StageFormProps } from "./StageForm.types";
@@ -70,7 +70,7 @@ return (
         render={({ field }) => {
         const { startDate, endDate } = field.value;
         return (
-            <StageDayPicker
+            <DayPicker
               label ={infoText.dateRange.label}
               tooltipText ={infoText.dateRange.tooltipText}
               classInput={`mx-auto ${errors?.dateRange ? "border-red-500" : ""}`}

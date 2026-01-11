@@ -1,11 +1,11 @@
 import type { JSX } from "react";
 import { DayPicker as DayPickerLib  } from "react-day-picker";
-import type { StageDayPickerProps } from "./StageDayPicker.types";
+import type { DayPickerProps } from "./DayPicker.types";
 import "react-day-picker/dist/style.css";
 
 
 //prettier-ignore
-export const StageDayPicker = ({ label,className, classInput, tooltipText, ...props }: StageDayPickerProps): JSX.Element => {
+export const DayPicker = ({ label,className, classInput, tooltipText, ...props }: DayPickerProps): JSX.Element => {
   return (
     <div className={`relative flex flex-col gap-2 group ${className}`}>
       <label className="ml-2 text-lg  tracking-wide">{label}</label>

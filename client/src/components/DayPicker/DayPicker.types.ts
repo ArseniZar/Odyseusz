@@ -1,6 +1,6 @@
 import {type DayPickerProps as DayPickerLabProps } from "react-day-picker";
 
-export type StageDayPickerProps = DayPickerLabProps & {
+export type DayPickerProps = DayPickerLabProps & {
   label: string;
   className?: string;     
   classInput?: string;    

@@ -3,7 +3,7 @@ import type { InformationSectionConfig } from "./informationSection.config.types
 
 
 
-export const tripInformationSectionConfig: InformationSectionConfig = {
+export const informationSectionConfig: InformationSectionConfig = {
   title: "Informacje o nowej podróży",
   iconTrip: iconTrip,
   dateRange: {

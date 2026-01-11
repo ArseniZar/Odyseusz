@@ -1,6 +1,6 @@
 import type { StagesSectionConfig } from "./stagesSection.config.types";
 
-export const tripStagesSectionConfig: StagesSectionConfig = {
+export const stagesSectionConfig: StagesSectionConfig = {
   title: "Etapy podróży",
   titleStage: "Etap",
 

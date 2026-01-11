@@ -14,3 +14,5 @@ export interface StageFormValues {
 export interface StagesValue{
   stages: StageFormValues[];
 }
+
+export interface TripCreatePageProps {}
