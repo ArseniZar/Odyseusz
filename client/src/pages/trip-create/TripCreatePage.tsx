@@ -1,31 +1,33 @@
 import { useForm } from "react-hook-form";
 import type { JSX } from "react";
 
-import { StagesSection } from "./StagesSection/components/StagesSection";
-import { InformationSection } from "./InformationSection/components/InformationSection";
+import { StagesSection } from "./components/StagesSection/StagesSection";
+import { InformationSection } from "./components/InformationSection/InformationSection";
 
-import { tripInformationSectionConfig } from "../config/informationSection.config";
-import { tripStagesSectionConfig } from "../config/stagesSection.config";
+import { informationSectionConfig } from "./config/informationSection.config";
+import { stagesSectionConfig } from "./config/stagesSection.config";
+import { pageConfig } from "./config/page.config";
 
 import { Header } from "@/components/Header";
+import { Title } from "@/components/Title";
 
-import type { StagesValue } from "./TripCreatePage.types";
+import type { StagesValue, TripCreatePageProps } from "./TripCreatePage.types";
 
-export const TripCreatePage = (): JSX.Element => {
+export const TripCreatePage = ({}:TripCreatePageProps): JSX.Element => {
   const { control, handleSubmit, watch, formState } = useForm<StagesValue>({
     mode: "all",
     defaultValues: {
       stages: [
         {
-          numberOfPeople: tripStagesSectionConfig.numberOfPeople.defaultValue,
+          numberOfPeople: stagesSectionConfig.numberOfPeople.defaultValue,
           coordinates: {
-            latitude: tripStagesSectionConfig.coordinates.defaultValue.latitude,
+            latitude: stagesSectionConfig.coordinates.defaultValue.latitude,
             longitude:
-              tripStagesSectionConfig.coordinates.defaultValue.longitude,
+              stagesSectionConfig.coordinates.defaultValue.longitude,
           },
           dateRange: {
-            startDate: tripStagesSectionConfig.dateRange.defaultValue.startDate,
-            endDate: tripStagesSectionConfig.dateRange.defaultValue.endDate,
+            startDate: stagesSectionConfig.dateRange.defaultValue.startDate,
+            endDate: stagesSectionConfig.dateRange.defaultValue.endDate,
           },
         }
       ],
@@ -45,16 +47,16 @@ export const TripCreatePage = (): JSX.Element => {
       <Header />
       <main className="flex-1 pt-15 px-20 overflow-hidden  bg-(--main-bg-color) font-geologica font-medium text-lg text-(--main-text-color)">
         <div className="h-full flex flex-col">
-          <h1 className="text-5xl"> Nowa podróż </h1>
+          <Title className="text-5xl font-normal" title={pageConfig.title}/>
           <div className="mt-7 flex-1 flex flex-row justify-between overflow-hidden">
             <InformationSection
-              infoText={tripInformationSectionConfig}
+              infoText={informationSectionConfig}
               watch={watch("stages")}
               onCancel={onCancel}
               onSubmit={onSubmit}
             />
             <StagesSection
-              infoText={tripStagesSectionConfig}
+              infoText={stagesSectionConfig}
               control={control}
               watch={watch("stages")}
               formState={formState}
