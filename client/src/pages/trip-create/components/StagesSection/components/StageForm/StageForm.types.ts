@@ -1,5 +1,5 @@
-import type { StagesSectionConfig } from "../../../../config/stagesSection.config.type";
-import type { StageFormValues, StagesValue } from "../../../../components/TripCreatePage.type";
+import type { StagesSectionConfig } from "../../../../config/stagesSection.config.types";
+import type { StageFormValues, StagesValue } from "../../../TripCreatePage.types";
 import type { Control, FieldErrors } from "react-hook-form";
 
 export interface StageFormProps {

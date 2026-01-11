@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { StageInformationProps } from "./StageInformation.type";
+import type { StageInformationProps } from "./StageInformation.types";
 function formatDate(date: Date | null): string {
   if (!date) {
     return "N/A";

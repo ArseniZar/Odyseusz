@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { IconButtonProps } from "./IconButton.type";
+import type { IconButtonProps } from "./IconButton.types";
 
 
 

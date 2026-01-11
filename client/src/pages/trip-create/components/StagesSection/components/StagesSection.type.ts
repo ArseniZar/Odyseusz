@@ -1,7 +1,7 @@
 import type { Control, FormState } from "react-hook-form";
 
-import type { StagesValue } from "../../TripCreatePage.type";
-import type { StagesSectionConfig } from "../../../config/stagesSection.config.type";
+import type { StagesValue } from "../../TripCreatePage.types";
+import type { StagesSectionConfig } from "../../../config/stagesSection.config.types";
 
 export interface StagesSectionProps {
   infoText: StagesSectionConfig;

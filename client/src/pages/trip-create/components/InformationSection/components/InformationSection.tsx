@@ -7,7 +7,7 @@ import { FormButtons } from "./FormButtons/FormButtons";
 import { TitleSection } from "@/components/TitleSection/TitleSection";
 
 import type { JSX } from "react";
-import type { StagesInformationProps } from "./InformationSection.type";
+import type { StagesInformationProps } from "./InformationSection.types";
 
 
 

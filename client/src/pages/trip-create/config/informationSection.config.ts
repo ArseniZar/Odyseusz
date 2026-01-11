@@ -1,5 +1,5 @@
 import { iconTrip } from "@/assets/";
-import type { InformationSectionConfig } from "./informationSection.config.type";
+import type { InformationSectionConfig } from "./informationSection.config.types";
 
 
 
