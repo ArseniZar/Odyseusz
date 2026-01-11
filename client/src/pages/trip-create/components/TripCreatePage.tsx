@@ -9,7 +9,7 @@ import { tripStagesSectionConfig } from "../config/stagesSection.config";
 
 import { Header } from "@/components/Header";
 
-import type { StagesValue } from "./TripCreatePage.type";
+import type { StagesValue } from "./TripCreatePage.types";
 
 export const TripCreatePage = (): JSX.Element => {
   const { control, handleSubmit, watch, formState } = useForm<StagesValue>({
