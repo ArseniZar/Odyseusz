@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type JSX } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import type { Map } from "leaflet";
 
 interface MapPickerProps {
@@ -67,7 +68,7 @@ export const MapPicker = ({label, className, tooltipText, value, onChange }: Map
         <MapContainer
           center={markerPosition ?? [51.505, -0.09]}
           zoom={10}
-          className="w-full h-full z-0"
+          className="w-full h-full z-0 rounde"
           ref={(map) => {
             if (map) mapInstanceRef.current = map;
           }}
