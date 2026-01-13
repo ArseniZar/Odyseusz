@@ -2,7 +2,7 @@ export interface InputProps {
   type?: string;
   label: string;
   placeholder?: string;
-  value?: string;
+  value?: any;
   tooltipText?: string;
   className?: string;
   classInput?: string;
