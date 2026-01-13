@@ -1,22 +1,21 @@
-export interface InformationFieldConfig {
-  label: string;
-  tooltipText?: string;
-}
+import type { InformationFieldConfig } from "@/types/all_types";
 
 export interface InformationSectionConfig {
   title: string;
   iconTrip: string;
+  
   dateRange: {
-    startDate: InformationFieldConfig;
-    endDate: InformationFieldConfig;
+    startDate: FormInformationFieldConfig;
+    endDate: FormInformationFieldConfig;
   };
+  
   stage: {
     title: string;
-    numberOfPeople: InformationFieldConfig;
-    dateRange: InformationFieldConfig;
+    numberOfPeople: FormInformationFieldConfig;
+    dateRange: FormInformationFieldConfig;
   };
-  formButtons: {
-    submitLabel: InformationFieldConfig;
-    cancelLabel: InformationFieldConfig;
-  };
+  formButtons: Record<FormButtonKey, FormInformationFieldConfig>;
 }
+
+type FormInformationFieldConfig = Pick<InformationFieldConfig, 'label'>;
+type FormButtonKey = "submit" | "cancel";

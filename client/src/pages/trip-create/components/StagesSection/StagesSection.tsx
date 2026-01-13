@@ -20,19 +20,19 @@ export const StagesSection = ({infoText, control, watch, formState }: StagesSect
 
   return (
     <section className="h-full w-5/9 flex flex-col">
-      <div className="h-full px-30 pb-5 flex flex-col gap-6 overflow-y-auto">
+      <div className="h-full px-30 pb-10 flex flex-col gap-6 overflow-y-auto">
         <div className="px-2 flex flex-row items-center justify-between">
           <Title className="font-light" title={infoText.title} />
-          <IconButton icon={iconAdd} classIcon="w-9 h-9 p-1" classButton="opacity-50 rounded-2xl" onClick={() => {
+          <IconButton icon={iconAdd} classIcon="w-9 h-9 p-1" classButton="opacity-50 rounded-full my-auto" onClick={() => {
               append({
                 numberOfPeople: infoText.numberOfPeople.defaultValue,
                 coordinates: {
-                  latitude: infoText.coordinates.defaultValue.latitude,
-                  longitude: infoText.coordinates.defaultValue.longitude,
+                  latitude: infoText.coordinates.defaultValue?.latitude,
+                  longitude: infoText.coordinates.defaultValue?.longitude,
                 },
                 dateRange: { 
-                  startDate: infoText.dateRange.defaultValue.startDate, 
-                  endDate: infoText.dateRange.defaultValue.endDate 
+                  startDate: infoText.dateRange.defaultValue?.startDate, 
+                  endDate: infoText.dateRange.defaultValue?.endDate 
                 },
               });
             }}/>

@@ -17,7 +17,7 @@ export const InformationSection = ({infoText,watch, onCancel, onSubmit}: StagesI
   return (
     <section className="h-full w-1/4 flex flex-col">
       <div className="h-full flex flex-col gap-6">
-        <Title className="font-light" title={"Informacje o nowej podróży"} />
+        <Title className="font-light" title={infoText.title} />
 
         <div className="flex-1 px-6 py-4 flex flex-col gap-4 rounded-2xl border border-black/10 shadow-2xl overflow-hidden">
           <TripDurationInformation

@@ -21,13 +21,13 @@ export const TripCreatePage = ({}:TripCreatePageProps): JSX.Element => {
         {
           numberOfPeople: stagesSectionConfig.numberOfPeople.defaultValue,
           coordinates: {
-            latitude: stagesSectionConfig.coordinates.defaultValue.latitude,
+            latitude: stagesSectionConfig.coordinates.defaultValue?.latitude,
             longitude:
-              stagesSectionConfig.coordinates.defaultValue.longitude,
+              stagesSectionConfig.coordinates.defaultValue?.longitude,
           },
           dateRange: {
-            startDate: stagesSectionConfig.dateRange.defaultValue.startDate,
-            endDate: stagesSectionConfig.dateRange.defaultValue.endDate,
+            startDate: stagesSectionConfig.dateRange.defaultValue?.startDate,
+            endDate: stagesSectionConfig.dateRange.defaultValue?.endDate,
           },
         }
       ],
