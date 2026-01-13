@@ -5,7 +5,6 @@ export const stagesSectionConfig: StagesSectionConfig = {
   titleStage: "Etap",
 
   numberOfPeople: {
-    type: "number",
     label: "Liczba osób",
     defaultValue: 1,
     placeholder: "Wpisz liczbę osób",

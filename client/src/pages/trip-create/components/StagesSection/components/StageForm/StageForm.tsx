@@ -34,15 +34,15 @@ return (
           validate: infoText.numberOfPeople.validate
         }}
         render={({ field }) =>
-        <Input
-          classInput={`w-1/5 ${errors?.numberOfPeople ? "border-red-500" : ""}`}
-          type={infoText.numberOfPeople.type}
-          label={infoText.numberOfPeople.label}
-          placeholder={infoText.numberOfPeople.placeholder}
-          tooltipText={infoText.numberOfPeople.tooltipText}
-          value={String(field.value)}
-          onChange={value => {field.onChange(value === "" ? null : isNaN(Number(value)) ? null : Number(value));}}
-        />}
+          <Input
+            classInput={`w-1/4 ${errors?.numberOfPeople ? "border-red-500" : ""}`}
+            label={infoText.numberOfPeople.label}
+            placeholder={infoText.numberOfPeople.placeholder}
+            tooltipText={infoText.numberOfPeople.tooltipText}
+            value={field.value}
+            onChange={value =>field.onChange(value === "" || value == null? null: isNaN(Number(value))? null: Number(value))}
+          />
+        }
       />
       <Controller
         name={`stages.${index}.coordinates`}

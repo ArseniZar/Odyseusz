@@ -9,32 +9,26 @@ export const informationSectionConfig: InformationSectionConfig = {
   dateRange: {
     startDate: {
       label: "Data rozpoczęcia",
-      tooltipText: "Data rozpoczęcia podróży.",
     },
     endDate: {
       label: "Data zakończenia",
-      tooltipText: "Data zakończenia podróży.",
     },
   },
   stage: {
     title: "Etap",
     numberOfPeople: {
       label: "Liczba osób",
-      tooltipText: "Liczba osób biorących udział w etapie podróży.",
     },
     dateRange: {
-      label: "Zakres dat",
-      tooltipText: "Daty rozpoczęcia i zakończenia etapu podróży.",
+      label: "Okreś",
     },
   },
   formButtons: {
-    submitLabel: {
+    submit: {
       label: "Zarejstruj podróż",
-      tooltipText: "Kliknij, aby zarejestrować nową podróż.",
     },
-    cancelLabel: {
+    cancel: {
       label: "Anuluj",
-      tooltipText: "Kliknij, aby anulować tworzenie podróży.",
     },
   },
 };
