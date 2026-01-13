@@ -18,13 +18,14 @@
     "react-leaflet": "^5.0.0-rc.2",
     "react-phone-input-2": "^2.15.1",
     "react-router-dom": "^7.9.6",
+    "react-select": "^5.10.2",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "4.1.16"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@types/leaflet": "^1.9.21",
-    "@types/node": "^24.6.0",
+    "@types/node": "^24.10.7",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
