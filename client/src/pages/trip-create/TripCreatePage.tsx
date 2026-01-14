@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import type { JSX } from "react";
 
 import { StagesSection } from "./components/StagesSection/StagesSection";
@@ -11,27 +11,31 @@ import { pageConfig } from "./config/page.config";
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
 
-import type { StagesValue, TripCreatePageProps } from "./TripCreatePage.types";
+import type { StagesValue, StageFormValues, TripCreatePageProps } from "./TripCreatePage.types";
 
-export const TripCreatePage = ({}:TripCreatePageProps): JSX.Element => {
+const defaultStage:StageFormValues = {
+  numberOfPeople: stagesSectionConfig.numberOfPeople.defaultValue,
+  coordinates: {
+    latitude: stagesSectionConfig.coordinates.defaultValue?.latitude ?? null,
+    longitude: stagesSectionConfig.coordinates.defaultValue?.longitude ?? null,
+  },
+  dateRange: {
+    startDate: stagesSectionConfig.dateRange.defaultValue?.startDate ?? null,
+    endDate: stagesSectionConfig.dateRange.defaultValue?.endDate ?? null,
+  },
+};
+
+export const TripCreatePage = ({}: TripCreatePageProps): JSX.Element => {
   const { control, handleSubmit, watch, formState } = useForm<StagesValue>({
     mode: "all",
     defaultValues: {
-      stages: [
-        {
-          numberOfPeople: stagesSectionConfig.numberOfPeople.defaultValue,
-          coordinates: {
-            latitude: stagesSectionConfig.coordinates.defaultValue?.latitude,
-            longitude:
-              stagesSectionConfig.coordinates.defaultValue?.longitude,
-          },
-          dateRange: {
-            startDate: stagesSectionConfig.dateRange.defaultValue?.startDate,
-            endDate: stagesSectionConfig.dateRange.defaultValue?.endDate,
-          },
-        }
-      ],
+      stages: [defaultStage],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "stages",
   });
 
   const onCancel = () => {
@@ -47,7 +51,7 @@ export const TripCreatePage = ({}:TripCreatePageProps): JSX.Element => {
       <Header />
       <main className="flex-1 pt-15 px-20 overflow-hidden  bg-(--main-bg-color) font-geologica font-medium text-lg text-(--main-text-color)">
         <div className="h-full flex flex-col">
-          <Title className="text-5xl font-normal" title={pageConfig.title}/>
+          <Title className="text-5xl font-normal" title={pageConfig.title} />
           <div className="mt-7 flex-1 flex flex-row justify-between overflow-hidden">
             <InformationSection
               infoText={informationSectionConfig}
@@ -57,9 +61,12 @@ export const TripCreatePage = ({}:TripCreatePageProps): JSX.Element => {
             />
             <StagesSection
               infoText={stagesSectionConfig}
+              fields={fields}
+              onRemoveStage={remove}
               control={control}
               watch={watch("stages")}
               formState={formState}
+              onAddStage={() => append(defaultStage)}
             />
           </div>
         </div>
