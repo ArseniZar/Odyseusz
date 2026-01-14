@@ -14,7 +14,7 @@ export const FilterSection = ({infoText,control, errors, onCreate}: FilterSectio
     <section className="w-full flex flex-col px-10 justify-between">
       <div className="flex flex-col gap-6">
         <div className="w-full flex flex-row items-start justify-between">
-          <div className="w-1/5 flex flex-row">
+          <div className="w-auto flex flex-row">
              <Button label={infoText.tripsButtons.create.label} onClick={onCreate}  classButton="mt-9 bg-black/90" classText="text-white"/>
           </div>
 

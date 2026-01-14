@@ -1,5 +1,5 @@
 import type { Control, FieldErrors } from "react-hook-form";
-import type { FilterValue } from "../TripsReadPage.types";
+import type { FilterValue } from "../../TripsReadPage.types";
 import type { FilterSectionConfig } from "../../config/filterSection.config.types";
 
 export interface FilterSectionProps {

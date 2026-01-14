@@ -9,8 +9,8 @@ import type { TripsSectionProps } from "./TripsSection.types";
 
 export const TripsSection = ({ infoText, trips, onDelete, onEdit, onShowDetails, onCancel}: TripsSectionProps): JSX.Element => {
   return (
-    <section className="w-full h-full flex flex-col">
-      <div className="h-full px-10 flex flex-col gap-6 overflow-y-auto">
+    <section className="w-full flex-1 flex flex-col overflow-hidden">
+      <div className="h-full px-10 pb-10 flex flex-col gap-6 overflow-y-auto">
         {trips.map((trip) => (
           <TripInformation
             key={trip.id}

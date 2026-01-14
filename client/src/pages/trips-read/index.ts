@@ -1,1 +1,1 @@
-export { TripsReadPage } from "./components/TripsReadPage";
+export { TripsReadPage } from "./TripsReadPage";
