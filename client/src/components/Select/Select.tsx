@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import SelectLib, { type MultiValue } from "react-select";
+import SelectLib from "react-select";
 
 import makeAnimated from "react-select/animated";
 import type { SelectProps, Option } from "./Select.types";
