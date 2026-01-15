@@ -1,6 +1,6 @@
-import type { InformationFieldConfig } from "@/types/all_types";
+import type { BaseFormButtonKey, Information, InformationFieldConfig } from "@/types/all_types";
 
-export interface InformationSectionConfig {
+export interface InformationSectionConfig extends Information {
   title: string;
   iconTrip: string;
   
@@ -14,8 +14,8 @@ export interface InformationSectionConfig {
     numberOfPeople: FormInformationFieldConfig;
     dateRange: FormInformationFieldConfig;
   };
-  formButtons: Record<FormButtonKey, FormInformationFieldConfig>;
+  formButtons: Record<FormButtonKey, InformationFieldConfig>;
 }
 
 type FormInformationFieldConfig = Pick<InformationFieldConfig, 'label'>;
-type FormButtonKey = "submit" | "cancel";
+type FormButtonKey  = BaseFormButtonKey;
