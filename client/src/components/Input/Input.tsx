@@ -27,7 +27,7 @@ export const Input = ({type = "text", label, placeholder ="", value, tooltipText
        <IconButton
           icon={iconCross}
           classIcon="w-5 h-5 p-0.5"
-          classButton={`p-1 rounded-full  transition-opacity  ${stringValue.length > 0 ? "visible" : "invisible"}`}
+          classButton={`p-1 rounded-full  ${stringValue.length > 0 ? "visible" : "invisible"}`}
           onClick={() => onChange?.("")}
         />
       </div>
