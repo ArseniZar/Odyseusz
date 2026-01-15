@@ -2,9 +2,9 @@ import React from "react";
 
 import { TripDurationInformation } from "./components/TripDurationInformation/TripDurationInformation";
 import { StageInformation } from "./components/StageInformation/StageInformation";
-import { FormButtons } from "./components/FormButtons/FormButtons";
 
-import { Title } from "@/components/Title/Title";
+import { Title } from "@/components/Title";
+import { FormButtons } from "@/components/FormButtons";
 
 import type { JSX } from "react";
 import type { StagesInformationProps } from "./InformationSection.types";
@@ -30,7 +30,6 @@ export const InformationSection = ({infoText,watch, onCancel, onSubmit}: StagesI
             {watch.map((stage, index) => (
               <React.Fragment key={index}>
                 <StageInformation
-                  key={index}
                   stageNumber={index + 1}
                   infoText={infoText}
                   dataRange={stage.dateRange}

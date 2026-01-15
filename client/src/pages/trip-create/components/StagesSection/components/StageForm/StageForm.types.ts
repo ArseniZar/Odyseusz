@@ -1,5 +1,5 @@
 import type { StagesSectionConfig } from "../../../../config/stagesSection.config.types";
-import type { StageFormValues, StagesValue } from "../../../../TripCreatePage.types";
+import type { StagesValue } from "../../../../TripCreatePage.types";
 import type { Control, FieldErrors } from "react-hook-form";
 
 export interface StageFormProps {
@@ -9,6 +9,6 @@ export interface StageFormProps {
   control: Control<StagesValue>;
   errors?: FieldErrors<StagesValue["stages"][number]> ;
   onDelete: (index: number) => void;
-  prevData: StageFormValues | null;
-  nextData: StageFormValues | null;
+  prevDateRange: StagesValue["stages"][number]["dateRange"] | null;
+  nextDateRange: StagesValue["stages"][number]["dateRange"] | null;
 }

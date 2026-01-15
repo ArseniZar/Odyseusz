@@ -62,7 +62,7 @@ export const TripCreatePage = ({}: TripCreatePageProps): JSX.Element => {
             <StagesSection
               infoText={stagesSectionConfig}
               fields={fields}
-              onRemoveStage={remove}
+              onRemoveStage={(index: number) => {fields.length > 1 && remove(index)}}
               control={control}
               watch={watch("stages")}
               formState={formState}

@@ -11,6 +11,16 @@ import { iconAdd } from "@/assets/";
 // prettier-ignore
 export const StagesSection = ({infoText,control, fields, watch, formState, onAddStage, onRemoveStage }: StagesSectionProps): JSX.Element => {
   
+  const getNearestDateRange = (index: number, direction: 'prev' | 'next') => {
+    const step = direction === 'prev' ? -1 : 1;
+    for (let i = index + step; i >= 0 && i < watch.length; i += step) {
+      const dr = watch[i]?.dateRange;
+      if (dr?.startDate && dr?.endDate)  return dr;
+    }
+    return null;
+  };
+
+
   return (
     <section className="h-full w-5/9 flex flex-col">
       <div className="h-full px-30 pb-10 flex flex-col gap-6 overflow-y-auto">
@@ -28,9 +38,9 @@ export const StagesSection = ({infoText,control, fields, watch, formState, onAdd
             stageNumber={index + 1}
             infoText={infoText}
             onDelete={() => onRemoveStage(index)}
-            prevData={watch[index - 1] || null}
-            nextData={watch[index + 1] || null}
-          />
+            prevDateRange={getNearestDateRange(index, 'prev')}
+            nextDateRange={getNearestDateRange(index, 'next')}
+          />  
         ))}
       </div>
     </section>

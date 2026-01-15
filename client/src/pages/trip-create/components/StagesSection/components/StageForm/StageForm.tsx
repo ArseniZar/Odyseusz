@@ -11,9 +11,8 @@ import { Input } from "@/components/Input/Input";
 import type { StageFormProps } from "./StageForm.types";
 
 // prettier-ignore
-export const StageForm = ({stageNumber,infoText,index, control, errors, onDelete, prevData , nextData}: StageFormProps): JSX.Element => {
+export const StageForm = ({stageNumber,infoText,index, control, errors, onDelete, prevDateRange , nextDateRange}: StageFormProps): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-
 return (
   <div className={`flex-none flex flex-col gap-5 rounded-2xl border border-black/10 shadow-xl ${errors ? "border-red-500" : ""}`}>
     <StageHeader 
@@ -35,7 +34,7 @@ return (
         }}
         render={({ field }) =>
           <Input
-            classInput={`w-1/4 ${errors?.numberOfPeople ? "border-red-500" : ""}`}
+            classInput={`w-1/5 ${errors?.numberOfPeople ? "border-red-500" : ""}`}
             label={infoText.numberOfPeople.label}
             placeholder={infoText.numberOfPeople.placeholder}
             tooltipText={infoText.numberOfPeople.tooltipText}
@@ -78,12 +77,26 @@ return (
               captionLayout="dropdown"
               navLayout="around"
               mode="range"
-              min={1}
+              min={0}
               numberOfMonths={2}
-              disabled={{ before: prevData?.dateRange.endDate ?? new Date() , 
-                          after: nextData?.dateRange.startDate ?? undefined
-              }}
-              selected={{
+              
+              disabled={(() => {
+                const before = prevDateRange?.endDate ?? new Date(new Date().setHours(0, 0, 0));
+                const after = nextDateRange?.startDate ?? undefined;
+                const matchers = [];
+
+                if (before && after) {
+                  matchers.push({ before, after }, before, after);
+                } else if (before) {
+                  matchers.push({ before }, before);
+                } else if (after) {
+                  matchers.push({ after }, after);
+                }
+
+                return matchers;
+              })()}
+
+                selected={{
                 from: startDate ?? undefined,
                 to: endDate ?? undefined,
               }}

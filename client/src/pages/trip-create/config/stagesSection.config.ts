@@ -7,7 +7,7 @@ export const stagesSectionConfig: StagesSectionConfig = {
   numberOfPeople: {
     label: "Liczba osób",
     defaultValue: 1,
-    placeholder: "Wpisz liczbę osób",
+    placeholder: "liczbę",
     tooltipText: "Proszę wpisać liczbę osób biorących udział w podróży.",
     validate: (value: any) => {
       if (isNaN(Number(value))) return "Pole musi być liczbą";

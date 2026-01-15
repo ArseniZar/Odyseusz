@@ -31,4 +31,4 @@ export const informationSectionConfig: InformationSectionConfig = {
       label: "Anuluj",
     },
   },
-};
+}
