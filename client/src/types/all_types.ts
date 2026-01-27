@@ -23,9 +23,31 @@ export interface Stage {
 
 export type TripStatus = "NOT_STARTED" | "ACTIVE" | "FINISHED" | "CANCELLED";
 
-
-
+//  information about form fields and buttons
 export interface InformationFieldConfig {
   label: string;
   tooltipText?: string;
 }
+
+export type BaseFormButtonKey = "submit" | "cancel";
+
+export type Information = {
+  formButtons: Record<BaseFormButtonKey, Pick<InformationFieldConfig, "label">>
+};
+
+//  form field configuration 
+export interface FormFieldConfig<T> {
+  label: string;
+  type?: "text" | "number" | "checkbox" | "date";
+  defaultValue: T | null;
+  placeholder?: string;
+  tooltipText?: string;
+  validate?: (value: any) => true | any;
+}
+
+
+export interface Coordinates {
+  latitude: number | null;
+  longitude: number | null;
+}
+

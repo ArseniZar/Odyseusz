@@ -4,7 +4,7 @@ export interface LogoProps {
 }
 
 export interface NavItemProps {
-  title: string;
-  href: string;
-  src?: string;
+  to: string;
+  label: string;
+  end?: boolean;
 }

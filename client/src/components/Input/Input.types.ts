@@ -1,9 +1,10 @@
 export interface InputProps {
-  type?: string;
+  type?: "checkbox" | "text";
   label: string;
   placeholder?: string;
   value?: any;
   tooltipText?: string;
+  error?: string;
   className?: string;
   classInput?: string;
   ref?: React.Ref<HTMLInputElement>
