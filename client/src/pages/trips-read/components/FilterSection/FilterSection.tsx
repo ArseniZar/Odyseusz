@@ -9,7 +9,7 @@ import { Button } from "@/components/Button";
 import type { FilterSectionProps } from "./FilterSection.types";
 
 // prettier-ignore
-export const FilterSection = ({infoText,control, errors, onCreate}: FilterSectionProps): JSX.Element => {
+export const FilterSection = ({infoText,control, onCreate}: FilterSectionProps): JSX.Element => {
   return (
     <section className="w-full flex flex-col px-10 justify-between">
       <div className="flex flex-col gap-6">
@@ -26,13 +26,13 @@ export const FilterSection = ({infoText,control, errors, onCreate}: FilterSectio
               rules={{
                 validate: infoText.numberOfStages.validate
               }}
-              render={({ field }) => (
+              render={({ field, fieldState: { error } }) => (
                 <Input
                   className="w-1/7"
-                  classInput={`${ errors?.numberOfStages ? "border-red-500" : ""}`}
                   label={infoText.numberOfStages.label}
                   placeholder={infoText.numberOfStages.placeholder}
                   tooltipText={infoText.numberOfStages.tooltipText}
+                  error={error?.message}
                   value={field.value}
                   onChange={value =>field.onChange(value === "" || value == null? null: isNaN(Number(value))? null: Number(value))}
                 />
@@ -45,13 +45,13 @@ export const FilterSection = ({infoText,control, errors, onCreate}: FilterSectio
               rules={{
                 validate: infoText.status.validate
               }}
-              render={({ field }) => (
+              render={({ field, fieldState: { error }}) => (
                 <Select
                   className="min-w-1/7 max-w-5/7"
-                  classSelect={`${ errors?.status ? "border-red-500" : ""}`}
                   label={infoText.status.label}
                   placeholder={infoText.status.placeholder}
                   tooltipText={infoText.status.tooltipText}
+                  error={error?.message}
                   options={infoText.status.options}
                   onChange={(v) => {field.onChange(v.map(option => option.value));
                   }}
@@ -65,15 +65,15 @@ export const FilterSection = ({infoText,control, errors, onCreate}: FilterSectio
               rules={{
                 validate: infoText.startDate.validate
               }}
-              render={({ field }) => { 
+              render={({ field, fieldState: { error }}) => { 
                 const [inputValue, setInputValue] = useState(field.value instanceof Date && isValid(field.value) ? format(field.value, infoText.formatDate) : "");
                 return(
                   <Input
                     className="w-1/7"
-                    classInput={`${ errors?.startDate ? "border-red-500" : ""}`}
                     label={infoText.startDate.label}
                     placeholder={infoText.startDate.placeholder}
                     tooltipText={infoText.startDate.tooltipText}
+                    error={error?.message}
                     value={inputValue}
                     onChange={(v) => {
                       const limited = v.replace(/[^0-9/]/g, "").slice(0, 10);
@@ -92,15 +92,15 @@ export const FilterSection = ({infoText,control, errors, onCreate}: FilterSectio
               rules={{
                 validate: infoText.endDate.validate
               }}
-              render={({ field }) => { 
+              render={({ field, fieldState: { error }}) => { 
                 const [inputValue, setInputValue] = useState(field.value instanceof Date && isValid(field.value) ? format(field.value, infoText.formatDate) : "");
                 return(
                   <Input
                     className="w-1/7"
-                    classInput={`${ errors?.endDate ? "border-red-500" : ""}`}
                     label={infoText.endDate.label}
                     placeholder={infoText.endDate.placeholder}
                     tooltipText={infoText.endDate.tooltipText}
+                    error={error?.message}
                     value={inputValue}
                     onChange={(v) => {
                       const limited = v.replace(/[^0-9/]/g, "").slice(0, 10);
