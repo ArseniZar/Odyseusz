@@ -3,7 +3,7 @@ import type { InputProps } from "./Input.types";
 import { IconButton } from "@/components/IconButton";
 import {iconCross} from "@/assets/"
 //prettier-ignore
-export const Input = ({type = "text", label, placeholder ="", value, tooltipText, className ="", classInput ="", ref = null, onChange, onFocus, onBlur}: InputProps): JSX.Element => {
+export const Input = ({type = "text", label, placeholder ="", value, error, tooltipText, className ="", classInput ="", ref = null, onChange, onFocus, onBlur}: InputProps): JSX.Element => {
   const stringValue = value == null ? "" : String(value);
   return (
     <div className={`relative flex flex-col gap-2 group ${className}`}>
@@ -13,25 +13,27 @@ export const Input = ({type = "text", label, placeholder ="", value, tooltipText
           <p className="break-normal">{tooltipText}</p>
         </div>
       )}
-      <div className={`flex flex-row items-center pr-2 rounded-2xl border-2 border-black/10 shadow-xl focus-within:border-blue-600 ${classInput}`}>
-      <input
-        className={` min-w-0 flex-1 py-3 px-4 outline-none`}
-        placeholder={placeholder}
-        value={stringValue}
-        type={type}
-        ref={ref} 
-        onChange={e => {onChange?.(e.target.value)}}
-        onFocus={(e) => onFocus?.(e)}
-        onBlur={(e) => onBlur?.(e)}
-      />
-       <IconButton
-          icon={iconCross}
-          classIcon="w-5 h-5 p-0.5"
-          classButton={`p-1 rounded-full  ${stringValue.length > 0 ? "visible" : "invisible"}`}
-          onClick={() => onChange?.("")}
-        />
+        <div className={`flex flex-row items-center rounded-2xl border-2 border-black/10 shadow-xl focus-within:border-blue-600 ${error ? "border-red-500" : ""} ${classInput}`}>
+          <input
+            className={` min-w-0 h-full w-full flex-1 py-3 px-4 outline-none `}
+            placeholder={placeholder}
+            value={stringValue}
+            type={type}
+            ref={ref} 
+            onChange={e => {onChange?.(type === "checkbox" ? e.target.checked : e.target.value)}}
+            onFocus={(e) => onFocus?.(e)}
+            onBlur={(e) => onBlur?.(e)}
+          />
+          {type !== "checkbox" && <IconButton
+              icon={iconCross}
+              classIcon="w-5 h-5 p-0.5"
+              classButton={`p-1 mr-1 rounded-full ${stringValue.length > 0 ? "visible" : "invisible"}`}
+              onClick={() => onChange?.("")}
+            />
+          }
+        </div>
+        {error && <p className="h-full ml-2 my-auto text-sm text-red-500">{error}</p>}
       </div>
-    </div>
   );
 };
 

@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import type { NavItemProps } from "../types";
+import type { JSX } from "react";
 
-export default function NavItem({ title, href, src}: NavItemProps) {
+export const NavItem =({ to, label, end = false }:NavItemProps):JSX.Element => {
   return (
-    <li className="hover:scale-110 transition-transform duration-300">
-      <Link to={href} className="flex flex-row gap-3 items-center">
-        {title}
-       {src && <img src={src} className="h-6 w-6" />}
-      </Link>
-    </li>
+      <NavLink 
+        to={to} 
+        end={end}
+        className={({ isActive }) => `flex flex-row hover:scale-110 transition-transform duration-300 ${isActive ? "border-b-4 border-white" : "hover:bg-[#1565c0]"}`}
+        >
+        {label}
+      </NavLink>
   );
 }
