@@ -45,6 +45,7 @@ class CountryProfile(Base):
   danger_level: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
   created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
   updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
+  # todo code 'PL'
 
   # Relationships
   consulates: Mapped[list["Consulate"]] = relationship(
@@ -65,6 +66,7 @@ class Consulate(Base):
   __tablename__ = "consulates"
 
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+  # todo delete country_profile_id
   country_profile_id: Mapped[int] = mapped_column(Integer, ForeignKey("country_profiles.id", ondelete="CASCADE"), nullable=False, index=True)
   address: Mapped[str] = mapped_column(String(500), nullable=False)
   email: Mapped[str] = mapped_column(String(255), nullable=False)

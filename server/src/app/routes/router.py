@@ -6,6 +6,7 @@ from app.routes.auth_router import router as auth_router
 from app.routes.country_router import router as country_router
 from app.routes.user_router import router as users_router
 from app.routes.travel_router import router as travel_router
+from app.routes.evacuation_router import router as evacuation_router
 
 
 logger = logging.getLogger(__name__)
@@ -40,6 +41,12 @@ api_router.include_router(
 	travel_router,
 	prefix="/travels",
 	tags=["travels"]
+)
+
+api_router.include_router(
+	evacuation_router,
+	prefix="/evacuations",
+	tags=["evacuations"]
 )
 
 logger.debug("Main API router initialized with sub-routers")

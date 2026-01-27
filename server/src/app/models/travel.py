@@ -11,6 +11,8 @@ class Travel(Base):
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   traveler_id: Mapped[int] = mapped_column(Integer, ForeignKey("traveler_profiles.id", ondelete="CASCADE"), nullable=False, index=True)
   created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+  # todo canceled bool
+  # todo updated_at datetime
 
   # Relationships
   traveler: Mapped["TravelerProfile"] = relationship(back_populates="travels")

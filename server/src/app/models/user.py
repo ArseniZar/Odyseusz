@@ -45,7 +45,7 @@ class TravelerProfile(Base):
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
   phone_number: Mapped[str] = mapped_column(String(20), nullable=False)
-  national_id: Mapped[str] = mapped_column(String(50), nullable=False)
+  national_id: Mapped[str] = mapped_column(String(50), nullable=False) # todo unique
 
   # Relationships
   user: Mapped["User"] = relationship(back_populates="traveler_profile")

@@ -85,6 +85,7 @@ async def get_travel(
 		select(Travel)
 		.options(selectinload(Travel.stages).selectinload(TravelStage.location))
 		.where(Travel.id == travel_id)
+    .sort(TravelStage.start_date)
 	)
 	travel_with_location = result.scalar_one_or_none()
 	

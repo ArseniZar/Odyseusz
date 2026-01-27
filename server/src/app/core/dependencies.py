@@ -7,7 +7,7 @@ from sqlalchemy import select
 from app.core.db import get_db
 from app.core.security import verify_token
 from app.crud.user import get_user_by_id
-from app.models.user import User, UserRole, EditorProfile, TravelerProfile
+from app.models.user import User, UserRole, EditorProfile, TravelerProfile, CoordinatorProfile, EvacuationAssistantProfile
 from app.models.country import CountryProfile
 
 security = HTTPBearer()
@@ -102,6 +102,56 @@ async def get_current_editor(
 		)
 	
 	return editor_profile
+
+
+async def get_current_coordinator(
+	current_user: User = Depends(get_current_active_user),
+	db: AsyncSession = Depends(get_db)
+) -> CoordinatorProfile:
+	"""Get the current user's coordinator profile."""
+	if current_user.role != UserRole.COORDINATOR:
+		raise HTTPException(
+			status_code=status.HTTP_403_FORBIDDEN,
+			detail="User is not a coordinator"
+		)
+	
+	result = await db.execute(
+		select(CoordinatorProfile).where(CoordinatorProfile.user_id == current_user.id)
+	)
+	coordinator_profile = result.scalar_one_or_none()
+	
+	if not coordinator_profile:
+		raise HTTPException(
+			status_code=status.HTTP_404_NOT_FOUND,
+			detail="Coordinator profile not found"
+		)
+	
+	return coordinator_profile
+
+
+async def get_current_evacuation_assistant(
+	current_user: User = Depends(get_current_active_user),
+	db: AsyncSession = Depends(get_db)
+) -> EvacuationAssistantProfile:
+	"""Get the current user's evacuation assistant profile."""
+	if current_user.role != UserRole.EVACUATION_ASSISTANT:
+		raise HTTPException(
+			status_code=status.HTTP_403_FORBIDDEN,
+			detail="User is not an evacuation assistant"
+		)
+	
+	result = await db.execute(
+		select(EvacuationAssistantProfile).where(EvacuationAssistantProfile.user_id == current_user.id)
+	)
+	assistant_profile = result.scalar_one_or_none()
+	
+	if not assistant_profile:
+		raise HTTPException(
+			status_code=status.HTTP_404_NOT_FOUND,
+			detail="Evacuation assistant profile not found"
+		)
+	
+	return assistant_profile
 
 
 async def verify_editor_country_access(
