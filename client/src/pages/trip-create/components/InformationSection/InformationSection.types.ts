@@ -4,7 +4,7 @@ import type { InformationSectionConfig } from "../../config/informationSection.c
 
 export interface StagesInformationProps {
   infoText: InformationSectionConfig;
-  watch: StagesValue["stages"];
+  stages: StagesValue["stages"];
   onCancel: () => void;
   onSubmit: () => void;
 }

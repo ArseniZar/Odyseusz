@@ -5,7 +5,7 @@ export const Button = ({ label, classButton, classText, disabled, onClick }: But
   return (
     <button
       disabled={disabled}
-      className={`p-3 rounded-2xl border border-black/10 shadow-2xl ${classButton}`}
+      className={`p-3 rounded-2xl border border-black/10 shadow-2xl hover:scale-102 transition-transform  ${classButton}`}
       onClick={onClick}
     >
       <span className={`text-lg ${classText}`}>{label}</span>

@@ -1,7 +1,7 @@
 import { useState, type JSX } from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useFormState } from "react-hook-form";
 
-import { StageHeader } from "../StageHeader/StageHeader";
+import { StageHeader } from "./components/StageHeader/StageHeader";
 
 import { iconTrash, iconOpen, iconClose } from "@/assets/";
 import { MapPicker } from "@/components/MapPicker/MapPicker";
@@ -11,10 +11,11 @@ import { Input } from "@/components/Input/Input";
 import type { StageFormProps } from "./StageForm.types";
 
 // prettier-ignore
-export const StageForm = ({stageNumber,infoText,index, control, errors, onDelete, prevDateRange , nextDateRange}: StageFormProps): JSX.Element => {
+export const StageForm = ({stageNumber,infoText,index, control, onDelete, prevDateRange , nextDateRange}: StageFormProps): JSX.Element => {
+  const { errors } = useFormState({ control });
   const [isOpen, setIsOpen] = useState(false);
 return (
-  <div className={`flex-none flex flex-col gap-5 rounded-2xl border border-black/10 shadow-xl ${errors ? "border-red-500" : ""}`}>
+  <div className={`flex-none flex flex-col gap-5 rounded-2xl border border-black/10 shadow-xl ${errors.stages?.[index] ? "border-red-500" : ""}`}>
     <StageHeader 
         title={infoText.titleStage} 
         stageNumber={stageNumber} 
@@ -32,12 +33,13 @@ return (
         rules={{
           validate: infoText.numberOfPeople.validate
         }}
-        render={({ field }) =>
+        render={({ field, fieldState: { error }}) =>
           <Input
-            classInput={`w-1/5 ${errors?.numberOfPeople ? "border-red-500" : ""}`}
+            classInput={`w-1/5`}
             label={infoText.numberOfPeople.label}
             placeholder={infoText.numberOfPeople.placeholder}
             tooltipText={infoText.numberOfPeople.tooltipText}
+            error={error?.message}
             value={field.value}
             onChange={value =>field.onChange(value === "" || value == null? null: isNaN(Number(value))? null: Number(value))}
           />
@@ -50,7 +52,7 @@ return (
         rules={{
           validate: infoText.coordinates.validate
         }}
-        render={({ field }) => (
+        render={({ field, fieldState: { error } }) => (
           <MapPicker
             label={infoText.coordinates.label}
             tooltipText={infoText.coordinates.tooltipText}
@@ -66,13 +68,14 @@ return (
         rules={{
           validate: infoText.dateRange.validate
         }}
-        render={({ field }) => {
+        render={({ field, fieldState: { error } }) => {
         const { startDate, endDate } = field.value;
         return (
             <DayPicker
               label ={infoText.dateRange.label}
               tooltipText ={infoText.dateRange.tooltipText}
-              classInput={`mx-auto ${errors?.dateRange ? "border-red-500" : ""}`}
+              error={error?.message}
+              classInput={`mx-auto`}
               animate
               captionLayout="dropdown"
               navLayout="around"

@@ -1,20 +1,22 @@
-import type { JSX } from "react";
+import { useWatch } from "react-hook-form";
 
 import { StageForm } from "./components/StageForm/StageForm";
 import { IconButton } from "@/components/IconButton";
-
-import type { StagesSectionProps } from "./StagesSection.type";
-
 import { Title } from "@/components/Title";
 import { iconAdd } from "@/assets/";
 
+import type { JSX } from "react";
+import type { StagesSectionProps } from "./StagesSection.type";
+
+
+
 // prettier-ignore
-export const StagesSection = ({infoText,control, fields, watch, formState, onAddStage, onRemoveStage }: StagesSectionProps): JSX.Element => {
-  
+export const StagesSection = ({infoText,control, fields, onAddStage, onRemoveStage }: StagesSectionProps): JSX.Element => {
+  const stages = useWatch({ name: "stages", control });
   const getNearestDateRange = (index: number, direction: 'prev' | 'next') => {
     const step = direction === 'prev' ? -1 : 1;
-    for (let i = index + step; i >= 0 && i < watch.length; i += step) {
-      const dr = watch[i]?.dateRange;
+    for (let i = index + step; i >= 0 && i < stages.length; i += step) {
+      const dr = stages[i]?.dateRange;
       if (dr?.startDate && dr?.endDate)  return dr;
     }
     return null;
@@ -34,9 +36,8 @@ export const StagesSection = ({infoText,control, fields, watch, formState, onAdd
             key={field.id}
             index={index}
             control={control}
-            errors={formState.errors.stages?.[index]}
             stageNumber={index + 1}
-            infoText={infoText}
+            infoText={infoText.stage}
             onDelete={() => onRemoveStage(index)}
             prevDateRange={getNearestDateRange(index, 'prev')}
             nextDateRange={getNearestDateRange(index, 'next')}

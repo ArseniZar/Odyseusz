@@ -7,8 +7,6 @@ export interface StagesSectionProps {
   infoText: StagesSectionConfig;
   control: Control<StagesValue>;
   fields: FieldArrayWithId<StagesValue, "stages">[]
-  watch:  StagesValue["stages"];
-  formState: FormState<StagesValue>;
   onAddStage: () => void;
   onRemoveStage: (index: number) => void;
 }

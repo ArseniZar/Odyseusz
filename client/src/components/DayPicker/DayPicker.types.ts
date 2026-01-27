@@ -5,4 +5,5 @@ export type DayPickerProps = DayPickerLabProps & {
   className?: string;     
   classInput?: string;    
   tooltipText?: string;
+  error?: string;
 };
