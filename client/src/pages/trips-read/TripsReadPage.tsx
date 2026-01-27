@@ -218,7 +218,7 @@ const sampleTrips: Trip[] = [
   };
 
 export const TripsReadPage = (): JSX.Element => {
-  const { control, handleSubmit, watch, formState } = useForm<FilterValue>({
+  const { control, watch } = useForm<FilterValue>({
     mode: "all",
     defaultValues: defalutFilter
   });
@@ -240,8 +240,7 @@ export const TripsReadPage = (): JSX.Element => {
             <FilterSection
               infoText={filterSectionConfig}
               control={control}
-              errors={formState.errors}
-              onCreate={() => navigate(`${routesConfig.routes.TRIP_CREATE}`)}
+              onCreate={() => navigate(routesConfig.TRIP_CREATE.path)}
             />
             <TripsSection
               infoText={tripsSectionConfig}
