@@ -6,7 +6,7 @@ import { formatDate } from "@/utils/formatDate";
 // prettier-ignore
 export const TripDurationInformation = ({infoText,dataRange}:TripDurationInformationProps): JSX.Element => {
   return (
-    <div className="flex flex-row gap-3 items-center">
+    <div className="flex flex-row gap-3 items-center border-b pb-3">
       <img className="w-20 h-20" src={infoText.iconTrip} alt="iconTrip" />
       <div className="flex flex-col gap-1">
         <p className="font-medium text-xl"> {infoText.dateRange.startDate.label}: <span className="font-light"> {formatDate(dataRange.startDate)} </span></p>

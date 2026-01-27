@@ -5,7 +5,7 @@ import "react-day-picker/dist/style.css";
 
 
 //prettier-ignore
-export const DayPicker = ({ label,className, classInput, tooltipText, ...props }: DayPickerProps): JSX.Element => {
+export const DayPicker = ({ label,className, classInput, tooltipText, error, ...props }: DayPickerProps): JSX.Element => {
   return (
     <div className={`relative flex flex-col gap-2 group ${className}`}>
       <label className="ml-2 text-lg  tracking-wide">{label}</label>
@@ -16,8 +16,9 @@ export const DayPicker = ({ label,className, classInput, tooltipText, ...props }
       )}
       <DayPickerLib 
         {...props}
-        className={`py-2 px-3 rounded-2xl border-2 border-black/10 shadow-2xl ${classInput}`}
+        className={`py-2 px-3 rounded-2xl border-2 border-black/10 shadow-2xl ${error ? "border-red-500" : ""} ${classInput}`}
       />
+      {error && <p className="h-full ml-2 my-auto text-sm text-red-500">{error}</p>}
     </div>
   );
 };

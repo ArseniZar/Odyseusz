@@ -1,25 +1,16 @@
+import type { Coordinates, FormFieldConfig } from "@/types/all_types";
+
 export interface StagesSectionConfig {
   title: string;
-  titleStage: string;
-  numberOfPeople: FormFieldConfig<number>;
-  coordinates: FormFieldConfig<Coordinates>;
-  dateRange: FormFieldConfig<DataRange>;
+  stage: {
+    titleStage: string;
+    numberOfPeople: FormFieldConfig<number>;
+    coordinates: FormFieldConfig<Coordinates>;
+    dateRange: FormFieldConfig<DataRange>;
+  };
 }
 
-export interface FormFieldConfig<T> {
-  label: string;
-  defaultValue: T | null;
-  placeholder?: string;
-  tooltipText?: string;
-  validate?: (value: any) => true | any;
-}
-
-export interface Coordinates {
-  latitude: number | null;
-  longitude: number | null;
-}
-
-export interface DataRange{
+export interface DataRange {
   startDate: Date | null;
   endDate: Date | null;
 }

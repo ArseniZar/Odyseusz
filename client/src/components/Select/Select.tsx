@@ -6,7 +6,7 @@ import type { SelectProps, Option } from "./Select.types";
 
 
 
-export const Select = <T,>({label,tooltipText,className,classSelect, ...props}: SelectProps<T>): JSX.Element => {
+export const Select = <T,>({label,tooltipText,className,classSelect, error, ...props}: SelectProps<T>): JSX.Element => {
   return (
     <div className={`relative flex flex-col gap-2 group ${className}`}>
       <label className="ml-2 text-lg tracking-wide">{label}</label>
@@ -20,7 +20,7 @@ export const Select = <T,>({label,tooltipText,className,classSelect, ...props}: 
         placeholder={props.placeholder ?? ""}
         classNames={{
           control: () => {
-            return `py-3 px-4 rounded-2xl border-2 border-black/10 shadow-xl ${classSelect}`;
+            return `py-3 px-4 rounded-2xl border-2 border-black/10 shadow-xl ${error ? "border-red-500" : ""} ${classSelect}`;
           },
           placeholder: () => "opacity-50",
 
@@ -41,6 +41,7 @@ export const Select = <T,>({label,tooltipText,className,classSelect, ...props}: 
         value={props.value}
         onChange={props.onChange}
       />
+      {error && <p className="h-full ml-2 my-auto text-sm text-red-500">{error}</p>}
     </div>
   );
 };
