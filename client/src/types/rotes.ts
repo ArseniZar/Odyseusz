@@ -5,6 +5,9 @@ export type AppRoutes =
   | "EVACUATION_CREATE"
   | "EVACUATIONS_READ"
   | "EVACUATION_EDIT" 
+  | "PROFILE_COUNTRY_CREATE"
+  | "PROFILE_COUNTRY_READ"
+  | "PROFILE_COUNTRY_EDIT";
 
 export const routesConfig: Record<AppRoutes, {path:string, label:string}> = {
   TRIP_CREATE: {path:"/trips/create", label:"Create Trip"},
@@ -13,4 +16,7 @@ export const routesConfig: Record<AppRoutes, {path:string, label:string}> = {
   EVACUATION_CREATE: {path:"/evacuations/create", label:"Create Evacuation"},
   EVACUATIONS_READ: {path:"/evacuations/read", label:"Read Evacuations"},
   EVACUATION_EDIT: {path:"/evacuations/edit/:evacuationId", label:"Edit Evacuation"},
+  PROFILE_COUNTRY_CREATE: {path:"/country/profile/create", label:"Create Profile Country"},
+  PROFILE_COUNTRY_READ: {path:"/country/profile/read", label:"Read Profile Country"},
+  PROFILE_COUNTRY_EDIT: {path:"/country/profile/edit/:profileId", label:"Edit Profile Country"},
 };

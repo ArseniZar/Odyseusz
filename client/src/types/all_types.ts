@@ -7,6 +7,7 @@ export interface Trip {
   stages: Stage[];
   cancel: boolean;
   numberOfStages: number;
+  dataUpdate: Date;
 }
 
 export type TripStatus = "NOT_STARTED" | "ACTIVE" | "FINISHED" | "CANCELLED";
@@ -30,6 +31,8 @@ export interface Evacuation {
   };
   collectionPoints: CollectionPoint[];
   assistants: Assistant[];
+  dataUpdate: Date;
+  dataLastActivated: Date | null;
 }
 
 export interface CollectionPoint {
@@ -49,7 +52,28 @@ export interface Assistant {
 
 export type EvacuationStatus = "ACTIVE" | "CANCELLED";
 
+// profile-country related types
 
+export interface ProfileCountry {
+  id: string;
+  name: string;
+  dangerLevel: DangerLevel;
+  description: string;
+  countryCode: string;
+  consulates: Consulate[];
+  dataUpdate: Date;
+}
+
+export interface Consulate {
+  id: string;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  dataUpdate: Date;
+}
+
+export type DangerLevel = "LOW" | "MEDIUM" | "HIGH" | "EXTREME";
 //  information about form fields and buttons
 export interface InformationFieldConfig {
   label: string;
