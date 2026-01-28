@@ -1,22 +1,19 @@
 import type { JSX } from "react";
 import Logo from "./components/Logo/Logo";
 import { NavItem } from "./components/NavItem/NavItem";
-
 import {iconAccount, iconMaps} from "@/assets/";
+import { routesConfig } from "@/types/rotes";
 const navItems = [
   { title: "Home", href: "/" },
 
-  { title: "Zarejestruj podróż", href: "/traveler/add_trip" },
-  { title: "Archiwum podróży", href: "/traveler/read_all_trip" },
-  { title: "Edytuj podróż", href: "/traveler/edit_trip/1" },
+  { title: "Zarejestruj podróż", href: routesConfig.TRIP_CREATE.path },
+  { title: "Archiwum podróży", href:  routesConfig.TRIPS_READ.path },
 
-  { title: "Dodaj ewakuację", href: "/kordinator/add_evacuation" }, //!!
-  { title: "Archiwum ewakuacji", href: "/kordinator/all_evacuation" , }, //!!
-  { title: "Edytuj ewakuację", href: "/kordinator/edit_evacuation/1" },
+  { title: "Dodaj ewakuację", href: routesConfig.EVACUATION_CREATE.path }, 
+  { title: "Archiwum ewakuacji", href: routesConfig.EVACUATIONS_READ.path },
 
-  // { title: "Dodaj ewakuację", href: "/kordinator/add_evacuation" }, //!!
-  { title: "Archiwum profili kraju", href: "/editor/all_profile" , }, //!!
-  { title: "Edytuj profil kraju", href: "/editor/edit_profile/1" },
+  { title: "Archiwum profili kraju", href: routesConfig.PROFILE_COUNTRY_READ.path , },
+  { title: "Edytuj profil kraju", href: routesConfig.PROFILE_COUNTRY_EDIT.path.replace(":profileId", "1") },
 ];
 
 const navItemsRight = [
