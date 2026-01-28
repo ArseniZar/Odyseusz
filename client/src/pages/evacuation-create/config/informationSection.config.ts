@@ -16,7 +16,7 @@ export const informationSectionConfig: InformationSectionConfig = {
   area: {
     label: "Obszar",
   },
-  collectionPoints: {
+  point: {
     title: "Mejsca zbiórki",
     name: {
       label: "Nazwa",
@@ -25,7 +25,7 @@ export const informationSectionConfig: InformationSectionConfig = {
       label: "Opis",
     },
   },
-  assistants: {
+  assistant: {
     title: "Asystent ewakuacji",
     name: {
       label: "Imię i nazwisko",

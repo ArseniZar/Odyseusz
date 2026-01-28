@@ -1,8 +1,9 @@
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
-export interface CollectionPointsInformationProps {
-  collectionPointsNumber: number;
-  infoText: InformationSectionConfig["collectionPoints"];
+export interface  GeneralInformationProps {
   name: string | null;
   description: string | null;
+  reason: string | null;
+  radius: number | null;
+  infoText: InformationSectionConfig;
 }

@@ -1,5 +1,5 @@
-import type { EvacuationSectionConfig } from "@/pages/evacuation-create/config/evacuationSection.types";
-import type { EvacuationFormValues } from "@/pages/evacuation-create/EvacuationCreatePage.types";
+import type { EvacuationSectionConfig } from "../../../../../../config/evacuationSection.types";
+import type { EvacuationFormValues } from "../../../../../../EvacuationCreatePage.types";
 import type { Control } from "react-hook-form";
 
 export interface PointFormProps {

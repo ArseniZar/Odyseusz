@@ -7,12 +7,12 @@ export interface InformationSectionConfig extends Information{
   reason: FormInformationFieldConfig;
   description: FormInformationFieldConfig;
   area: FormInformationFieldConfig;
-  collectionPoints:{
+  point:{
     title: string;
     name: FormInformationFieldConfig;
     description: FormInformationFieldConfig;
   };
-  assistants: {
+  assistant: {
     title: string;
     name: InformationFieldConfig;
     workingHours: InformationFieldConfig;

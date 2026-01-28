@@ -1,9 +1,8 @@
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
-export interface  EvacuationGeneralInformationProps {
+export interface PointInformationProps {
+  pointNumber: number;
+  infoText: InformationSectionConfig["point"];
   name: string | null;
   description: string | null;
-  reason: string | null;
-  area: number | null;
-  infoText: InformationSectionConfig;
 }

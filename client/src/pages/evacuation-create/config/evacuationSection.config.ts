@@ -53,7 +53,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
     title: "Obszar ewakuacji",
     coordinates: {
       label: "Współrzędne (szerokość, długość)",
-      defaultValue: { latitude: null, longitude: null },
+      defaultValue: null,
       placeholder: "Wybierz współrzędne obszaru ewakuacji na mapie",
       tooltipText: "Współrzędne środka obszaru ewakuacji",
       validate: (value: any) => {
@@ -119,7 +119,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
       },
       coordinates: {
         label: "Współrzędne (szerokość, długość)",
-        defaultValue: { latitude: null, longitude: null },
+        defaultValue: null,
         placeholder: "Wybierz współrzędne miejsca zbiórki na mapie",
         tooltipText: "Współrzędne miejsca zbiórki",
         validate: (value: any) => {

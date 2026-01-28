@@ -1,13 +1,10 @@
 import { Title } from "@/components/Title";
 import type { JSX } from "react";
 import type { InformationSectionProps } from "./InformationSection.types";
-import { EvacuationGeneralInformation } from "./components/EvacuationDurationInformation/EvacuationGeneralInformation";
+import { GeneralInformation } from "./components/GeneralInformation/GeneralInformation";
 import { FormButtons } from "@/components/FormButtons";
-import { CollectionPointsInformation } from "./components/CollectionPointsInformation/CollectionPointsInformation";
-import { AssistantsInformation } from "./components/AssistantsInformation/AssistantsInformation";
-
-const area = (radius: number | null): number | null =>
-  radius === null ? null : Number((Math.PI * radius ** 2).toFixed(2));
+import { PointInformation } from "./components/PointInformation/PointInformation";
+import { AssistantInformation } from "./components/AssistantInformation/AssistantInformation";
 
 // prettier-ignore
 export const InformationSection = ({infoText, evacuation, onCancel,onSubmit}:InformationSectionProps): JSX.Element => {
@@ -17,28 +14,28 @@ export const InformationSection = ({infoText, evacuation, onCancel,onSubmit}:Inf
         <Title className="font-light" title={infoText.title} />
         
         <div className="flex-1 px-6 py-4 flex flex-col gap-4 rounded-2xl border border-black/10 shadow-2xl overflow-y-auto  scrollbar-none">
-          <EvacuationGeneralInformation 
+          <GeneralInformation 
             infoText={infoText} 
             name={evacuation.generalInfoForm.name} 
             description={evacuation.generalInfoForm.description} 
             reason={evacuation.generalInfoForm.reason} 
-            area={area(evacuation.areaForm.radius)} 
+            radius={evacuation.areaForm.radius} 
           />
-          {evacuation.colectionPointsForm.points.map((collectionPoints, index) => (
-            <CollectionPointsInformation 
+          {evacuation.colectionPointsForm.points.map((point, index) => (
+            <PointInformation 
               key={index}
-              collectionPointsNumber={index + 1}
-              infoText={infoText.collectionPoints} 
-              name={collectionPoints.name} 
-              description={collectionPoints.description} 
+              pointNumber={index + 1}
+              infoText={infoText.point} 
+              name={point.name} 
+              description={point.description} 
             />
           ))} 
           {evacuation.assistantsForm.assistants.map((assistant, index) => (
             assistant.isActive && (
-            <AssistantsInformation 
+            <AssistantInformation 
               key={index}
-              assistantsNumber={index + 1}
-              infoText={infoText.assistants} 
+              assistantNumber={index + 1}
+              infoText={infoText.assistant} 
               name={assistant.name}
               workingHours={assistant.workingHours}
               phone={assistant.phone}
