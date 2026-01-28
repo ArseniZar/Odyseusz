@@ -26,7 +26,7 @@ export const EvacuationSection = ({infoText, control,fieldsPoints, fieldsAssista
         <GeneralInfoForm control={control} infoText={infoText.generalInfoForm} isActive={EvacuationStep.GeneralInfo === activeStep} />
         <AreaForm control={control} infoText={infoText.areaForm} isActive={EvacuationStep.Area === activeStep} />
         <CollectionPointsForm control={control} infoText={infoText.collectionPointsForm} isActive={EvacuationStep.CollectionPoints === activeStep} fields={fieldsPoints} onAddPoint={onAddPoint} onRemovePoint={onRemovePoint}/>
-        <AssistantsForm control={control} infoText={Object.assign(infoText.assistantsForm, infoText.assistants)} isActive={EvacuationStep.Assistants === activeStep} fields={fieldsAssistans}/>
+        <AssistantsForm control={control} infoText={Object.assign(infoText.assistantsForm, infoText.assistant)} isActive={EvacuationStep.Assistants === activeStep} fields={fieldsAssistans}/>
       </div>
     </section>
   );
