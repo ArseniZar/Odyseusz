@@ -1,10 +1,10 @@
 import type { JSX } from "react";
-import type { TripDurationInformationProps } from "./TripDurationInformation.types";
+import type { DurationInformationProps } from "./DurationInformation.types";
 
 import { formatDate } from "@/utils/formatDate";
 
 // prettier-ignore
-export const TripDurationInformation = ({infoText,dataRange}:TripDurationInformationProps): JSX.Element => {
+export const DurationInformation = ({infoText,dataRange}:DurationInformationProps): JSX.Element => {
   return (
     <div className="flex flex-row gap-3 items-center border-b pb-3">
       <img className="w-20 h-20" src={infoText.iconTrip} alt="iconTrip" />
