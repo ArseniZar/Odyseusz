@@ -1,3 +1,4 @@
+// trip related types 
 export interface Trip {
   id: number;
   status: TripStatus;
@@ -8,20 +9,46 @@ export interface Trip {
   numberOfStages: number;
 }
 
+export type TripStatus = "NOT_STARTED" | "ACTIVE" | "FINISHED" | "CANCELLED";
+
 export interface Stage {
   id: number;
-  dateRange: {
-    startDate: Date;
-    endDate: Date;
-  };
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
+  dateRange: DataRange
+  coordinates: Coordinates
   numberOfPeople: number;
 }
+// evacuation related types
+export interface Evacuation {
+  id: number;
+  status: EvacuationStatus;
+  name: string;
+  reason: string;
+  description: string;
+  area: {
+    coordinates: Coordinates;
+    radius: number;
+  };
+  collectionPoints: CollectionPoint[];
+  assistants: Assistant[];
+}
 
-export type TripStatus = "NOT_STARTED" | "ACTIVE" | "FINISHED" | "CANCELLED";
+export interface CollectionPoint {
+  id: number;
+  name: string;
+  description: string;
+  coordinates: Coordinates;
+}
+
+export interface Assistant {
+  id: number;
+  name: string;
+  workingHours: string;
+  phone: string;
+  email: string;
+}
+
+export type EvacuationStatus = "ACTIVE" | "CANCELLED";
+
 
 //  information about form fields and buttons
 export interface InformationFieldConfig {
@@ -47,7 +74,11 @@ export interface FormFieldConfig<T> {
 
 
 export interface Coordinates {
-  latitude: number | null;
-  longitude: number | null;
+  latitude: number;
+  longitude: number;
 }
 
+export interface DataRange {
+  startDate: Date;
+  endDate: Date;
+}
