@@ -1,4 +1,4 @@
-import { TripDurationInformation } from "./components/TripDurationInformation/TripDurationInformation";
+import { DurationInformation } from "./components/DurationInformation/DurationInformation";
 import { StageInformation } from "./components/StageInformation/StageInformation";
 
 import { Title } from "@/components/Title";
@@ -18,7 +18,7 @@ export const InformationSection = ({infoText,stages, onCancel, onSubmit}: Inform
         <Title className="font-light" title={infoText.title} />
 
         <div className="flex-1 px-6 py-4 flex flex-col gap-4 rounded-2xl border border-black/10 shadow-2xl overflow-hidden">
-          <TripDurationInformation
+          <DurationInformation
             infoText={infoText}
             dataRange={{ startDate: stages[0]?.dateRange.startDate, endDate: stages[stages.length - 1]?.dateRange.endDate }}
           />
