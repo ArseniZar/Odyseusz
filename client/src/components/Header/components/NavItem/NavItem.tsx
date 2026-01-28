@@ -7,7 +7,7 @@ export const NavItem =({ to, label, end = false }:NavItemProps):JSX.Element => {
       <NavLink 
         to={to} 
         end={end}
-        className={({ isActive }) => `flex flex-row hover:scale-110 transition-transform duration-300 ${isActive ? "border-b-4 border-white" : "hover:bg-[#1565c0]"}`}
+        className={({ isActive }) => `flex flex-row hover:scale-110 transition-transform duration-300 ${isActive ? "border-b-4 border-white" : "hover:scale-110"}`}
         >
         {label}
       </NavLink>
