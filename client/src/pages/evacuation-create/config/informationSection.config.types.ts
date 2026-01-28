@@ -14,10 +14,10 @@ export interface InformationSectionConfig extends Information{
   };
   assistant: {
     title: string;
-    name: InformationFieldConfig;
-    workingHours: InformationFieldConfig;
-    phone: InformationFieldConfig;
-    email: InformationFieldConfig;
+    name: FormInformationFieldConfig;
+    workingHours: FormInformationFieldConfig;
+    phone: FormInformationFieldConfig;
+    email: FormInformationFieldConfig;
   };
 
   formButtons: Record<FormButtonKey, FormInformationFieldConfig>;

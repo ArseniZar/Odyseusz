@@ -4,7 +4,10 @@ import type { EvacuationFormValues } from "../../EvacuationCreatePage.types";
 import type { InformationSectionConfig } from "../../config/informationSection.config.types";
 
 export interface EvacuationSectionProps {
-  infoText: EvacuationSectionConfig & InformationSectionConfig;
+  infoText: {
+    evacuationSectionConfig:EvacuationSectionConfig;
+    informationSectionConfig:InformationSectionConfig;
+  };
   control: Control<EvacuationFormValues>;
   fieldsPoints: FieldArrayWithId<EvacuationFormValues, "colectionPointsForm.points">[];
   fieldsAssistans: FieldArrayWithId<EvacuationFormValues, "assistantsForm.assistants">[];

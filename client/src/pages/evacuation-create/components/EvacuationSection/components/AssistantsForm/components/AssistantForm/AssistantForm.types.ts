@@ -5,7 +5,10 @@ import type { Control } from "react-hook-form";
 
 export interface AssistantFormProps {
   assistantNumber?: number;
-  infoText: EvacuationSectionConfig["assistantsForm"]["assistant"] & InformationSectionConfig["assistant"];
+  infoText: {
+    evacuationSectionConfig:EvacuationSectionConfig["assistantsForm"]["assistant"];
+    informationSectionConfig:InformationSectionConfig["assistant"];
+  };
   index: number;
   control: Control<EvacuationFormValues>;
 }
