@@ -10,9 +10,9 @@ export const TripInformation =({infoText, status, endDate, startDate, numberOfSt
         <div className="p-5 flex flex-row gap-5 border border-black/10 shadow-xl rounded-2xl items-center justify-between">
             <img className="w-20" src={infoText.iconTrip} alt="iconTrip"/>
             <div className="flex flex-col">
-                <p className="font-medium text-xl">{infoText.trip.status.label}: <span className="font-light"> {infoText.trip.status.options[status]} </span></p>
-                <p className="font-medium text-lg"> {infoText.trip.dateRange.label}: <span className="font-light"> {formatDate(startDate)}</span> - <span className="font-light">{formatDate(endDate)}</span></p>
-                <p className="font-medium text-lg"> {infoText.trip.numberOfStages.label}: <span className="font-light"> {formatNumber(numberOfStages)} </span></p>
+                <p className="font-medium text-xl">{infoText.status.label}:<span className="font-light ml-1">{infoText.status.options[status]} </span></p>
+                <p className="font-medium text-lg">{infoText.dateRange.label}:<span className="font-light ml-1">{formatDate(startDate)}</span> - <span className="font-light">{formatDate(endDate)}</span></p>
+                <p className="font-medium text-lg">{infoText.numberOfStages.label}:<span className="font-light ml-1">{formatNumber(numberOfStages)} </span></p>
             </div>
             <button className={`flex-1 h-full opacity-0 hover:opacity-30 transition-opacity ${infoText.showButtons.details.some((item) => status === item)  ? "visible" : "invisible"}`} onClick={onShowDetails}>
                 <p className="font-medium text-lg"> {infoText.tripButtons.details.label} </p>

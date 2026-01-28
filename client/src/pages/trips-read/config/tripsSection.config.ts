@@ -3,22 +3,20 @@ import type { TripsSectionConfig } from "./tripsSection.config.types";
 
 export const tripsSectionConfig: TripsSectionConfig = {
   iconTrip: iconTrip,
-  trip: {
-    status: {
-      label: "Status",
-      options: {
-        NOT_STARTED: "Nie rozpoczęta",
-        ACTIVE: "Aktywna",
-        FINISHED: "Zakończona",
-        CANCELLED: "Anulowana",
-      },
+  status: {
+    label: "Status",
+    options: {
+      NOT_STARTED: "Nie rozpoczęta",
+      ACTIVE: "Aktywna",
+      FINISHED: "Zakończona",
+      CANCELLED: "Anulowana",
     },
-    dateRange: {
-      label: "Okreś",
-    },
-    numberOfStages: {
-      label: "Liczba etapów",
-    },
+  },
+  dateRange: {
+    label: "Okreś",
+  },
+  numberOfStages: {
+    label: "Liczba etapów",
   },
   tripButtons: {
     edit: {

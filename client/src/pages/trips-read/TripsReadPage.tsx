@@ -210,12 +210,12 @@ const sampleTrips: Trip[] = [
     },
   ];
 
-  const defalutFilter:FilterValue = {
-    numberOfStages: filterSectionConfig.numberOfStages.defaultValue,
-    status: filterSectionConfig.status.defaultValue,
-    startDate: filterSectionConfig.startDate.defaultValue,
-    endDate: filterSectionConfig.endDate.defaultValue,
-  };
+const defalutFilter:FilterValue = {
+  numberOfStages: filterSectionConfig.numberOfStages.defaultValue,
+  status: filterSectionConfig.status.defaultValue,
+  startDate: filterSectionConfig.startDate.defaultValue,
+  endDate: filterSectionConfig.endDate.defaultValue,
+};
 
 export const TripsReadPage = (): JSX.Element => {
   const { control, watch } = useForm<FilterValue>({
