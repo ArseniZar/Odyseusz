@@ -1,0 +1,1 @@
+export {EvacuationsReadPage} from "./EvacuationsReadPage";
