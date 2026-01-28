@@ -17,198 +17,160 @@ import type { Trip } from "@/types/all_types";
 import { routesConfig } from "@/types/rotes";
 
 
-const sampleTrips: Trip[] = [
-    {
-      id: 1,
-      status: "ACTIVE",
-      startDate: new Date("2026-01-10"),
-      endDate: new Date("2026-01-15"),
-      cancel: false,
-      numberOfStages: 2,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2026-01-10"),
-            endDate: new Date("2026-01-11"),
-          },
-          coordinates: {
-            latitude: 50.0647,
-            longitude: 19.945,
-          },
-          numberOfPeople: 5,
+export const sampleTrips: Trip[] = [
+  {
+    id: 1,
+    status: "ACTIVE",
+    startDate: new Date("2026-01-10"),
+    endDate: new Date("2026-01-15"),
+    cancel: false,
+    numberOfStages: 2,
+    stages: [
+      {
+        id: 1,
+        dateRange: {
+          startDate: new Date("2026-01-10"),
+          endDate: new Date("2026-01-11"),
         },
-        {
-          id: 2,
-          dateRange: {
-            startDate: new Date("2026-01-12"),
-            endDate: new Date("2026-01-15"),
-          },
-          coordinates: {
-            latitude: 50.0677,
-            longitude: 19.942,
-          },
-          numberOfPeople: 5,
+        coordinates: {
+          latitude: 50.0647,
+          longitude: 19.945,
         },
-      ],
-    },
-    {
-      id: 2,
-      status: "CANCELLED",
-      startDate: new Date("2026-02-01"),
-      endDate: new Date("2026-02-05"),
-      cancel: true,
-      numberOfStages: 1,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2026-02-01"),
-            endDate: new Date("2026-02-05"),
-          },
-          coordinates: {
-            latitude: 51.1079,
-            longitude: 17.0385,
-          },
-          numberOfPeople: 3,
+        numberOfPeople: 5,
+      },
+      {
+        id: 2,
+        dateRange: {
+          startDate: new Date("2026-01-12"),
+          endDate: new Date("2026-01-15"),
         },
-      ],
-    },
-    {
-      id: 3,
-      status: "FINISHED",
-      startDate: new Date("2025-12-20"),
-      endDate: new Date("2025-12-25"),
-      cancel: false,
-      numberOfStages: 3,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2025-12-20"),
-            endDate: new Date("2025-12-21"),
-          },
-          coordinates: {
-            latitude: 52.2297,
-            longitude: 21.0122,
-          },
-          numberOfPeople: 2,
+        coordinates: {
+          latitude: 50.0677,
+          longitude: 19.942,
         },
-        {
-          id: 2,
-          dateRange: {
-            startDate: new Date("2025-12-22"),
-            endDate: new Date("2025-12-23"),
-          },
-          coordinates: {
-            latitude: 52.237,
-            longitude: 21.0175,
-          },
-          numberOfPeople: 2,
+        numberOfPeople: 5,
+      },
+    ],
+    dataUpdate: new Date("2026-01-05"),
+  },
+  {
+    id: 2,
+    status: "CANCELLED",
+    startDate: new Date("2026-02-01"),
+    endDate: new Date("2026-02-05"),
+    cancel: true,
+    numberOfStages: 1,
+    stages: [
+      {
+        id: 1,
+        dateRange: {
+          startDate: new Date("2026-02-01"),
+          endDate: new Date("2026-02-05"),
         },
-        {
-          id: 3,
-          dateRange: {
-            startDate: new Date("2025-12-24"),
-            endDate: new Date("2025-12-25"),
-          },
-          coordinates: {
-            latitude: 52.23,
-            longitude: 21.01,
-          },
-          numberOfPeople: 2,
+        coordinates: {
+          latitude: 51.1079,
+          longitude: 17.0385,
         },
-      ],
-    },
-    {
-      id: 4,
-      status: "NOT_STARTED",
-      startDate: new Date("2026-03-01"),
-      endDate: new Date("2026-03-05"),
-      cancel: false,
-      numberOfStages: 1,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2026-03-01"),
-            endDate: new Date("2026-03-05"),
-          },
-          coordinates: {
-            latitude: 53.1325,
-            longitude: 23.1688,
-          },
-          numberOfPeople: 4,
+        numberOfPeople: 3,
+      },
+    ],
+    dataUpdate: new Date("2026-01-20"),
+  },
+  {
+    id: 3,
+    status: "FINISHED",
+    startDate: new Date("2025-12-20"),
+    endDate: new Date("2025-12-25"),
+    cancel: false,
+    numberOfStages: 3,
+    stages: [
+      {
+        id: 1,
+        dateRange: {
+          startDate: new Date("2025-12-20"),
+          endDate: new Date("2025-12-21"),
         },
-      ],
-    },
-    {
-      id: 4,
-      status: "NOT_STARTED",
-      startDate: new Date("2026-03-01"),
-      endDate: new Date("2026-03-05"),
-      cancel: false,
-      numberOfStages: 1,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2026-03-01"),
-            endDate: new Date("2026-03-05"),
-          },
-          coordinates: {
-            latitude: 53.1325,
-            longitude: 23.1688,
-          },
-          numberOfPeople: 4,
+        coordinates: {
+          latitude: 52.2297,
+          longitude: 21.0122,
         },
-      ],
-    },
-    {
-      id: 4,
-      status: "NOT_STARTED",
-      startDate: new Date("2026-03-01"),
-      endDate: new Date("2026-03-05"),
-      cancel: false,
-      numberOfStages: 1,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2026-03-01"),
-            endDate: new Date("2026-03-05"),
-          },
-          coordinates: {
-            latitude: 53.1325,
-            longitude: 23.1688,
-          },
-          numberOfPeople: 4,
+        numberOfPeople: 2,
+      },
+      {
+        id: 2,
+        dateRange: {
+          startDate: new Date("2025-12-22"),
+          endDate: new Date("2025-12-23"),
         },
-      ],
-    },
-    {
-      id: 4,
-      status: "NOT_STARTED",
-      startDate: new Date("2026-03-01"),
-      endDate: new Date("2026-03-05"),
-      cancel: false,
-      numberOfStages: 1,
-      stages: [
-        {
-          id: 1,
-          dateRange: {
-            startDate: new Date("2026-03-01"),
-            endDate: new Date("2026-03-05"),
-          },
-          coordinates: {
-            latitude: 53.1325,
-            longitude: 23.1688,
-          },
-          numberOfPeople: 4,
+        coordinates: {
+          latitude: 52.237,
+          longitude: 21.0175,
         },
-      ],
-    },
-  ];
+        numberOfPeople: 2,
+      },
+      {
+        id: 3,
+        dateRange: {
+          startDate: new Date("2025-12-24"),
+          endDate: new Date("2025-12-25"),
+        },
+        coordinates: {
+          latitude: 52.23,
+          longitude: 21.01,
+        },
+        numberOfPeople: 2,
+      },
+    ],
+    dataUpdate: new Date("2025-12-15"),
+  },
+  {
+    id: 4,
+    status: "NOT_STARTED",
+    startDate: new Date("2026-03-01"),
+    endDate: new Date("2026-03-05"),
+    cancel: false,
+    numberOfStages: 1,
+    stages: [
+      {
+        id: 1,
+        dateRange: {
+          startDate: new Date("2026-03-01"),
+          endDate: new Date("2026-03-05"),
+        },
+        coordinates: {
+          latitude: 53.1325,
+          longitude: 23.1688,
+        },
+        numberOfPeople: 4,
+      },
+    ],
+    dataUpdate: new Date("2026-02-20"),
+  },
+  {
+    id: 5,
+    status: "NOT_STARTED",
+    startDate: new Date("2026-03-10"),
+    endDate: new Date("2026-03-15"),
+    cancel: false,
+    numberOfStages: 1,
+    stages: [
+      {
+        id: 1,
+        dateRange: {
+          startDate: new Date("2026-03-10"),
+          endDate: new Date("2026-03-15"),
+        },
+        coordinates: {
+          latitude: 54.352,
+          longitude: 18.6466,
+        },
+        numberOfPeople: 6,
+      },
+    ],
+    dataUpdate: new Date("2026-02-25"),
+  },
+];
+
 
 const defalutFilter:FilterValue = {
   numberOfStages: filterSectionConfig.numberOfStages.defaultValue,

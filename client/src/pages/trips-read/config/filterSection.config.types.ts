@@ -1,5 +1,5 @@
 import type { Option } from "@/components/Select";
-import type { InformationFieldConfig, TripStatus } from "@/types/all_types";
+import type { DateFormat, InformationFieldConfig, TripStatus } from "@/types/all_types";
 
 export interface FilterSectionConfig {
   status: FilterFieldConfig<TripStatus[]> & { options: Option<TripStatus>[] };
@@ -20,9 +20,4 @@ export interface FilterFieldConfig<T> {
 
 type FilterInformationFieldConfig = Pick<InformationFieldConfig, "label">;
 type TripButtonKey = "create";
-type DateFormat =
-  | "MM/dd/yyyy"
-  | "dd/MM/yyyy"
-  | "yyyy-MM-dd"
-  | "dd MMM yyyy"
-  | "EEEE, MMMM d, yyyy";
+

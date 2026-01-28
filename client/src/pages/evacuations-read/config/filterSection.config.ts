@@ -11,6 +11,19 @@ export const filterSectionConfig: FilterSectionConfig = {
       { value: "CANCELLED", label: "Nie Atywna" },
     ],
   },
+  lastUpdateDate: {
+    label: "Data ostatniej aktualizacji",
+    defaultValue: null,
+    placeholder: "dd/mm/yyyy",
+    tooltipText: "Filtruj od tej daty",
+    validate: (value: any) => {
+      if (value !== null) {
+        if (typeof value === "string") return "error";
+      }
+      return true;
+    },
+  },
+  formatDate: "dd/MM/yyyy",
   evacuationsButtons: {
     create: {
       label: "Utwórz ewakuację",

@@ -1,10 +1,12 @@
-import type { JSX } from "react";
+import { useState, type JSX } from "react";
 import { Controller } from "react-hook-form";
 
 import { Select } from "@/components/Select";
 import { Button } from "@/components/Button";
 
+import { format, isValid, parse } from "date-fns";
 import type { FilterSectionProps } from "./FilterSection.types";
+import { Input } from "@/components/Input";
 
 // prettier-ignore
 export const FilterSection = ({infoText,control, onCreate}: FilterSectionProps): JSX.Element => {
@@ -17,6 +19,33 @@ export const FilterSection = ({infoText,control, onCreate}: FilterSectionProps):
           </div>
 
           <div className="w-4/5 flex flex-row gap-10 justify-end">
+            <Controller
+              name="lastUpdateDate"
+              control={control}
+              shouldUnregister={false}
+              rules={{
+                validate: infoText.lastUpdateDate.validate
+              }}
+              render={({ field, fieldState: { error }}) => { 
+                const [inputValue, setInputValue] = useState(field.value instanceof Date && isValid(field.value) ? format(field.value, infoText.formatDate) : "");
+                return(
+                  <Input
+                    className="w-1/7"
+                    label={infoText.lastUpdateDate.label}
+                    placeholder={infoText.lastUpdateDate.placeholder}
+                    tooltipText={infoText.lastUpdateDate.tooltipText}
+                    error={error?.message}
+                    value={inputValue}
+                    onChange={(v) => {
+                      const limited = v.replace(/[^0-9/]/g, "").slice(0, 10);
+                      setInputValue(limited);
+                      const parsed = parse(limited, infoText.formatDate, new Date());
+                      field.onChange(limited === "" ? null : isValid(parsed) ? parsed : limited);
+                    }}
+                  />
+                )
+              }}
+            />
             <Controller
               name="status"
               control={control}
