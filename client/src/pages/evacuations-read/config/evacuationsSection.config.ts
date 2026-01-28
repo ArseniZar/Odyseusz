@@ -28,6 +28,9 @@ export const evacuationsSectionConfig: EvacuationsSectionConfig = {
   area: {
     label: "Obszar",
   },
+  dateLastActivated: {
+    label: "Data ostatniej aktywacji",
+  },
   point: {
     title: "Punkty zbiórki",
     name: {

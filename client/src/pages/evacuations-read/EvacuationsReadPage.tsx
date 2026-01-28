@@ -30,7 +30,7 @@ export const mockEvacuations: Evacuation[] = [
     },
     collectionPoints: [
       {
-        id: 1,
+        id: 101,
         name: "Central Stadium",
         description: "Main evacuation assembly point",
         coordinates: {
@@ -39,7 +39,7 @@ export const mockEvacuations: Evacuation[] = [
         },
       },
       {
-        id: 2,
+        id: 102,
         name: "City Park Entrance",
         description: "Secondary collection point near the park",
         coordinates: {
@@ -50,20 +50,22 @@ export const mockEvacuations: Evacuation[] = [
     ],
     assistants: [
       {
-        id: 1,
+        id: 201,
         name: "Anna Müller",
         workingHours: "08:00 - 16:00",
         phone: "+49 170 1234567",
         email: "anna.mueller@example.com",
       },
       {
-        id: 2,
+        id: 202,
         name: "Max Schmidt",
         workingHours: "16:00 - 00:00",
         phone: "+49 170 7654321",
         email: "max.schmidt@example.com",
       },
     ],
+    dataUpdate: new Date('2026-01-20'),
+    dataLastActivated: new Date('2026-01-21'),
   },
   {
     id: 2,
@@ -80,7 +82,7 @@ export const mockEvacuations: Evacuation[] = [
     },
     collectionPoints: [
       {
-        id: 3,
+        id: 103,
         name: "Community Hall North",
         description: "Indoor assembly point",
         coordinates: {
@@ -91,13 +93,15 @@ export const mockEvacuations: Evacuation[] = [
     ],
     assistants: [
       {
-        id: 3,
+        id: 203,
         name: "Laura Fischer",
         workingHours: "07:00 - 15:00",
         phone: "+49 151 9876543",
         email: "laura.fischer@example.com",
       },
     ],
+    dataUpdate: new Date('2026-01-18'),
+    dataLastActivated: new Date('2026-01-19'),
   },
   {
     id: 3,
@@ -114,7 +118,7 @@ export const mockEvacuations: Evacuation[] = [
     },
     collectionPoints: [
       {
-        id: 4,
+        id: 104,
         name: "Market Square",
         description: "Central town square",
         coordinates: {
@@ -124,6 +128,8 @@ export const mockEvacuations: Evacuation[] = [
       },
     ],
     assistants: [],
+    dataUpdate: new Date('2026-01-17'),
+    dataLastActivated: null,
   },
   {
     id: 4,
@@ -140,7 +146,7 @@ export const mockEvacuations: Evacuation[] = [
     },
     collectionPoints: [
       {
-        id: 5,
+        id: 105,
         name: "Terminal Parking Area",
         description: "Outdoor parking area used as collection point",
         coordinates: {
@@ -149,7 +155,7 @@ export const mockEvacuations: Evacuation[] = [
         },
       },
       {
-        id: 6,
+        id: 106,
         name: "Cargo Terminal Gate",
         description: "Secondary point near cargo terminal",
         coordinates: {
@@ -160,15 +166,18 @@ export const mockEvacuations: Evacuation[] = [
     ],
     assistants: [
       {
-        id: 4,
+        id: 204,
         name: "James Brown",
         workingHours: "09:00 - 18:00",
         phone: "+44 7700 900123",
         email: "james.brown@example.com",
       },
     ],
+    dataUpdate: new Date('2026-01-22'),
+    dataLastActivated: new Date('2026-01-23'),
   },
 ];
+
 
 
 const defalutFilter:FilterValue = {

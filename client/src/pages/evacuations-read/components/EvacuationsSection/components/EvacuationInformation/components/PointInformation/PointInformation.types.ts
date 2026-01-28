@@ -1,12 +1,9 @@
+import type { Evacuation } from "@/types/all_types";
 import type { EvacuationsSectionConfig } from "../../../../../../config/evacuationsSection.config.types";
 
-export interface PointInformationProps {
+type EvacuationInfo = Pick<Evacuation["collectionPoints"][number], 'name' | 'description' | 'coordinates'>;
+
+export interface PointInformationProps extends EvacuationInfo {
   pointNumber: number;
   infoText: EvacuationsSectionConfig["point"];
-  name: string;
-  description: string;
-  coordinates: {
-        latitude: number;
-        longitude: number;
-  };
 }
