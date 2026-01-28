@@ -1,0 +1,1 @@
+export { getFlagUrl } from "./getFlagUrl";
