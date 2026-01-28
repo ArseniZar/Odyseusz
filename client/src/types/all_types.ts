@@ -106,3 +106,10 @@ export interface DataRange {
   startDate: Date;
   endDate: Date;
 }
+
+export type DateFormat =
+  | "MM/dd/yyyy"
+  | "dd/MM/yyyy"
+  | "yyyy-MM-dd"
+  | "dd MMM yyyy"
+  | "EEEE, MMMM d, yyyy";

@@ -6,7 +6,7 @@ import { pageConfig } from "./config/page.config";
 import { routesConfig } from "@/types/rotes";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import type { FilterValue } from "./EvacuationsReadPage.types";
+import type { FilterValues } from "./EvacuationsReadPage.types";
 import { filterSectionConfig } from "./config/filterSection.config";
 import { evacuationsSectionConfig } from "./config/evacuationsSection.config";
 import { FilterSection } from "./components/FilterSection/FilterSection";
@@ -180,12 +180,13 @@ export const mockEvacuations: Evacuation[] = [
 
 
 
-const defalutFilter:FilterValue = {
+const defalutFilter:FilterValues = {
     status: filterSectionConfig.status.defaultValue,
+    lastUpdateDate: filterSectionConfig.lastUpdateDate.defaultValue,
 };
   
 export const EvacuationsReadPage = (): JSX.Element => {
-  const { control, watch } = useForm<FilterValue>({
+  const { control, watch } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter
   });
