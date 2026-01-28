@@ -40,7 +40,7 @@ export const stagesSectionConfig: StagesSectionConfig = {
 
     dateRange: {
       label: "Zakres dat",
-      defaultValue: { startDate: null, endDate: null },
+      defaultValue: null,
       tooltipText:
         "Proszę wybrać daty rozpoczęcia i zakończenia etapu podróży.",
       validate: (value: any) => {

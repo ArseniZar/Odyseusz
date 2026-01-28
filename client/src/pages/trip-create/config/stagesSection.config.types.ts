@@ -1,4 +1,4 @@
-import type { Coordinates, FormFieldConfig } from "@/types/all_types";
+import type { Coordinates, DataRange, FormFieldConfig } from "@/types/all_types";
 
 export interface StagesSectionConfig {
   title: string;
@@ -10,7 +10,4 @@ export interface StagesSectionConfig {
   };
 }
 
-export interface DataRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
+
