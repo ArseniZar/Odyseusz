@@ -77,18 +77,12 @@ export const EvacuationCreatePage = (): JSX.Element => {
     },
   });
 
-  const {
-    fields: fieldsPoint,
-    append: appendPoint,
-    remove: removePoint,
-  } = useFieldArray({
+  const {fields: fieldsPoint,append: appendPoint,remove: removePoint} = useFieldArray({
     control,
     name: "colectionPointsForm.points",
   });
 
-  const {
-    fields: fieldsAssistant,
-  } = useFieldArray({
+  const {fields: fieldsAssistant} = useFieldArray({
     control,
     name: "assistantsForm.assistants",
   });
@@ -119,10 +113,7 @@ export const EvacuationCreatePage = (): JSX.Element => {
               onSubmit={onSubmit}
             />
             <EvacuationSection
-              infoText={Object.assign(
-                evacuationSectionConfig,
-                informationSectionConfig,
-              )}
+              infoText={{evacuationSectionConfig:evacuationSectionConfig,informationSectionConfig:informationSectionConfig}}
               control={control}
               fieldsPoints={fieldsPoint}
               fieldsAssistans={fieldsAssistant}

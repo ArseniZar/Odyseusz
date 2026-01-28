@@ -1,9 +1,10 @@
+import type { EvacuationFormValues } from "@/pages/evacuation-create/EvacuationCreatePage.types";
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
 export interface  GeneralInformationProps {
-  name: string | null;
-  description: string | null;
-  reason: string | null;
-  radius: number | null;
+  name: EvacuationFormValues["generalInfoForm"]["name"];
+  description: EvacuationFormValues["generalInfoForm"]["description"];
+  reason: EvacuationFormValues["generalInfoForm"]["reason"];
+  radius: EvacuationFormValues["areaForm"]["radius"];
   infoText: InformationSectionConfig;
 }

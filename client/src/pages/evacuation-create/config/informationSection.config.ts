@@ -29,19 +29,15 @@ export const informationSectionConfig: InformationSectionConfig = {
     title: "Asystent ewakuacji",
     name: {
       label: "Imię i nazwisko",
-      tooltipText: "Imię i nazwisko asystenta ewakuacji",
     },
     workingHours: {
       label: "Godziny pracy",
-      tooltipText: "Godziny pracy asystenta ewakuacji",
     },
     phone: {
       label: "Numer telefonu",
-      tooltipText: "Numer telefonu asystenta ewakuacji",
     },
     email: {
       label: "Adres email",
-      tooltipText: "Adres email asystenta ewakuacji",
     },
   },
   formButtons: {

@@ -5,7 +5,10 @@ import type { Control, FieldArrayWithId } from "react-hook-form";
 
 export interface AssistantsFormProps {
     control: Control<EvacuationFormValues>;
-    infoText: EvacuationSectionConfig["assistantsForm"] & InformationSectionConfig["assistants"];
+    infoText: {
+      evacuationSectionConfig:EvacuationSectionConfig["assistantsForm"];
+      informationSectionConfig:InformationSectionConfig["assistant"];
+    };
     isActive: boolean;
     fields:FieldArrayWithId<EvacuationFormValues, "assistantsForm.assistants">[]
 }

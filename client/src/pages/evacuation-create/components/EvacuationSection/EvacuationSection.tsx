@@ -13,20 +13,20 @@ export const EvacuationSection = ({infoText, control,fieldsPoints, fieldsAssista
 );
 
   const sections = [
-    { id: EvacuationStep.GeneralInfo, title: infoText.generalInfoForm.title },
-    { id: EvacuationStep.Area,        title: infoText.areaForm.title },
-    { id: EvacuationStep.CollectionPoints, title: infoText.collectionPointsForm.title },
-    { id: EvacuationStep.Assistants,   title: infoText.assistantsForm.title },
+    { id: EvacuationStep.GeneralInfo, title: infoText.evacuationSectionConfig.generalInfoForm.title },
+    { id: EvacuationStep.Area,        title: infoText.evacuationSectionConfig.areaForm.title },
+    { id: EvacuationStep.CollectionPoints, title: infoText.evacuationSectionConfig.collectionPointsForm.title },
+    { id: EvacuationStep.Assistants,   title: infoText.evacuationSectionConfig.assistantsForm.title },
   ];
 
   return (
     <section className="h-full w-1/2 flex flex-col">
       <div className="h-full flex flex-col gap-4">
         <SectionHeader sections={sections} isActive={activeStep} onClick={setActiveStep}/>
-        <GeneralInfoForm control={control} infoText={infoText.generalInfoForm} isActive={EvacuationStep.GeneralInfo === activeStep} />
-        <AreaForm control={control} infoText={infoText.areaForm} isActive={EvacuationStep.Area === activeStep} />
-        <CollectionPointsForm control={control} infoText={infoText.collectionPointsForm} isActive={EvacuationStep.CollectionPoints === activeStep} fields={fieldsPoints} onAddPoint={onAddPoint} onRemovePoint={onRemovePoint}/>
-        <AssistantsForm control={control} infoText={Object.assign(infoText.assistantsForm, infoText.assistant)} isActive={EvacuationStep.Assistants === activeStep} fields={fieldsAssistans}/>
+        <GeneralInfoForm control={control} infoText={infoText.evacuationSectionConfig.generalInfoForm} isActive={EvacuationStep.GeneralInfo === activeStep} />
+        <AreaForm control={control} infoText={infoText.evacuationSectionConfig.areaForm} isActive={EvacuationStep.Area === activeStep} />
+        <CollectionPointsForm control={control} infoText={infoText.evacuationSectionConfig.collectionPointsForm} isActive={EvacuationStep.CollectionPoints === activeStep} fields={fieldsPoints} onAddPoint={onAddPoint} onRemovePoint={onRemovePoint}/>
+        <AssistantsForm control={control} infoText={{evacuationSectionConfig:infoText.evacuationSectionConfig.assistantsForm, informationSectionConfig:infoText.informationSectionConfig.assistant}} isActive={EvacuationStep.Assistants === activeStep} fields={fieldsAssistans}/>
       </div>
     </section>
   );

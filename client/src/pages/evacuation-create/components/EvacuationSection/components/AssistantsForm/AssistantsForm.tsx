@@ -10,7 +10,7 @@ export const AssistantsForm = ({control,fields,infoText,isActive}:AssistantsForm
                       key={field.id}
                       index={index}
                       control={control}
-                      infoText={{ ...infoText.assistant, ...((({ assistant, ...rest }) => rest)(infoText)) }}
+                      infoText={{evacuationSectionConfig:infoText.evacuationSectionConfig.assistant, informationSectionConfig:infoText.informationSectionConfig}}
                     />
                   ))}
         </div>
