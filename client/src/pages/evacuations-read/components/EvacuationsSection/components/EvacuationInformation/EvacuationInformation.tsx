@@ -6,7 +6,7 @@ import { PointInformation } from "./components/PointInformation/PointInformation
 import { AssistantInformation } from "./components/AssistantInformation/AssistantInformation";
 import { GeneralInformation } from "./components/GeneralInformation/GeneralInformation";
 
-export const EvacuationInformation =({infoText, status, name, area,assistants,collectionPoints,description,reason,onActive, onCancel, }: EvacuationInformationProps):JSX.Element => {
+export const EvacuationInformation =({infoText, status, name, area,assistants,collectionPoints,description,reason, dataLastActivated,onActive, onCancel}: EvacuationInformationProps):JSX.Element => {
     const [isOpen, setIsOpen] = useState(false);
     return(
         <div className="flex flex-none flex-col  gap-5 border border-black/10 shadow-xl rounded-2xl">
@@ -30,7 +30,8 @@ export const EvacuationInformation =({infoText, status, name, area,assistants,co
                     infoText={infoText}
                     reason={reason}
                     description={description}
-                    radius={area.radius}
+                    area={area}
+                    dataLastActivated={dataLastActivated}
                 />
                 <hr />
                 {collectionPoints.map((point, index) => (   

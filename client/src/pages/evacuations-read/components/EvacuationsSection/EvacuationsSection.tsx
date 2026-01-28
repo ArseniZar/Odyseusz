@@ -17,6 +17,7 @@ export const EvacuationsSection = ({ infoText, evacuations, onActive, onCancel}:
             collectionPoints={evacuation.collectionPoints}
             description={evacuation.description}
             reason={evacuation.reason}
+            dataLastActivated={evacuation.dataLastActivated}
             onActive={() => onActive(evacuation.id)}
             onCancel={() => onCancel(evacuation.id)}
           />

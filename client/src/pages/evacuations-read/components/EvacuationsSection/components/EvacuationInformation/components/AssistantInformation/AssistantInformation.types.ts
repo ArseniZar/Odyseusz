@@ -1,10 +1,9 @@
+import type { Evacuation } from "@/types/all_types";
 import type { EvacuationsSectionConfig } from "../../../../../../config/evacuationsSection.config.types";
 
-export interface AssistantInformationProps {
+type EvacuationInfo = Pick<Evacuation["assistants"][number], 'name' | 'workingHours' | 'phone' | 'email'>;
+
+export interface AssistantInformationProps extends EvacuationInfo {
   assistantNumber: number;
   infoText: EvacuationsSectionConfig["assistant"];
-  name: string;
-  workingHours: string;
-  phone: string;
-  email: string;
 }

@@ -11,6 +11,7 @@ export interface EvacuationsSectionConfig {
   reason: EvacuationInformationFieldConfig;
   description: EvacuationInformationFieldConfig;
   area: EvacuationInformationFieldConfig;
+  dateLastActivated: EvacuationInformationFieldConfig;
   point: {
     title: string;
     name: EvacuationInformationFieldConfig;
