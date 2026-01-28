@@ -1,5 +1,3 @@
-import React from "react";
-
 import { TripDurationInformation } from "./components/TripDurationInformation/TripDurationInformation";
 import { StageInformation } from "./components/StageInformation/StageInformation";
 
@@ -7,13 +5,13 @@ import { Title } from "@/components/Title";
 import { FormButtons } from "@/components/FormButtons";
 
 import type { JSX } from "react";
-import type { StagesInformationProps } from "./InformationSection.types";
+import type { InformationSectionProps } from "./InformationSection.types";
 
 
 
 
 // prettier-ignore
-export const InformationSection = ({infoText,stages, onCancel, onSubmit}: StagesInformationProps): JSX.Element => {
+export const InformationSection = ({infoText,stages, onCancel, onSubmit}: InformationSectionProps): JSX.Element => {
   return (
     <section className="h-full w-1/4 flex flex-col">
       <div className="h-full flex flex-col gap-6">
@@ -29,7 +27,7 @@ export const InformationSection = ({infoText,stages, onCancel, onSubmit}: Stages
                 <StageInformation
                   key={index}
                   stageNumber={index + 1}
-                  infoText={infoText}
+                  infoText={infoText.stage}
                   dataRange={stage.dateRange}
                   numberOfPeople={stage.numberOfPeople}
                 />

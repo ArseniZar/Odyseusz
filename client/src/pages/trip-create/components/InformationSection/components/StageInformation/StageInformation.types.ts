@@ -2,7 +2,7 @@ import type { InformationSectionConfig } from "../../../../config/informationSec
 
 export interface StageInformationProps {
   stageNumber: number;
-  infoText: InformationSectionConfig;
+  infoText: InformationSectionConfig["stage"];
   dataRange: { startDate: Date | null; endDate: Date | null };
   numberOfPeople: number | null;
 }
