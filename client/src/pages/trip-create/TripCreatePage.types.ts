@@ -11,7 +11,7 @@ export interface StageFormValues {
   };
 }
 
-export interface StagesValue{
+export interface TripFormValue{
   stages: StageFormValues[];
 }
 

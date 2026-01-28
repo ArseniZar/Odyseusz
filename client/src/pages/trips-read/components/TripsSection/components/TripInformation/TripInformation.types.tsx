@@ -1,9 +1,9 @@
 import type { Trip } from "@/types/all_types";
 import type { TripsSectionConfig } from "../../../../config/tripsSection.config.types";
 
-type TripForInfo = Pick<Trip, 'status' | 'numberOfStages' | 'startDate' | 'endDate'>;
+type TripInfo = Pick<Trip, 'status' | 'numberOfStages' | 'startDate' | 'endDate'>;
 
-export interface TripInformationProps extends TripForInfo {
+export interface TripInformationProps extends TripInfo {
     infoText: TripsSectionConfig;
     onDelete?: () => void;
     onEdit?: () => void;

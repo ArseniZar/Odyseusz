@@ -11,7 +11,7 @@ import { pageConfig } from "./config/page.config";
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
 
-import type { StagesValue, StageFormValues, TripCreatePageProps } from "./TripCreatePage.types";
+import type { TripFormValue, StageFormValues, TripCreatePageProps } from "./TripCreatePage.types";
 
 const defaultStage:StageFormValues = {
   numberOfPeople: stagesSectionConfig.stage.numberOfPeople.defaultValue,
@@ -26,7 +26,7 @@ const defaultStage:StageFormValues = {
 };
 
 export const TripCreatePage = ({}: TripCreatePageProps): JSX.Element => {
-  const { control, handleSubmit, watch } = useForm<StagesValue>({
+  const { control, handleSubmit, watch } = useForm<TripFormValue>({
     mode: "all",
     defaultValues: {
       stages: [defaultStage],

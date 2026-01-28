@@ -1,2 +1,2 @@
 export { TripCreatePage } from "./TripCreatePage";
-export type { StageFormValues,StagesValue, TripCreatePageProps  } from "./TripCreatePage.types";
+export type { StageFormValues,TripFormValue as StagesValue, TripCreatePageProps  } from "./TripCreatePage.types";
