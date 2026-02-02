@@ -18,6 +18,7 @@ export interface Stage {
   coordinates: Coordinates
   numberOfPeople: number;
 }
+
 // evacuation related types
 export interface Evacuation {
   id: number;
@@ -53,10 +54,10 @@ export interface Assistant {
 export type EvacuationStatus = "ACTIVE" | "CANCELLED";
 
 // profile-country related types
-
 export interface ProfileCountry {
-  id: string;
+  id: number;
   name: string;
+  isEditable: boolean;
   dangerLevel: DangerLevel;
   description: string;
   countryCode: string;
@@ -65,7 +66,7 @@ export interface ProfileCountry {
 }
 
 export interface Consulate {
-  id: string;
+  id: number;
   address: string;
   phone: string;
   email: string;
@@ -74,6 +75,13 @@ export interface Consulate {
 }
 
 export type DangerLevel = "LOW" | "MEDIUM" | "HIGH" | "EXTREME";
+
+
+
+
+
+
+
 //  information about form fields and buttons
 export interface InformationFieldConfig {
   label: string;
@@ -96,6 +104,13 @@ export interface FormFieldConfig<T> {
   validate?: (value: any) => true | any;
 }
 
+export interface FilterFieldConfig<T> {
+  label: string;
+  defaultValue: T | null;
+  placeholder?: string;
+  tooltipText?: string;
+  validate?: (value: any) => true | any;
+}
 
 export interface Coordinates {
   latitude: number;

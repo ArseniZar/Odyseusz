@@ -5,6 +5,7 @@ import { TripsReadPage } from "@/pages/trips-read";
 import { EvacuationCreatePage } from "@/pages/evacuation-create";
 import { EvacuationsReadPage } from "@/pages/evacuations-read";
 import { ProfileCountryEditPage } from "@/pages/profile-country-edit";
+import { ProfileCountryReadPage } from "@/pages/profile-country-read";
 
 // import { RegisterPage } from "../pages/register/ui/RegisterPage";
 // import AllTripsPage from "../pages/all-trips/ui/AllTripPage";
@@ -25,6 +26,7 @@ export default function App() {
           <Route path={routesConfig.EVACUATION_CREATE.path} element={<EvacuationCreatePage/>}/>
           <Route path={routesConfig.EVACUATIONS_READ.path} element={<EvacuationsReadPage/>}/>
           <Route path={routesConfig.PROFILE_COUNTRY_EDIT.path} element={<ProfileCountryEditPage/>}/>
+          <Route path={routesConfig.PROFILE_COUNTRY_READ.path} element={<ProfileCountryReadPage/>}/>
         </Routes>
       </BrowserRouter>
     </>
