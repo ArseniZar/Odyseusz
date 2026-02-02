@@ -6,7 +6,7 @@ import { PointInformation } from "./components/PointInformation/PointInformation
 import { AssistantInformation } from "./components/AssistantInformation/AssistantInformation";
 import { GeneralInformation } from "./components/GeneralInformation/GeneralInformation";
 
-export const EvacuationInformation =({infoText, status, name, area,assistants,collectionPoints,description,reason, dataLastActivated,onActive, onCancel}: EvacuationInformationProps):JSX.Element => {
+export const EvacuationInformation =({infoText, status, name, area,assistants,collectionPoints,description,reason, dataLastActivated,onActive, onCancel, onDelete, onEdit}: EvacuationInformationProps):JSX.Element => {
     const [isOpen, setIsOpen] = useState(false);
     return(
         <div className="flex flex-none flex-col  gap-5 border border-black/10 shadow-xl rounded-2xl">
@@ -23,6 +23,8 @@ export const EvacuationInformation =({infoText, status, name, area,assistants,co
                 <div className="flex flex-row gap-3 justify-center">
                     <Button label={infoText.evacuationButtons.active.label}  onClick={onActive} classButton={`bg-black/90 ${infoText.showButtons.active.some((item) => status === item)  ? "block" : "hidden"}`} classText="text-white"/>
                     <Button label={infoText.evacuationButtons.cancel.label}  onClick={onCancel} classButton={`bg-black/90 ${infoText.showButtons.cancel.some((item) => status === item) ? "block" : "hidden"}`} classText="text-white"/>
+                    <Button label={infoText.evacuationButtons.edit.label}  onClick={onEdit} classButton={`bg-black/90 ${infoText.showButtons.edit.some((item) => status === item) ? "block" : "hidden"}`} classText="text-white"/>
+                    <Button label={infoText.evacuationButtons.delete.label}  onClick={onDelete} classButton={`bg-black/90 ${infoText.showButtons.delete.some((item) => status === item) ? "block" : "hidden"}`} classText="text-white"/>
                 </div>
             </div>
             <div className={`${isOpen ? "block" : "hidden"} px-5 pb-5 flex-1 flex flex-col gap-4`}>
