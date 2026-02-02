@@ -209,15 +209,18 @@ export const EvacuationsReadPage = (): JSX.Element => {
                     onCreate={() => navigate(routesConfig.EVACUATION_CREATE.path)}
                 />
                 <EvacuationsSection
-                  infoText={evacuationsSectionConfig}
-                  evacuations={mockEvacuations}
-                  onActive={function (tripId: number): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                  onCancel={function (tripId: number): void {
-                    throw new Error("Function not implemented."); 
-                  }}
-                />
+              infoText={evacuationsSectionConfig}
+              evacuations={mockEvacuations}
+              onActive={function (evacuationId: number): void {
+                throw new Error("Function not implemented.");
+              } }
+              onCancel={function (evacuationId: number): void {
+                throw new Error("Function not implemented.");
+              } } onDelete={function (evacuationId: number): void {
+                throw new Error("Function not implemented.");
+              } } onEdit={function (evacuationId: number): void {
+                throw new Error("Function not implemented.");
+              } }              />
               </div>
             </div>
           </main>

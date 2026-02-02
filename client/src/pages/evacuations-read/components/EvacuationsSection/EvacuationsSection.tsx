@@ -2,7 +2,7 @@ import { EvacuationInformation } from "./components/EvacuationInformation/Evacua
 import type { JSX } from "react";
 import type { EvacuationsSectionProps } from "./EvacuationsSection.types";
 
-export const EvacuationsSection = ({ infoText, evacuations, onActive, onCancel}: EvacuationsSectionProps): JSX.Element => {
+export const EvacuationsSection = ({ infoText, evacuations, onActive, onCancel, onDelete, onEdit}: EvacuationsSectionProps): JSX.Element => {
   return (
     <section className="w-full flex-1 flex flex-col overflow-hidden">
       <div className="h-full px-10 pb-10 flex flex-col gap-6 overflow-y-auto">
@@ -20,6 +20,8 @@ export const EvacuationsSection = ({ infoText, evacuations, onActive, onCancel}:
             dataLastActivated={evacuation.dataLastActivated}
             onActive={() => onActive(evacuation.id)}
             onCancel={() => onCancel(evacuation.id)}
+            onDelete={() => onDelete(evacuation.id)}
+            onEdit={() => onEdit(evacuation.id)}
           />
         ))}
       </div>

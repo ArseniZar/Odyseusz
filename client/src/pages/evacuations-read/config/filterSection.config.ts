@@ -12,7 +12,7 @@ export const filterSectionConfig: FilterSectionConfig = {
     ],
   },
   lastUpdateDate: {
-    label: "Data ostatniej aktualizacji",
+    label: "Data ost. aktywacji",
     defaultValue: null,
     placeholder: "dd/mm/yyyy",
     tooltipText: "Filtruj od tej daty",
@@ -29,4 +29,4 @@ export const filterSectionConfig: FilterSectionConfig = {
       label: "Utwórz ewakuację",
     },
   },
-};
+}

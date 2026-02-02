@@ -71,10 +71,18 @@ export const evacuationsSectionConfig: EvacuationsSectionConfig = {
     cancel: {
       label: "Anuluj",
     },
+    delete: {
+      label: "Usuń",
+    },
+    edit: {
+      label: "Edytuj",
+    },
   },
   showButtons: {
     cancel: ["ACTIVE"],
     details: ["ACTIVE", "CANCELLED"],
     active: ["CANCELLED"],
+    delete: ["CANCELLED"],
+    edit: ["CANCELLED"]
   },
 };

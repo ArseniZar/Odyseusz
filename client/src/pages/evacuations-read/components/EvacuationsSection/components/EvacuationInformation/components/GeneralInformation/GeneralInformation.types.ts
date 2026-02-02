@@ -4,7 +4,6 @@ import type { EvacuationsSectionConfig } from "../../../../../../config/evacuati
 type EvacuationInfo = Pick<Evacuation,   'reason' | 'description' | 'area' | "dataLastActivated">;
 
 export interface GeneralInformationProps extends EvacuationInfo {
-    description: string;
     infoText: EvacuationsSectionConfig;
     
 }      

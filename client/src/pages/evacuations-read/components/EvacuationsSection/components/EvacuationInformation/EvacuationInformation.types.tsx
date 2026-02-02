@@ -7,4 +7,6 @@ export interface EvacuationInformationProps extends EvacuationInfo {
     infoText: EvacuationsSectionConfig;
     onActive: () => void;
     onCancel: () => void;
+    onDelete: () => void;
+    onEdit: () => void;
 }

@@ -21,14 +21,14 @@ export interface EvacuationsSectionConfig {
   };
   assistant: {
     title: string;
-    name: InformationFieldConfig;
-    workingHours: InformationFieldConfig;
-    phone: InformationFieldConfig;
-    email: InformationFieldConfig;
+    name: EvacuationInformationFieldConfig;
+    workingHours: EvacuationInformationFieldConfig;
+    phone: EvacuationInformationFieldConfig;
+    email: EvacuationInformationFieldConfig;
   };
   evacuationButtons: Record<EvacuationButtonKey,EvacuationInformationFieldConfig>;
   showButtons: Record<EvacuationButtonKey, EvacuationStatus[]>;
 }
 
 type EvacuationInformationFieldConfig = Pick<InformationFieldConfig, "label">;
-type EvacuationButtonKey = "active" | "cancel" | "details";
+type EvacuationButtonKey = "active" | "cancel" | "details" | "delete" | "edit";
