@@ -28,12 +28,15 @@ async def get_evacuation_with_details(
   db: AsyncSession, 
   evacuation_id: int
 ) -> Evacuation | None:
-  """Get evacuation with areas and assembly points loaded."""
+  """Get evacuation with areas, assembly points, and assistants loaded."""
+  from app.models.evacuation import EvacuationArea, AssemblyPoint
+  
   result = await db.execute(
     select(Evacuation)
     .options(
-      selectinload(Evacuation.areas),
-      selectinload(Evacuation.assembly_points)
+      selectinload(Evacuation.areas).selectinload(EvacuationArea.location),
+      selectinload(Evacuation.assembly_points).selectinload(AssemblyPoint.location),
+      selectinload(Evacuation.assistants)
     )
     .where(Evacuation.id == evacuation_id)
   )
@@ -46,8 +49,14 @@ async def get_all_evacuations(
   limit: int = 100,
   active_only: bool = False
 ) -> list[Evacuation]:
-  """Get all evacuations with pagination."""
-  query = select(Evacuation)
+  """Get all evacuations with areas, assembly points, and assistants loaded."""
+  from app.models.evacuation import EvacuationArea, AssemblyPoint
+  
+  query = select(Evacuation).options(
+    selectinload(Evacuation.areas).selectinload(EvacuationArea.location),
+    selectinload(Evacuation.assembly_points).selectinload(AssemblyPoint.location),
+    selectinload(Evacuation.assistants)
+  )
   
   if active_only:
     query = query.where(Evacuation.active == True)
@@ -62,9 +71,16 @@ async def get_evacuations_by_coordinator(
   skip: int = 0,
   limit: int = 100
 ) -> list[Evacuation]:
-  """Get evacuations by coordinator."""
+  """Get evacuations by coordinator with areas, assembly points, and assistants loaded."""
+  from app.models.evacuation import EvacuationArea, AssemblyPoint
+  
   result = await db.execute(
     select(Evacuation)
+    .options(
+      selectinload(Evacuation.areas).selectinload(EvacuationArea.location),
+      selectinload(Evacuation.assembly_points).selectinload(AssemblyPoint.location),
+      selectinload(Evacuation.assistants)
+    )
     .where(Evacuation.coordinator_id == coordinator_id)
     .offset(skip)
     .limit(limit)
@@ -76,17 +92,73 @@ async def create_evacuation(
   db: AsyncSession, 
   evacuation_create: EvacuationCreate
 ) -> Evacuation:
-  """Create a new evacuation."""
+  """Create a new evacuation with areas, assembly points, and assistants."""
+  from app.models.location import Location
+  from datetime import datetime, timezone
+  
+  # Create the evacuation
   evacuation = Evacuation(
     name=evacuation_create.name,
     reason=evacuation_create.reason,
     description=evacuation_create.description,
     active=evacuation_create.active,
     coordinator_id=evacuation_create.coordinator_id,
+    last_active_at=datetime.now(timezone.utc) if evacuation_create.active else None,
   )
   db.add(evacuation)
+  await db.flush()  # Flush to get the evacuation ID
+  
+  # Create areas with locations
+  for area_data in evacuation_create.areas:
+    # Create or find location
+    location = Location(
+      latitude=area_data.latitude,
+      longitude=area_data.longitude
+    )
+    db.add(location)
+    await db.flush()  # Get location ID
+    
+    area = EvacuationArea(
+      evacuation_id=evacuation.id,
+      location_id=location.id,
+      radius=area_data.radius,
+    )
+    db.add(area)
+  
+  # Create assembly points with locations
+  for point_data in evacuation_create.assembly_points:
+    # Create or find location
+    location = Location(
+      latitude=point_data.latitude,
+      longitude=point_data.longitude
+    )
+    db.add(location)
+    await db.flush()  # Get location ID
+    
+    point = AssemblyPoint(
+      evacuation_id=evacuation.id,
+      location_id=location.id,
+      name=point_data.name,
+      description=point_data.description,
+    )
+    db.add(point)
+  
+  # Link assistants
+  if evacuation_create.assistant_ids:
+    from app.models.user import EvacuationAssistantProfile
+    
+    for assistant_id in evacuation_create.assistant_ids:
+      assistant = await db.execute(
+        select(EvacuationAssistantProfile)
+        .options(selectinload(EvacuationAssistantProfile.evacuations))
+        .where(EvacuationAssistantProfile.id == assistant_id)
+      )
+      assistant = assistant.scalar_one_or_none()
+      if assistant:
+        assistant.evacuations.append(evacuation)
+  
   await db.commit()
-  await db.refresh(evacuation)
+  await db.refresh(evacuation, ["areas", "assembly_points", "assistants"])
   return evacuation
 
 
@@ -95,17 +167,93 @@ async def update_evacuation(
   evacuation_id: int,
   evacuation_update: EvacuationUpdate
 ) -> Evacuation | None:
-  """Update evacuation."""
+  """Update evacuation with full replacement of related entities."""
+  from app.models.location import Location
+  from app.models.user import EvacuationAssistantProfile
+  from datetime import datetime, timezone
+  
   evacuation = await get_evacuation_by_id(db, evacuation_id)
   if not evacuation:
     return None
 
-  update_data = evacuation_update.model_dump(exclude_unset=True)
-  for key, value in update_data.items():
-    setattr(evacuation, key, value)
+  # Check if active status is changing from False to True
+  was_inactive = not evacuation.active
+  will_be_active = evacuation_update.active
+  
+  # Update basic fields
+  evacuation.name = evacuation_update.name
+  evacuation.reason = evacuation_update.reason
+  evacuation.description = evacuation_update.description
+  evacuation.active = evacuation_update.active
+  
+  # Update last_active_at when activating
+  if was_inactive and will_be_active:
+    evacuation.last_active_at = datetime.now(timezone.utc)
+  
+  # Delete existing areas
+  await db.execute(
+    select(EvacuationArea).where(EvacuationArea.evacuation_id == evacuation_id)
+  )
+  for area in evacuation.areas:
+    await db.delete(area)
+  await db.flush()
+  
+  # Delete existing assembly points
+  for point in evacuation.assembly_points:
+    await db.delete(point)
+  await db.flush()
+  
+  # Clear existing assistants
+  evacuation.assistants.clear()
+  await db.flush()
+  
+  # Create new areas
+  for area_data in evacuation_update.areas:
+    location = Location(
+      latitude=area_data.latitude,
+      longitude=area_data.longitude
+    )
+    db.add(location)
+    await db.flush()
+    
+    area = EvacuationArea(
+      evacuation_id=evacuation.id,
+      location_id=location.id,
+      radius=area_data.radius,
+    )
+    db.add(area)
+  
+  # Create new assembly points
+  for point_data in evacuation_update.assembly_points:
+    location = Location(
+      latitude=point_data.latitude,
+      longitude=point_data.longitude
+    )
+    db.add(location)
+    await db.flush()
+    
+    point = AssemblyPoint(
+      evacuation_id=evacuation.id,
+      location_id=location.id,
+      name=point_data.name,
+      description=point_data.description,
+    )
+    db.add(point)
+  
+  # Link new assistants
+  if evacuation_update.assistant_ids:
+    for assistant_id in evacuation_update.assistant_ids:
+      assistant = await db.execute(
+        select(EvacuationAssistantProfile)
+        .options(selectinload(EvacuationAssistantProfile.evacuations))
+        .where(EvacuationAssistantProfile.id == assistant_id)
+      )
+      assistant = assistant.scalar_one_or_none()
+      if assistant:
+        assistant.evacuations.append(evacuation)
 
   await db.commit()
-  await db.refresh(evacuation)
+  await db.refresh(evacuation, ["areas", "assembly_points", "assistants"])
   return evacuation
 
 
@@ -259,6 +407,23 @@ async def delete_assembly_point(db: AsyncSession, point_id: int) -> bool:
   await db.delete(point)
   await db.commit()
   return True
+
+
+# Get all assistants
+async def get_all_assistants(
+  db: AsyncSession,
+  skip: int = 0,
+  limit: int = 1000
+) -> list:
+  """Get all evacuation assistants."""
+  from app.models.user import EvacuationAssistantProfile
+  
+  result = await db.execute(
+    select(EvacuationAssistantProfile)
+    .offset(skip)
+    .limit(limit)
+  )
+  return list(result.scalars().all())
 
 
 # Association operations

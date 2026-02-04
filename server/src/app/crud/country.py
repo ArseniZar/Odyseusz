@@ -51,11 +51,38 @@ async def get_all_country_profiles(
   skip: int = 0, 
   limit: int = 100
 ) -> list[CountryProfile]:
-  """Get all country profiles with pagination."""
+  """Get all country profiles with consulates loaded."""
   result = await db.execute(
-    select(CountryProfile).offset(skip).limit(limit)
+    select(CountryProfile)
+    .options(selectinload(CountryProfile.consulates))
+    .offset(skip)
+    .limit(limit)
   )
   return list(result.scalars().all())
+
+
+async def get_editor_country_profiles(
+  db: AsyncSession,
+  editor_id: int,
+  skip: int = 0,
+  limit: int = 100
+) -> list[CountryProfile]:
+  """Get country profiles that an editor has access to."""
+  from app.models.user import EditorProfile
+  
+  result = await db.execute(
+    select(EditorProfile)
+    .options(selectinload(EditorProfile.country_profiles).selectinload(CountryProfile.consulates))
+    .where(EditorProfile.id == editor_id)
+  )
+  editor = result.scalar_one_or_none()
+  
+  if not editor:
+    return []
+  
+  # Return the editor's country profiles with pagination applied
+  countries = editor.country_profiles[skip:skip + limit]
+  return countries
 
 
 async def get_country_profiles_by_danger_level(
@@ -81,6 +108,7 @@ async def create_country_profile(
   """Create a new country profile."""
   country = CountryProfile(
     name=country_create.name,
+    country_code=country_create.country_code,
     description=country_create.description,
     danger_level=country_create.danger_level,
   )
@@ -121,6 +149,18 @@ async def delete_country_profile(db: AsyncSession, country_id: int) -> bool:
 
 
 # Consulate CRUD
+async def get_all_consulates(
+  db: AsyncSession,
+  skip: int = 0,
+  limit: int = 1000
+) -> list[Consulate]:
+  """Get all consulates."""
+  result = await db.execute(
+    select(Consulate).offset(skip).limit(limit)
+  )
+  return list(result.scalars().all())
+
+
 async def get_consulate_by_id(
   db: AsyncSession, 
   consulate_id: int
@@ -130,22 +170,6 @@ async def get_consulate_by_id(
     select(Consulate).where(Consulate.id == consulate_id)
   )
   return result.scalar_one_or_none()
-
-
-async def get_consulates_by_country(
-  db: AsyncSession,
-  country_id: int,
-  skip: int = 0,
-  limit: int = 100
-) -> list[Consulate]:
-  """Get all consulates for a country."""
-  result = await db.execute(
-    select(Consulate)
-    .where(Consulate.country_profile_id == country_id)
-    .offset(skip)
-    .limit(limit)
-  )
-  return list(result.scalars().all())
 
 
 async def create_consulate(

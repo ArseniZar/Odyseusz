@@ -6,6 +6,7 @@ from app.models.country import DangerLevel
 # Base schemas
 class CountryProfileBase(BaseModel):
   name: str = Field(..., min_length=1, max_length=255)
+  country_code: str = Field(..., min_length=2, max_length=2, pattern="^[A-Z]{2}$")
   description: str = Field(..., min_length=1)
   danger_level: DangerLevel
 
@@ -22,6 +23,27 @@ class CountryProfileCreate(CountryProfileBase):
   pass
 
 
+# Public response schema (without danger_level)
+class CountryProfilePublicResponse(BaseModel):
+  id: int
+  name: str
+  country_code: str
+  description: str
+  created_at: datetime
+  updated_at: datetime
+
+  class Config:
+    from_attributes = True
+
+
+# Public response with consulates (without danger_level)
+class CountryProfilePublicDetailResponse(CountryProfilePublicResponse):
+  consulates: list["ConsulateResponse"] = []
+
+  class Config:
+    from_attributes = True
+
+
 class ConsulateCreate(ConsulateBase):
   country_profile_id: int
 
@@ -29,6 +51,7 @@ class ConsulateCreate(ConsulateBase):
 # Update schemas
 class CountryProfileUpdate(BaseModel):
   name: str | None = Field(None, min_length=1, max_length=255)
+  country_code: str | None = Field(None, min_length=2, max_length=2, pattern="^[A-Z]{2}$")
   description: str | None = Field(None, min_length=1)
   danger_level: DangerLevel | None = None
 

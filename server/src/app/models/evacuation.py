@@ -29,7 +29,8 @@ class Evacuation(Base):
   reason: Mapped[str] = mapped_column(String(255), nullable=False)
   description: Mapped[str] = mapped_column(Text, nullable=False)
   active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
-  # todo nullable=True
+  last_active_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+  
   coordinator_id: Mapped[int] = mapped_column(Integer, ForeignKey("coordinator_profiles.id"), nullable=False, index=True)
   created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
   updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)

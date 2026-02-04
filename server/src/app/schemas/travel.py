@@ -1,9 +1,19 @@
 from datetime import date, datetime
+from enum import Enum
 from pydantic import BaseModel, Field, field_validator
 
 
+class TravelStatus(str, Enum):
+	"""Travel status enumeration (computed, not stored)."""
+	PLANNED = "planned"  # Travel is planned but not started
+	ONGOING = "ongoing"  # Travel is currently in progress
+	COMPLETED = "completed"  # Travel has been completed
+	CANCELLED = "cancelled"  # Travel has been cancelled
+
+
 # Base schemas
-class TravelStageBase(BaseModel):
+class TravelStageCreateNested(BaseModel):
+	"""Travel stage for nested creation with coordinates."""
 	latitude: float = Field(..., ge=-90, le=90, description="Latitude coordinate")
 	longitude: float = Field(..., ge=-180, le=180, description="Longitude coordinate")
 	start_date: date
@@ -18,36 +28,34 @@ class TravelStageBase(BaseModel):
 		return v
 
 
-class TravelBase(BaseModel):
-	pass
-
-
 # Create schemas
-class TravelStageCreate(TravelStageBase):
-	pass
-
-
 class TravelCreate(BaseModel):
 	"""Create travel schema - traveler_id is set automatically from current user."""
-	stages: list[TravelStageCreate] = Field(..., min_length=1, description="At least one stage is required")
+	cancelled: bool = False
+	stages: list[TravelStageCreateNested] = Field(..., min_length=1, description="At least one stage is required")
 
 
-# Update schemas
-class TravelStageUpdate(BaseModel):
-	latitude: float | None = Field(None, ge=-90, le=90)
-	longitude: float | None = Field(None, ge=-180, le=180)
-	start_date: date | None = None
-	end_date: date | None = None
-	people_count: int | None = Field(None, gt=0)
+# Update schemas (PUT - full replacement)
+class TravelUpdate(BaseModel):
+	"""Update travel schema - replaces all stages. All fields required."""
+	cancelled: bool = False
+	stages: list[TravelStageCreateNested] = Field(..., min_length=1, description="At least one stage is required")
 
 
-# Response schemas - keep location_id in response for backward compatibility
+# Response schemas
+class LocationResponse(BaseModel):
+	id: int
+	latitude: float
+	longitude: float
+	
+	class Config:
+		from_attributes = True
+
+
 class TravelStageResponse(BaseModel):
 	id: int
 	travel_id: int
-	location_id: int
-	latitude: float
-	longitude: float
+	location: LocationResponse
 	start_date: date
 	end_date: date
 	people_count: int
@@ -56,16 +64,14 @@ class TravelStageResponse(BaseModel):
 		from_attributes = True
 
 
-class TravelResponse(TravelBase):
+class TravelResponse(BaseModel):
 	id: int
 	traveler_id: int
+	cancelled: bool
+	status: TravelStatus  # Computed field
 	created_at: datetime
-
-	class Config:
-		from_attributes = True
-
-
-class TravelDetailResponse(TravelResponse):
+	updated_at: datetime
+	finished_at: date | None  # Computed from last stage's end_date
 	stages: list[TravelStageResponse] = []
 
 	class Config:

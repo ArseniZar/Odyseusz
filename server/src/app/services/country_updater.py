@@ -1,7 +1,7 @@
 import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.crud.country import get_all_country_profiles, update_country_profile
-from app.services.tugo_client import tugo_client
+from app.services.external_api_client import external_api_client
 from app.schemas.country import CountryProfileUpdate
 
 logger = logging.getLogger(__name__)
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 async def update_country_danger_levels(db: AsyncSession) -> dict:
 	"""
-	Update danger levels for all countries using TuGo API.
+	Update danger levels for all countries using external API.
 	Returns statistics about the update process.
 	"""
 	stats = {
@@ -27,75 +27,67 @@ async def update_country_danger_levels(db: AsyncSession) -> dict:
 		
 		logger.info(f"Starting danger level update for {stats['total']} countries")
 		
-		# Get list of countries from TuGo API to map names/codes
-		tugo_countries = await tugo_client.get_countries()
-		tugo_country_map = {}
+		# Get list of countries from external API
+		api_countries = await external_api_client.get_countries()
+		api_country_map = {}
 		
-		# Create a map of country names/codes from TuGo
-		for tugo_country in tugo_countries:
-			if isinstance(tugo_country, dict):
-				code = tugo_country.get("id", "").upper()
-				name = tugo_country.get("name", "").lower()
-				if code:
-					tugo_country_map[code] = tugo_country
+		# Create a map of country names/codes from external API
+		for api_country in api_countries:
+			if isinstance(api_country, dict):
+				country_id = api_country.get("id", "").upper()
+				name = api_country.get("name", "").lower()
+				if country_id:
+					api_country_map[country_id] = api_country
 				if name:
-					tugo_country_map[name] = tugo_country
+					api_country_map[name] = api_country
 		
 		# Update each country
 		for country in countries:
 			try:
-				# Try to find matching country in TuGo by name or code
+				# Try to find matching country in external API by code or name
 				country_name_lower = country.name.lower()
+				country_code_upper = country.country_code.upper()
 				
-				# Try to get country data from TuGo
-				tugo_data = None
-				country_code = None
+				api_data = None
 				
-				# First try by name
-				if country_name_lower in tugo_country_map:
-					tugo_data = tugo_country_map[country_name_lower]
-					country_code = tugo_data.get("code", "")
+				# First try by country code
+				if country_code_upper in api_country_map:
+					api_data = api_country_map[country_code_upper]
+				# Then try by name
+				elif country_name_lower in api_country_map:
+					api_data = api_country_map[country_name_lower]
 				else:
 					# Try to find by searching in the list
-					for tugo_country in tugo_countries:
-						if isinstance(tugo_country, dict):
-							tugo_name = tugo_country.get("name", "").lower()
-							if tugo_name == country_name_lower:
-								tugo_data = tugo_country
-								country_code = tugo_data.get("code", "")
+					for api_country in api_countries:
+						if isinstance(api_country, dict):
+							api_name = api_country.get("name", "").lower()
+							api_code = api_country.get("id", "").upper()
+							if api_name == country_name_lower or api_code == country_code_upper:
+								api_data = api_country
 								break
 				
-				# If we found a match, fetch detailed data
-				if country_code:
-					detailed_data = await tugo_client.get_country(country_code)
-					if detailed_data:
-						# advisoryState is a numeric value (0, 1, 2, 3)
-						advisory_state = detailed_data.get("advisoryState")
-						
-						# Check if advisoryState exists (it can be 0, which is falsy but valid)
-						if advisory_state is not None:
-							new_danger_level = tugo_client.map_advisory_state_to_danger_level(advisory_state)
-							
-							# Only update if danger level changed
-							if country.danger_level != new_danger_level:
-								await update_country_profile(
-									db,
-									country.id,
-									CountryProfileUpdate(danger_level=new_danger_level)
-								)
-								stats["updated"] += 1
-								logger.info(f"Updated {country.name}: {country.danger_level} -> {new_danger_level} (advisoryState: {advisory_state})")
-							else:
-								stats["skipped"] += 1
+				# If we found a match, update the danger level
+				if api_data:
+					new_danger_level = api_data.get("danger")
+					
+					if new_danger_level:
+						# Only update if danger level changed
+						if country.danger_level != new_danger_level:
+							await update_country_profile(
+								db,
+								country.id,
+								CountryProfileUpdate(danger_level=new_danger_level)
+							)
+							stats["updated"] += 1
+							logger.info(f"Updated {country.name}: {country.danger_level} -> {new_danger_level}")
 						else:
 							stats["skipped"] += 1
-							logger.warning(f"No advisoryState for {country.name}")
 					else:
-						stats["not_found"] += 1
-						logger.warning(f"Country {country.name} (code: {country_code}) not found in TuGo API")
+						stats["skipped"] += 1
+						logger.warning(f"No danger level for {country.name}")
 				else:
 					stats["not_found"] += 1
-					logger.warning(f"Could not match {country.name} with TuGo countries")
+					logger.warning(f"Could not match {country.name} with external API countries")
 			
 			except Exception as e:
 				stats["errors"] += 1

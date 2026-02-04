@@ -27,7 +27,7 @@ def start_scheduler():
 		scheduled_country_update,
 		trigger=CronTrigger(hour=6, minute=0),
 		id="update_country_danger_levels",
-		name="Update country danger levels from TuGo API",
+		name="Update country danger levels from external API",
 		replace_existing=True
 	)
 	

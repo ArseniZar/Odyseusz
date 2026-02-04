@@ -78,7 +78,9 @@ erDiagram
   travels {
     int id PK
     int traveler_id FK
+    boolean cancelled
     datetime created_at
+    datetime updated_at
   }
   
   travel_stages {
@@ -137,6 +139,7 @@ erDiagram
   country_profiles {
     int id PK
     string name UK
+    string country_code UK
     string description
     string danger_level
     datetime created_at

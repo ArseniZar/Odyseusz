@@ -154,6 +154,40 @@ async def get_current_evacuation_assistant(
 	return assistant_profile
 
 
+async def get_optional_current_editor(
+	credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False)),
+	db: AsyncSession = Depends(get_db)
+) -> Optional[EditorProfile]:
+	"""Get the current editor profile if authenticated, otherwise return None."""
+	if not credentials:
+		return None
+	
+	try:
+		token = credentials.credentials
+		payload = verify_token(token, token_type="access")
+		if payload is None:
+			return None
+		
+		user_id: Optional[int] = payload.get("sub")
+		if user_id is None:
+			return None
+		
+		user = await get_user_by_id(db, user_id)
+		if user is None or not user.is_active or user.role != UserRole.EDITOR:
+			return None
+		
+		result = await db.execute(
+			select(EditorProfile)
+			.options(selectinload(EditorProfile.country_profiles))
+			.where(EditorProfile.user_id == user.id)
+		)
+		editor_profile = result.scalar_one_or_none()
+		
+		return editor_profile
+	except Exception:
+		return None
+
+
 async def verify_editor_country_access(
 	country_id: int,
 	current_editor: EditorProfile = Depends(get_current_editor),

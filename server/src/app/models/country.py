@@ -41,11 +41,11 @@ class CountryProfile(Base):
 
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   name: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
+  country_code: Mapped[str] = mapped_column(String(2), unique=True, nullable=False, index=True)
   description: Mapped[str] = mapped_column(Text, nullable=False)
   danger_level: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
   created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
   updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
-  # todo code 'PL'
 
   # Relationships
   consulates: Mapped[list["Consulate"]] = relationship(
@@ -58,7 +58,7 @@ class CountryProfile(Base):
   )
 
   def __repr__(self) -> str:
-    return f"<CountryProfile(id={self.id}, name={self.name}, danger_level={self.danger_level})>"
+    return f"<CountryProfile(id={self.id}, name={self.name}, code={self.country_code}, danger_level={self.danger_level})>"
 
 
 class Consulate(Base):
@@ -66,8 +66,6 @@ class Consulate(Base):
   __tablename__ = "consulates"
 
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-  # todo delete country_profile_id
-  country_profile_id: Mapped[int] = mapped_column(Integer, ForeignKey("country_profiles.id", ondelete="CASCADE"), nullable=False, index=True)
   address: Mapped[str] = mapped_column(String(500), nullable=False)
   email: Mapped[str] = mapped_column(String(255), nullable=False)
   phone_number: Mapped[str] = mapped_column(String(20), nullable=False)
@@ -82,4 +80,4 @@ class Consulate(Base):
   )
 
   def __repr__(self) -> str:
-    return f"<Consulate(id={self.id}, country_profile_id={self.country_profile_id}, email={self.email})>"
+    return f"<Consulate(id={self.id}, email={self.email})>"

@@ -29,8 +29,7 @@ class Settings:
   ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
   REFRESH_TOKEN_EXPIRE_DAYS: int = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "30"))
 
-  TUGO_API_KEY: str = os.getenv("TUGO_API_KEY", "api_key")
-  TUGO_API_BASE_URL: str = os.getenv("TUGO_API_BASE_URL", "https://api.tugo.com/v1/travelsafe")
+  EXTERNAL_API_BASE_URL: str = os.getenv("EXTERNAL_API_BASE_URL", "http://localhost:8001")
 
 
 @lru_cache()
