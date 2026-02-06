@@ -54,8 +54,8 @@ async def register_traveler(
 	user = await create_traveler(db, traveler_create)
 	
 	# Create tokens
-	access_token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
-	refresh_token_str = create_refresh_token(data={"sub": user.id})
+	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
+	refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
 	
 	# Store refresh token in database
 	await create_refresh_token_db(db, refresh_token_str, user.id)
@@ -85,8 +85,8 @@ async def register_editor(
 	user = await create_editor(db, editor_create)
 	
 	# Create tokens
-	access_token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
-	refresh_token_str = create_refresh_token(data={"sub": user.id})
+	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
+	refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
 	
 	# Store refresh token in database
 	await create_refresh_token_db(db, refresh_token_str, user.id)
@@ -116,8 +116,8 @@ async def register_coordinator(
 	user = await create_coordinator(db, coordinator_create)
 	
 	# Create tokens
-	access_token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
-	refresh_token_str = create_refresh_token(data={"sub": user.id})
+	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
+	refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
 	
 	# Store refresh token in database
 	await create_refresh_token_db(db, refresh_token_str, user.id)
@@ -147,8 +147,8 @@ async def register_evacuation_assistant(
 	user = await create_evacuation_assistant(db, assistant_create)
 	
 	# Create tokens
-	access_token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
-	refresh_token_str = create_refresh_token(data={"sub": user.id})
+	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
+	refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
 	
 	# Store refresh token in database
 	await create_refresh_token_db(db, refresh_token_str, user.id)
@@ -186,8 +186,8 @@ async def login(
 		)
 	
 	# Create tokens
-	access_token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
-	refresh_token_str = create_refresh_token(data={"sub": user.id})
+	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
+	refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
 	
 	# Store refresh token in database
 	await create_refresh_token_db(db, refresh_token_str, user.id)
@@ -222,7 +222,21 @@ async def refresh_token(
 		)
 	
 	# Get user
-	user_id = payload.get("sub")
+	user_id_str = payload.get("sub")
+	if not user_id_str:
+		raise HTTPException(
+			status_code=status.HTTP_401_UNAUTHORIZED,
+			detail="Invalid refresh token"
+		)
+	
+	try:
+		user_id = int(user_id_str)
+	except (ValueError, TypeError):
+		raise HTTPException(
+			status_code=status.HTTP_401_UNAUTHORIZED,
+			detail="Invalid refresh token"
+		)
+	
 	user = await get_user_by_id(db, user_id)
 	if not user or not user.is_active:
 		raise HTTPException(
@@ -231,10 +245,10 @@ async def refresh_token(
 		)
 	
 	# Create new access token
-	access_token = create_access_token(data={"sub": user.id, "email": user.email, "role": user.role})
+	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
 	
 	# Optionally rotate refresh token (create new one and revoke old)
-	new_refresh_token_str = create_refresh_token(data={"sub": user.id})
+	new_refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
 	await revoke_refresh_token(db, refresh_token)
 	await create_refresh_token_db(db, new_refresh_token_str, user.id)
 	

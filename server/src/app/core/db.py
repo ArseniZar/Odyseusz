@@ -26,7 +26,7 @@ class DatabaseManager:
 	def _get_database_url(self) -> str:
 		"""Construct database URL from settings."""
 		if settings.USE_SQLITE:
-			return "sqlite+aiosqlite:///:memory:"
+			return "sqlite+aiosqlite:///./odysseus.db"
 		else:	
 			return f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
 	
@@ -39,7 +39,7 @@ class DatabaseManager:
 		database_url = self._get_database_url()
 		
 		if settings.USE_SQLITE:
-			logger.debug("Initializing SQLite in-memory database")
+			logger.debug("Initializing SQLite database")
 		else:
 			logger.debug(f"Initializing database connection to {settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}")
 		

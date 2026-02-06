@@ -29,8 +29,13 @@ async def get_current_user(
 	if payload is None:
 		raise credentials_exception
 	
-	user_id: Optional[int] = payload.get("sub")
-	if user_id is None:
+	user_id_str: Optional[str] = payload.get("sub")
+	if user_id_str is None:
+		raise credentials_exception
+	
+	try:
+		user_id = int(user_id_str)
+	except (ValueError, TypeError):
 		raise credentials_exception
 	
 	user = await get_user_by_id(db, user_id)
@@ -168,8 +173,13 @@ async def get_optional_current_editor(
 		if payload is None:
 			return None
 		
-		user_id: Optional[int] = payload.get("sub")
-		if user_id is None:
+		user_id_str: Optional[str] = payload.get("sub")
+		if user_id_str is None:
+			return None
+		
+		try:
+			user_id = int(user_id_str)
+		except (ValueError, TypeError):
 			return None
 		
 		user = await get_user_by_id(db, user_id)

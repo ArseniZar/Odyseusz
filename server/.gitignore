@@ -29,6 +29,7 @@ ENV/
 .venv/
 venv.bak/
 .venv.bak/
+*.db
 
 # === uv package manager ===
 .uv/
