@@ -52,6 +52,29 @@ def compute_travel_status(travel: Travel, today: date) -> TravelStatus:
     return TravelStatus.ONGOING
 
 
+def compute_started_at(travel: Travel, today: date) -> date | None:
+  """
+  Compute started_at based on first stage's start_date.
+  
+  Returns:
+  - None if travel is cancelled
+  - None if travel hasn't started yet (not past first stage's start_date)
+  - First stage's start_date if travel has started
+  """
+  if travel.cancelled:
+    return None
+  
+  if not travel.stages:
+    return None
+  
+  first_stage = travel.stages[0]
+  
+  if today >= first_stage.start_date:
+    return first_stage.start_date
+  
+  return None
+
+
 def compute_finished_at(travel: Travel, today: date) -> date | None:
   """
   Compute finished_at based on last stage's end_date.
@@ -76,11 +99,12 @@ def compute_finished_at(travel: Travel, today: date) -> date | None:
 
 
 def build_travel_response(travel: Travel) -> TravelResponse:
-  """Build TravelResponse with computed status and finished_at."""
+  """Build TravelResponse with computed status, started_at, and finished_at."""
   from datetime import date
   
   today = date.today()
   computed_status = compute_travel_status(travel, today)
+  computed_started_at = compute_started_at(travel, today)
   computed_finished_at = compute_finished_at(travel, today)
   
   return TravelResponse(
@@ -90,6 +114,7 @@ def build_travel_response(travel: Travel) -> TravelResponse:
     status=computed_status,
     created_at=travel.created_at,
     updated_at=travel.updated_at,
+    started_at=computed_started_at,
     finished_at=computed_finished_at,
     stages=[
       {

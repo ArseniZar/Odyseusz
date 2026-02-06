@@ -71,6 +71,7 @@ class TravelResponse(BaseModel):
 	status: TravelStatus  # Computed field
 	created_at: datetime
 	updated_at: datetime
+	started_at: date | None  # Computed from first stage's start_date
 	finished_at: date | None  # Computed from last stage's end_date
 	stages: list[TravelStageResponse] = []
 
