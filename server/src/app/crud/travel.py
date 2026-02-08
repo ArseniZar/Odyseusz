@@ -2,7 +2,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.models.travel import Travel, TravelStage
-from app.schemas.travel import TravelCreate, TravelUpdate
+from app.schemas.travel import (
+  TravelCreate,
+  TravelStageCreate,
+  TravelStageUpdate
+)
 
 
 # Travel CRUD
@@ -50,13 +54,14 @@ async def get_travels_by_traveler(
 
 async def create_travel(
 	db: AsyncSession,
-	travel_create
+	travel_create: TravelCreate,
+	traveler_id: int
 ) -> Travel:
 	"""Create a new travel with stages and locations."""
 	from app.models.location import Location
 	
 	travel = Travel(
-		traveler_id=travel_create.traveler_id,
+		traveler_id=traveler_id,
 		cancelled=travel_create.cancelled,
 	)
 	db.add(travel)
@@ -142,5 +147,92 @@ async def delete_travel(db: AsyncSession, travel_id: int) -> bool:
 
 
 # TravelStage CRUD
-# Stage CRUD operations removed - stages are now managed through travel create/update only
+async def get_travel_stage_by_id(
+  db: AsyncSession, 
+  stage_id: int
+) -> TravelStage | None:
+  """Get travel stage by ID."""
+  result = await db.execute(
+    select(TravelStage).where(TravelStage.id == stage_id)
+  )
+  return result.scalar_one_or_none()
+
+
+async def get_travel_stages_by_travel(
+  db: AsyncSession,
+  travel_id: int
+) -> list[TravelStage]:
+  """Get all stages for a travel."""
+  result = await db.execute(
+    select(TravelStage)
+    .where(TravelStage.travel_id == travel_id)
+    .order_by(TravelStage.start_date)
+  )
+  return list(result.scalars().all())
+
+
+async def get_travel_stages_by_location(
+  db: AsyncSession,
+  location_id: int,
+  skip: int = 0,
+  limit: int = 100
+) -> list[TravelStage]:
+  """Get all travel stages for a specific location."""
+  result = await db.execute(
+    select(TravelStage)
+    .where(TravelStage.location_id == location_id)
+    .order_by(TravelStage.start_date.desc())
+    .offset(skip)
+    .limit(limit)
+  )
+  return list(result.scalars().all())
+
+
+async def create_travel_stage(
+  db: AsyncSession, 
+  travel_id: int,
+  stage_create: TravelStageCreate
+) -> TravelStage:
+  """Create a new travel stage."""
+  stage = TravelStage(
+    travel_id=travel_id,
+    location_id=stage_create.location_id,
+    start_date=stage_create.start_date,
+    end_date=stage_create.end_date,
+    people_count=stage_create.people_count,
+  )
+  db.add(stage)
+  await db.commit()
+  await db.refresh(stage)
+  return stage
+
+
+async def update_travel_stage(
+  db: AsyncSession,
+  stage_id: int,
+  stage_update: TravelStageUpdate
+) -> TravelStage | None:
+  """Update travel stage."""
+  stage = await get_travel_stage_by_id(db, stage_id)
+  if not stage:
+    return None
+
+  update_data = stage_update.model_dump(exclude_unset=True)
+  for key, value in update_data.items():
+    setattr(stage, key, value)
+
+  await db.commit()
+  await db.refresh(stage)
+  return stage
+
+
+async def delete_travel_stage(db: AsyncSession, stage_id: int) -> bool:
+  """Delete a travel stage."""
+  stage = await get_travel_stage_by_id(db, stage_id)
+  if not stage:
+    return False
+
+  await db.delete(stage)
+  await db.commit()
+  return True
   

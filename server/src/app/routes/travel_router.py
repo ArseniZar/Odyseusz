@@ -147,10 +147,8 @@ async def create_travel_endpoint(
   Automatically creates location records from coordinates.
   Status is computed based on dates and cancelled flag.
   """
-  # Set traveler_id from authenticated user
-  travel_create.traveler_id = current_traveler.id
-  
-  travel = await create_travel(db, travel_create)
+  # Pass traveler_id from authenticated user to CRUD function
+  travel = await create_travel(db, travel_create, current_traveler.id)
   
   # Reload with stages and locations for response
   travel_with_details = await get_travel_with_stages(db, travel.id)

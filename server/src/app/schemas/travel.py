@@ -42,6 +42,38 @@ class TravelUpdate(BaseModel):
 	stages: list[TravelStageCreateNested] = Field(..., min_length=1, description="At least one stage is required")
 
 
+# Individual stage schemas (for standalone stage operations)
+class TravelStageCreate(BaseModel):
+	"""Create a single travel stage (requires existing location_id)."""
+	location_id: int
+	start_date: date
+	end_date: date
+	people_count: int = Field(..., gt=0, description="Number of people traveling")
+
+	@field_validator('end_date')
+	@classmethod
+	def validate_dates(cls, v, info):
+		if 'start_date' in info.data and v < info.data['start_date']:
+			raise ValueError('end_date must be after or equal to start_date')
+		return v
+
+
+class TravelStageUpdate(BaseModel):
+	"""Update a travel stage (partial update)."""
+	location_id: int | None = None
+	start_date: date | None = None
+	end_date: date | None = None
+	people_count: int | None = Field(None, gt=0, description="Number of people traveling")
+
+	@field_validator('end_date')
+	@classmethod
+	def validate_dates(cls, v, info):
+		if v is not None and 'start_date' in info.data and info.data['start_date'] is not None:
+			if v < info.data['start_date']:
+				raise ValueError('end_date must be after or equal to start_date')
+		return v
+
+
 # Response schemas
 class LocationResponse(BaseModel):
 	id: int
