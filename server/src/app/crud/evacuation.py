@@ -30,13 +30,14 @@ async def get_evacuation_with_details(
 ) -> Evacuation | None:
   """Get evacuation with areas, assembly points, and assistants loaded."""
   from app.models.evacuation import EvacuationArea, AssemblyPoint
+  from app.models.user import EvacuationAssistantProfile
   
   result = await db.execute(
     select(Evacuation)
     .options(
       selectinload(Evacuation.areas).selectinload(EvacuationArea.location),
       selectinload(Evacuation.assembly_points).selectinload(AssemblyPoint.location),
-      selectinload(Evacuation.assistants)
+      selectinload(Evacuation.assistants).selectinload(EvacuationAssistantProfile.user)
     )
     .where(Evacuation.id == evacuation_id)
   )
@@ -51,11 +52,12 @@ async def get_all_evacuations(
 ) -> list[Evacuation]:
   """Get all evacuations with areas, assembly points, and assistants loaded."""
   from app.models.evacuation import EvacuationArea, AssemblyPoint
+  from app.models.user import EvacuationAssistantProfile
   
   query = select(Evacuation).options(
     selectinload(Evacuation.areas).selectinload(EvacuationArea.location),
     selectinload(Evacuation.assembly_points).selectinload(AssemblyPoint.location),
-    selectinload(Evacuation.assistants)
+    selectinload(Evacuation.assistants).selectinload(EvacuationAssistantProfile.user)
   )
   
   if active_only:
@@ -73,13 +75,14 @@ async def get_evacuations_by_coordinator(
 ) -> list[Evacuation]:
   """Get evacuations by coordinator with areas, assembly points, and assistants loaded."""
   from app.models.evacuation import EvacuationArea, AssemblyPoint
+  from app.models.user import EvacuationAssistantProfile
   
   result = await db.execute(
     select(Evacuation)
     .options(
       selectinload(Evacuation.areas).selectinload(EvacuationArea.location),
       selectinload(Evacuation.assembly_points).selectinload(AssemblyPoint.location),
-      selectinload(Evacuation.assistants)
+      selectinload(Evacuation.assistants).selectinload(EvacuationAssistantProfile.user)
     )
     .where(Evacuation.coordinator_id == coordinator_id)
     .offset(skip)
@@ -158,8 +161,9 @@ async def create_evacuation(
         assistant.evacuations.append(evacuation)
   
   await db.commit()
-  await db.refresh(evacuation, ["areas", "assembly_points", "assistants"])
-  return evacuation
+  
+  # Reload with full details including user data
+  return await get_evacuation_with_details(db, evacuation.id)
 
 
 async def update_evacuation(
@@ -253,8 +257,9 @@ async def update_evacuation(
         assistant.evacuations.append(evacuation)
 
   await db.commit()
-  await db.refresh(evacuation, ["areas", "assembly_points", "assistants"])
-  return evacuation
+  
+  # Reload with full details including user data
+  return await get_evacuation_with_details(db, evacuation_id)
 
 
 async def delete_evacuation(db: AsyncSession, evacuation_id: int) -> bool:
@@ -415,11 +420,12 @@ async def get_all_assistants(
   skip: int = 0,
   limit: int = 1000
 ) -> list:
-  """Get all evacuation assistants."""
+  """Get all evacuation assistants with user data."""
   from app.models.user import EvacuationAssistantProfile
   
   result = await db.execute(
     select(EvacuationAssistantProfile)
+    .options(selectinload(EvacuationAssistantProfile.user))
     .offset(skip)
     .limit(limit)
   )

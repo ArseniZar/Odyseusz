@@ -28,6 +28,62 @@ from app.schemas.evacuation import (
 router = APIRouter()
 
 
+def build_evacuation_response(evacuation: Evacuation) -> dict:
+  """Build evacuation response with properly formatted assistant data."""
+  return {
+    "id": evacuation.id,
+    "name": evacuation.name,
+    "reason": evacuation.reason,
+    "description": evacuation.description,
+    "active": evacuation.active,
+    "coordinator_id": evacuation.coordinator_id,
+    "last_active_at": evacuation.last_active_at,
+    "created_at": evacuation.created_at,
+    "updated_at": evacuation.updated_at,
+    "areas": [
+      {
+        "id": area.id,
+        "evacuation_id": area.evacuation_id,
+        "radius": area.radius,
+        "location": {
+          "id": area.location.id,
+          "latitude": area.location.latitude,
+          "longitude": area.location.longitude
+        },
+        "created_at": area.created_at
+      }
+      for area in evacuation.areas
+    ],
+    "assembly_points": [
+      {
+        "id": point.id,
+        "evacuation_id": point.evacuation_id,
+        "name": point.name,
+        "description": point.description,
+        "location": {
+          "id": point.location.id,
+          "latitude": point.location.latitude,
+          "longitude": point.location.longitude
+        },
+        "created_at": point.created_at
+      }
+      for point in evacuation.assembly_points
+    ],
+    "assistants": [
+      {
+        "id": assistant.id,
+        "user_id": assistant.user_id,
+        "first_name": assistant.user.first_name,
+        "last_name": assistant.user.last_name,
+        "email": assistant.user.email,
+        "phone_number": assistant.phone_number,
+        "working_hours": assistant.working_hours
+      }
+      for assistant in evacuation.assistants
+    ]
+  }
+
+
 # Evacuation CRUD endpoints
 @router.get("/", response_model=list[EvacuationDetailResponse])
 async def list_evacuations(
@@ -65,7 +121,7 @@ async def list_evacuations(
       )
     evacuations = await get_evacuations_by_coordinator(db, coordinator_profile.id, skip, limit)
   
-  return evacuations
+  return [build_evacuation_response(evacuation) for evacuation in evacuations]
 
 
 @router.get("/assistants", response_model=list[EvacuationAssistantResponse])
@@ -75,9 +131,22 @@ async def list_all_assistants(
   current_user: User = Depends(get_current_active_user),
   db: AsyncSession = Depends(get_db)
 ):
-  """Get list of all evacuation assistants (authenticated users)."""
+  """Get list of all evacuation assistants with user details (authenticated users)."""
   assistants = await get_all_assistants(db, skip, limit)
-  return assistants
+  
+  # Build response with user data
+  return [
+    {
+      "id": assistant.id,
+      "user_id": assistant.user_id,
+      "first_name": assistant.user.first_name,
+      "last_name": assistant.user.last_name,
+      "email": assistant.user.email,
+      "phone_number": assistant.phone_number,
+      "working_hours": assistant.working_hours
+    }
+    for assistant in assistants
+  ]
 
 
 @router.get("/{evacuation_id}", response_model=EvacuationDetailResponse)
@@ -106,7 +175,7 @@ async def get_evacuation(
         detail="You do not have access to this evacuation"
       )
   
-  return evacuation
+  return build_evacuation_response(evacuation)
 
 
 @router.post("/", response_model=EvacuationDetailResponse, status_code=status.HTTP_201_CREATED)
@@ -132,7 +201,7 @@ async def create_evacuation_endpoint(
     )
   
   evacuation = await create_evacuation(db, evacuation_create)
-  return evacuation
+  return build_evacuation_response(evacuation)
 
 
 @router.put("/{evacuation_id}", response_model=EvacuationDetailResponse)
@@ -171,7 +240,7 @@ async def update_evacuation_endpoint(
       detail="Evacuation not found"
     )
   
-  return updated_evacuation
+  return build_evacuation_response(updated_evacuation)
 
 
 @router.delete("/{evacuation_id}", status_code=status.HTTP_204_NO_CONTENT)

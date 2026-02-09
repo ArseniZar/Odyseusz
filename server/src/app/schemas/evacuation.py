@@ -135,6 +135,9 @@ class EvacuationAssistantLinkCreate(BaseModel):
 class EvacuationAssistantResponse(BaseModel):
   id: int
   user_id: int
+  first_name: str
+  last_name: str
+  email: str
   phone_number: str
   working_hours: str
   
