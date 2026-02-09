@@ -117,20 +117,6 @@ class EvacuationResponse(EvacuationBase):
     from_attributes = True
 
 
-class EvacuationDetailResponse(EvacuationResponse):
-  areas: list[EvacuationAreaResponse] = []
-  assembly_points: list[AssemblyPointResponse] = []
-  assistants: list[EvacuationAssistantResponse] = []
-
-  class Config:
-    from_attributes = True
-
-
-class EvacuationAssistantLinkCreate(BaseModel):
-  evacuation_id: int
-  assistant_id: int
-
-
 class EvacuationAssistantResponse(BaseModel):
   id: int
   user_id: int
@@ -143,3 +129,16 @@ class EvacuationAssistantResponse(BaseModel):
   class Config:
     from_attributes = True
   
+
+class EvacuationDetailResponse(EvacuationResponse):
+  areas: list[EvacuationAreaResponse] = []
+  assembly_points: list[AssemblyPointResponse] = []
+  assistants: list[EvacuationAssistantResponse] = []
+
+  class Config:
+    from_attributes = True
+
+
+class EvacuationAssistantLinkCreate(BaseModel):
+  evacuation_id: int
+  assistant_id: int
