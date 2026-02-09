@@ -5,6 +5,5 @@ export interface  GeneralInformationProps {
   name: EvacuationFormValues["generalInfoForm"]["name"];
   description: EvacuationFormValues["generalInfoForm"]["description"];
   reason: EvacuationFormValues["generalInfoForm"]["reason"];
-  radius: EvacuationFormValues["areaForm"]["radius"];
   infoText: InformationSectionConfig;
 }

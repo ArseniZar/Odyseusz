@@ -9,8 +9,11 @@ export interface EvacuationSectionProps {
     informationSectionConfig:InformationSectionConfig;
   };
   control: Control<EvacuationFormValues>;
+  fieldsAreas: FieldArrayWithId<EvacuationFormValues, "areasForm.areas">[];
   fieldsPoints: FieldArrayWithId<EvacuationFormValues, "colectionPointsForm.points">[];
   fieldsAssistans: FieldArrayWithId<EvacuationFormValues, "assistantsForm.assistants">[];
+  onAddArea: () => void;
+  onRemoveArea: (index: number) => void;
   onAddPoint: () => void;
   onRemovePoint: (index: number) => void;
 }

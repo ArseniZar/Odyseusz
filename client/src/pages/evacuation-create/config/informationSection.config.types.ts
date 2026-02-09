@@ -1,4 +1,4 @@
-import type { BaseFormButtonKey, Information, InformationFieldConfig } from "@/types/all_types";
+import type { BaseFormButtonKey, Information, InformationFieldConfig } from "@/types/domain/forms";
 
 export interface InformationSectionConfig extends Information{
   title: string;
@@ -6,7 +6,10 @@ export interface InformationSectionConfig extends Information{
   name: FormInformationFieldConfig;
   reason: FormInformationFieldConfig;
   description: FormInformationFieldConfig;
-  area: FormInformationFieldConfig;
+  area: {
+    title: string;
+    radius: FormInformationFieldConfig;
+  };
   point:{
     title: string;
     name: FormInformationFieldConfig;

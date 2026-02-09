@@ -1,4 +1,5 @@
-import type { Coordinates, FormFieldConfig } from "@/types/all_types";
+import type { Coordinates } from "@/types/domain/common";
+import type { FormFieldConfig } from "@/types/domain/forms";
 
 export interface EvacuationSectionConfig {
   generalInfoForm: {
@@ -6,31 +7,35 @@ export interface EvacuationSectionConfig {
     name: FormFieldConfig<string>;
     reason: FormFieldConfig<string>;
     description: FormFieldConfig<string>;
-    activateImmediately: FormFieldConfig<boolean> ;
+    activateImmediately: FormFieldConfig<boolean>;
   };
-  areaForm: {
+  areasForm: {
     title: string;
-    coordinates: FormFieldConfig<Coordinates>;
-    radius: FormFieldConfig<number>;
+    area: {
+      titleArea: string;
+      coordinates: FormFieldConfig<Coordinates>;
+      radius: FormFieldConfig<number>;
+    };
+    addButton: {
+      label: string;
+    };
   };
   collectionPointsForm: {
     title: string;
-    point:{
+    point: {
       titlePoint: string;
       name: FormFieldConfig<string>;
       description: FormFieldConfig<string>;
       coordinates: FormFieldConfig<Coordinates>;
-    }
+    };
     addButton: {
-      label:string
-    }
+      label: string;
+    };
   };
   assistantsForm: {
     title: string;
-    assistant:{
+    assistant: {
       isActive: FormFieldConfig<boolean>;
-    }
+    };
   };
-  
 }
-

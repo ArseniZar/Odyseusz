@@ -1,16 +1,29 @@
-import { Controller } from "react-hook-form";
-
+import { useState, type JSX } from "react";
+import type { AreaFormProps } from "./AreaForm.types";
+import { Controller, useFormState } from "react-hook-form";
+import { AreaHeader } from "./components/AreaHeader/AreaHeader";
+import { iconTrash, iconOpen, iconClose } from "@/assets/";
+import { Input } from "@/components/Input";
 import { MapPicker } from "@/components/MapPicker";
 
-import type { JSX } from "react";
-import type { AreaFormProps } from "./AreaForm.types";
-import { Input } from "@/components/Input";
+// prettier-ignore
+export const AreaForm = ({areaNumber,control,index,infoText,onDelete}: AreaFormProps): JSX.Element => {
+  const { errors } = useFormState({ control });
+  const [isOpen, setIsOpen] = useState(false);
 
-export const AreaForm = ({ control, infoText, isActive }: AreaFormProps): JSX.Element => {
   return (
-    <div className={`px-6 py-4 mb-10 flex flex-col gap-4 rounded-2xl border border-black/10 shadow-2xl  ${isActive ? "block" : "hidden"}`}>
-      <Controller
-        name={`areaForm.coordinates`}
+    <div className={`flex-none flex flex-col gap-5 rounded-2xl border border-black/10 shadow-xl ${errors.colectionPointsForm?.points?.[index] ? "border-red-500" : ""}`}>
+      <AreaHeader
+        title={infoText.titleArea}
+        areaNumber={areaNumber}
+        isOpen={isOpen}
+        icons={{ iconTrash, iconOpen, iconClose }}
+        onDelete={() => onDelete(index)}
+        onToggle={() => setIsOpen((prev) => !prev)}
+      />
+      <div className={`${isOpen ? "block" : "hidden"} px-6 pb-6 flex-1 flex flex-col gap-5`}>
+        <Controller
+        name={`areasForm.areas.${index}.coordinates`}
         control={control}
         shouldUnregister={false}
         rules={{
@@ -26,7 +39,7 @@ export const AreaForm = ({ control, infoText, isActive }: AreaFormProps): JSX.El
         )}
       />
       <Controller
-        name={`areaForm.radius`}
+        name={`areasForm.areas.${index}.radius`}
         control={control}
         shouldUnregister={false}
         rules={{
@@ -44,6 +57,7 @@ export const AreaForm = ({ control, infoText, isActive }: AreaFormProps): JSX.El
           />
         )}
       />
+      </div>
     </div>
   );
 };

@@ -14,7 +14,10 @@ export const informationSectionConfig: InformationSectionConfig = {
     label: "Opis",
   },
   area: {
-    label: "Obszar",
+    title:"Obszar ewakuacji",
+    radius: {
+      label: "Promień",
+    },
   },
   point: {
     title: "Mejsca zbiórki",

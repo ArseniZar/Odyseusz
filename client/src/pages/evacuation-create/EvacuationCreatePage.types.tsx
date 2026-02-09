@@ -16,6 +16,14 @@ export interface AssistantFormValues {
   isActive: boolean | null;
 }
 
+export interface AreaFormValues {
+  coordinates: {
+    latitude: number | null;
+    longitude: number | null;
+  };
+  radius: number | null;
+}
+
 export interface EvacuationFormValues {
   generalInfoForm: {
     name: string | null;
@@ -23,12 +31,8 @@ export interface EvacuationFormValues {
     description: string | null;
     activateImmediately: boolean;
   };
-  areaForm: {
-    coordinates: {
-      latitude: number | null;
-      longitude: number | null;
-    };
-    radius: number | null;
+  areasForm: {
+    areas: AreaFormValues[];
   };
   colectionPointsForm: {
     points: PointFormValues[];
