@@ -1,5 +1,6 @@
 import type { Option } from "@/components/Select";
-import type { InformationFieldConfig, EvacuationStatus, DateFormat, FilterFieldConfig } from "@/types/all_types";
+import type { EvacuationStatus } from "@/types/domain/evacuation";
+import type { InformationFieldConfig, DateFormat, FilterFieldConfig } from "@/types/domain/forms";
 
 export interface FilterSectionConfig {
   status: FilterFieldConfig<EvacuationStatus[]> & { options: Option<EvacuationStatus>[] };

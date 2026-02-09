@@ -1,4 +1,4 @@
-import type { Evacuation } from "@/types/all_types";
+import type { Evacuation } from "@/types/domain/evacuation";
 import type { EvacuationsSectionConfig } from "../../config/evacuationsSection.config.types";
 
 export interface EvacuationsSectionProps{

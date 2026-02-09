@@ -26,7 +26,16 @@ export const evacuationsSectionConfig: EvacuationsSectionConfig = {
     label: "Opis",
   },
   area: {
-    label: "Obszar",
+    title: "Obszar ewakuacji",
+    latitude: {
+      label: "Szerokość",
+    },
+    longitude: {
+      label: "Długość",
+    },
+    radius: {
+      label: "Promień (m)",
+    },
   },
   dateLastActivated: {
     label: "Data ostatniej aktywacji",
