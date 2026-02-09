@@ -3,7 +3,7 @@ import { useEffect, type JSX } from "react";
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
 import { pageConfig } from "./config/page.config";
-import { routesConfig } from "@/types/rotes";
+import { routesConfig } from "@/types/rotes/rotes";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import type { FilterValues } from "./EvacuationsReadPage.types";
@@ -11,8 +11,7 @@ import { filterSectionConfig } from "./config/filterSection.config";
 import { evacuationsSectionConfig } from "./config/evacuationsSection.config";
 import { FilterSection } from "./components/FilterSection/FilterSection";
 import { EvacuationsSection } from "./components/EvacuationsSection/EvacuationsSection";
-import type { Evacuation } from "@/types/all_types";
-
+import type { Evacuation } from "@/types/domain/evacuation";
 
 export const mockEvacuations: Evacuation[] = [
   {
@@ -20,14 +19,17 @@ export const mockEvacuations: Evacuation[] = [
     status: "ACTIVE",
     name: "Evacuation – Industrial Zone",
     reason: "Chemical leak detected",
-    description: "Emergency evacuation due to hazardous chemical spill in the industrial area.",
-    area: {
-      coordinates: {
-        latitude: 52.520008,
-        longitude: 13.404954,
+    description:
+      "Emergency evacuation due to hazardous chemical spill in the industrial area.",
+    areas: [
+      {
+        coordinates: {
+          latitude: 52.520008,
+          longitude: 13.404954,
+        },
+        radius: 1500,
       },
-      radius: 1500,
-    },
+    ],
     collectionPoints: [
       {
         id: 101,
@@ -64,22 +66,25 @@ export const mockEvacuations: Evacuation[] = [
         email: "max.schmidt@example.com",
       },
     ],
-    dataUpdate: new Date('2026-01-20'),
-    dataLastActivated: new Date('2026-01-21'),
+    dataUpdate: new Date("2026-01-20"),
+    dataLastActivated: new Date("2026-01-21"),
   },
   {
     id: 2,
     status: "ACTIVE",
     name: "Evacuation – Riverside Area",
     reason: "Flood risk",
-    description: "Preventive evacuation due to rising water levels in the river.",
-    area: {
-      coordinates: {
-        latitude: 48.137154,
-        longitude: 11.576124,
+    description:
+      "Preventive evacuation due to rising water levels in the river.",
+    areas: [
+      {
+        coordinates: {
+          latitude: 48.137154,
+          longitude: 11.576124,
+        },
+        radius: 2500,
       },
-      radius: 2500,
-    },
+    ],
     collectionPoints: [
       {
         id: 103,
@@ -100,8 +105,8 @@ export const mockEvacuations: Evacuation[] = [
         email: "laura.fischer@example.com",
       },
     ],
-    dataUpdate: new Date('2026-01-18'),
-    dataLastActivated: new Date('2026-01-19'),
+    dataUpdate: new Date("2026-01-18"),
+    dataLastActivated: new Date("2026-01-19"),
   },
   {
     id: 3,
@@ -109,13 +114,15 @@ export const mockEvacuations: Evacuation[] = [
     name: "Evacuation – Old Town",
     reason: "Gas leak (false alarm)",
     description: "Evacuation cancelled after inspection confirmed no danger.",
-    area: {
-      coordinates: {
-        latitude: 50.110924,
-        longitude: 8.682127,
+    areas: [
+      {
+        coordinates: {
+          latitude: 50.110924,
+          longitude: 8.682127,
+        },
+        radius: 1000,
       },
-      radius: 1000,
-    },
+    ],
     collectionPoints: [
       {
         id: 104,
@@ -128,7 +135,7 @@ export const mockEvacuations: Evacuation[] = [
       },
     ],
     assistants: [],
-    dataUpdate: new Date('2026-01-17'),
+    dataUpdate: new Date("2026-01-17"),
     dataLastActivated: null,
   },
   {
@@ -136,14 +143,17 @@ export const mockEvacuations: Evacuation[] = [
     status: "ACTIVE",
     name: "Evacuation – Airport Zone",
     reason: "Security threat",
-    description: "Temporary evacuation of airport perimeter due to security alert.",
-    area: {
-      coordinates: {
-        latitude: 51.47002,
-        longitude: -0.454295,
+    description:
+      "Temporary evacuation of airport perimeter due to security alert.",
+    areas: [
+      {
+        coordinates: {
+          latitude: 51.47002,
+          longitude: -0.454295,
+        },
+        radius: 3000,
       },
-      radius: 3000,
-    },
+    ],
     collectionPoints: [
       {
         id: 105,
@@ -173,57 +183,58 @@ export const mockEvacuations: Evacuation[] = [
         email: "james.brown@example.com",
       },
     ],
-    dataUpdate: new Date('2026-01-22'),
-    dataLastActivated: new Date('2026-01-23'),
+    dataUpdate: new Date("2026-01-22"),
+    dataLastActivated: new Date("2026-01-23"),
   },
 ];
 
-
-
-const defalutFilter:FilterValues = {
-    status: filterSectionConfig.status.defaultValue,
-    lastUpdateDate: filterSectionConfig.lastUpdateDate.defaultValue,
+const defalutFilter: FilterValues = {
+  status: filterSectionConfig.status.defaultValue,
+  lastUpdateDate: filterSectionConfig.lastUpdateDate.defaultValue,
 };
-  
+
 export const EvacuationsReadPage = (): JSX.Element => {
   const { control, watch } = useForm<FilterValues>({
     mode: "all",
-    defaultValues: defalutFilter
+    defaultValues: defalutFilter,
   });
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     console.log("Форма изменилась:", watch());
   }, [watch()]);
 
   return (
     <div className="h-screen flex flex-col">
-          <Header />
-          <main className="flex-1 pt-15 px-20 overflow-hidden  bg-(--main-bg-color) font-geologica font-medium text-lg text-(--main-text-color)">
-            <div className="h-full flex flex-col">
-              <Title className="text-5xl font-normal" title={pageConfig.title} />
-              <div className="mt-7 flex-1 flex flex-col gap-6 overflow-hidden">
-                <FilterSection
-                    infoText={filterSectionConfig}
-                    control={control}
-                    onCreate={() => navigate(routesConfig.EVACUATION_CREATE.path)}
-                />
-                <EvacuationsSection
+      <Header />
+      <main className="flex-1 pt-15 px-20 overflow-hidden  bg-(--main-bg-color) font-geologica font-medium text-lg text-(--main-text-color)">
+        <div className="h-full flex flex-col">
+          <Title className="text-5xl font-normal" title={pageConfig.title} />
+          <div className="mt-7 flex-1 flex flex-col gap-6 overflow-hidden">
+            <FilterSection
+              infoText={filterSectionConfig}
+              control={control}
+              onCreate={() => navigate(routesConfig.EVACUATION_CREATE.path)}
+            />
+            <EvacuationsSection
               infoText={evacuationsSectionConfig}
               evacuations={mockEvacuations}
               onActive={function (evacuationId: number): void {
                 throw new Error("Function not implemented.");
-              } }
+              }}
               onCancel={function (evacuationId: number): void {
                 throw new Error("Function not implemented.");
-              } } onDelete={function (evacuationId: number): void {
+              }}
+              onDelete={function (evacuationId: number): void {
                 throw new Error("Function not implemented.");
-              } } onEdit={function (evacuationId: number): void {
+              }}
+              onEdit={function (evacuationId: number): void {
                 throw new Error("Function not implemented.");
-              } }              />
-              </div>
-            </div>
-          </main>
+              }}
+            />
+          </div>
         </div>
+      </main>
+    </div>
   );
-}
+};

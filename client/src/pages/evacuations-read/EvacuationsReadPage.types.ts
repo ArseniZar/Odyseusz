@@ -1,4 +1,4 @@
-import type { EvacuationStatus } from "@/types/all_types";
+import type { EvacuationStatus } from "@/types/domain/evacuation";
 
 export interface FilterValues {
   status: EvacuationStatus[] | null;      

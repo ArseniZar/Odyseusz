@@ -5,8 +5,9 @@ import type { EvacuationInformationProps } from "./EvacuationInformation.types";
 import { PointInformation } from "./components/PointInformation/PointInformation";
 import { AssistantInformation } from "./components/AssistantInformation/AssistantInformation";
 import { GeneralInformation } from "./components/GeneralInformation/GeneralInformation";
+import { AreaInformation } from "./components/AreaInformation/AreaInformation";
 
-export const EvacuationInformation =({infoText, status, name, area,assistants,collectionPoints,description,reason, dataLastActivated,onActive, onCancel, onDelete, onEdit}: EvacuationInformationProps):JSX.Element => {
+export const EvacuationInformation =({infoText, status, name, areas,assistants,collectionPoints,description,reason, dataLastActivated,onActive, onCancel, onDelete, onEdit}: EvacuationInformationProps):JSX.Element => {
     const [isOpen, setIsOpen] = useState(false);
     return(
         <div className="flex flex-none flex-col  gap-5 border border-black/10 shadow-xl rounded-2xl">
@@ -15,7 +16,6 @@ export const EvacuationInformation =({infoText, status, name, area,assistants,co
                 <div className="flex flex-col">
                     <p className="font-medium text-xl">{infoText.status.label}:<span className="font-light ml-1">{infoText.status.options[status]} </span></p>
                     <p className="font-medium text-lg"> {infoText.name.label}:<span className="font-light ml-1">{name}</span></p>
-                    <p className="font-medium text-lg"> {infoText.latitude.label}/{infoText.longitude.label}:<span className="font-light ml-1"> {area.coordinates.latitude} / {area.coordinates.longitude} </span></p>
                 </div>
                 <button className={`flex-1 h-full opacity-0 hover:opacity-30 transition-opacity ${infoText.showButtons.details.some((item) => status === item)  ? "visible" : "invisible"}`} onClick={() => setIsOpen(prev => !prev)}>
                     <p className="font-medium text-lg"> {infoText.evacuationButtons.details.label} </p>
@@ -32,10 +32,18 @@ export const EvacuationInformation =({infoText, status, name, area,assistants,co
                     infoText={infoText}
                     reason={reason}
                     description={description}
-                    area={area}
                     dataLastActivated={dataLastActivated}
                 />
                 <hr />
+                {areas.map((area, index) => (
+                    <AreaInformation 
+                        areaNumber={index+1}
+                        infoText={infoText.area} 
+                        radius={area.radius}
+                        coordinates={area.coordinates}
+                    />
+                ))}
+                <hr />   
                 {collectionPoints.map((point, index) => (   
                     <PointInformation 
                         pointNumber={index+1} 

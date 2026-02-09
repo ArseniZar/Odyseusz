@@ -1,4 +1,5 @@
-import type {InformationFieldConfig,EvacuationStatus} from "@/types/all_types";
+import type { InformationFieldConfig } from "@/types/domain/forms";
+import type {EvacuationStatus} from "@/types/domain/evacuation";
 
 export interface EvacuationsSectionConfig {
   iconEvacuation: string;
@@ -10,7 +11,12 @@ export interface EvacuationsSectionConfig {
   longitude: EvacuationInformationFieldConfig;
   reason: EvacuationInformationFieldConfig;
   description: EvacuationInformationFieldConfig;
-  area: EvacuationInformationFieldConfig;
+  area: {
+    title: string;
+    latitude: EvacuationInformationFieldConfig;
+    longitude: EvacuationInformationFieldConfig;
+    radius: EvacuationInformationFieldConfig;
+  };
   dateLastActivated: EvacuationInformationFieldConfig;
   point: {
     title: string;
