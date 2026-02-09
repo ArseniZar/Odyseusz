@@ -187,20 +187,16 @@ async def create_evacuation_endpoint(
   """
   Create a new evacuation with areas, assembly points, and assistants (coordinator only).
   
+  The coordinator_id is automatically set from the authenticated user's JWT token.
+  
   This endpoint combines the creation of:
   - Evacuation basic info
   - Evacuation areas
   - Assembly points
   - Assistant assignments
   """
-  # Ensure the coordinator_id matches the current coordinator
-  if evacuation_create.coordinator_id != current_coordinator.id:
-    raise HTTPException(
-      status_code=status.HTTP_403_FORBIDDEN,
-      detail="You can only create evacuations for yourself"
-    )
-  
-  evacuation = await create_evacuation(db, evacuation_create)
+  # Create evacuation with coordinator_id from JWT token
+  evacuation = await create_evacuation(db, evacuation_create, current_coordinator.id)
   return build_evacuation_response(evacuation)
 
 

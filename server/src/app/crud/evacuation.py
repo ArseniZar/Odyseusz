@@ -93,7 +93,8 @@ async def get_evacuations_by_coordinator(
 
 async def create_evacuation(
   db: AsyncSession, 
-  evacuation_create: EvacuationCreate
+  evacuation_create: EvacuationCreate,
+  coordinator_id: int
 ) -> Evacuation:
   """Create a new evacuation with areas, assembly points, and assistants."""
   from app.models.location import Location
@@ -105,7 +106,7 @@ async def create_evacuation(
     reason=evacuation_create.reason,
     description=evacuation_create.description,
     active=evacuation_create.active,
-    coordinator_id=evacuation_create.coordinator_id,
+    coordinator_id=coordinator_id,
     last_active_at=datetime.now(timezone.utc) if evacuation_create.active else None,
   )
   db.add(evacuation)

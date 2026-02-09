@@ -38,7 +38,6 @@ class AssemblyPointCreateNested(BaseModel):
 
 
 class EvacuationCreate(EvacuationBase):
-  coordinator_id: int
   areas: list[EvacuationAreaCreateNested] = []
   assembly_points: list[AssemblyPointCreateNested] = []
   assistant_ids: list[int] = []
