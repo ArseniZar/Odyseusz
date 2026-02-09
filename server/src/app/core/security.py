@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 from jose import JWTError, jwt
 from app.core.config import settings
+import uuid
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -34,7 +35,7 @@ def create_refresh_token(data: dict) -> str:
 	"""Create a JWT refresh token."""
 	to_encode = data.copy()
 	expire = datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
-	to_encode.update({"exp": expire, "type": "refresh"})
+	to_encode.update({"exp": expire, "type": "refresh", "jti": str(uuid.uuid4())})
 	encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 	return encoded_jwt
 

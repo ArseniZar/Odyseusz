@@ -24,6 +24,7 @@ from app.crud.refresh_token import (
 from app.schemas.user import (
 	UserLogin,
 	Token,
+	RefreshTokenRequest,
 	TravelerCreate,
 	EditorCreate,
 	CoordinatorCreate,
@@ -201,12 +202,12 @@ async def login(
 
 @router.post("/refresh", response_model=Token)
 async def refresh_token(
-	refresh_token: str,
+	request: RefreshTokenRequest,
 	db: AsyncSession = Depends(get_db)
 ):
 	"""Refresh access token using refresh token."""
 	# Verify refresh token
-	payload = verify_token(refresh_token, token_type="refresh")
+	payload = verify_token(request.refresh_token, token_type="refresh")
 	if payload is None:
 		raise HTTPException(
 			status_code=status.HTTP_401_UNAUTHORIZED,
@@ -214,7 +215,7 @@ async def refresh_token(
 		)
 	
 	# Check if token exists in database and is valid
-	db_refresh_token = await get_refresh_token(db, refresh_token)
+	db_refresh_token = await get_refresh_token(db, request.refresh_token)
 	if not db_refresh_token:
 		raise HTTPException(
 			status_code=status.HTTP_401_UNAUTHORIZED,
@@ -247,9 +248,9 @@ async def refresh_token(
 	# Create new access token
 	access_token = create_access_token(data={"sub": str(user.id), "email": user.email, "role": user.role})
 	
-	# Optionally rotate refresh token (create new one and revoke old)
+	# Rotate refresh token (revoke old, create new)
+	await revoke_refresh_token(db, request.refresh_token)
 	new_refresh_token_str = create_refresh_token(data={"sub": str(user.id)})
-	await revoke_refresh_token(db, refresh_token)
 	await create_refresh_token_db(db, new_refresh_token_str, user.id)
 	
 	return {
@@ -261,12 +262,12 @@ async def refresh_token(
 
 @router.post("/logout")
 async def logout(
-	refresh_token: str,
+	request: RefreshTokenRequest,
 	current_user: User = Depends(get_current_active_user),
 	db: AsyncSession = Depends(get_db)
 ):
 	"""Revoke a refresh token (logout)."""
-	success = await revoke_refresh_token(db, refresh_token)
+	success = await revoke_refresh_token(db, request.refresh_token)
 	if not success:
 		raise HTTPException(
 			status_code=status.HTTP_404_NOT_FOUND,
