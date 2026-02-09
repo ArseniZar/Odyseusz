@@ -68,11 +68,8 @@ def compute_started_at(travel: Travel, today: date) -> date | None:
     return None
   
   first_stage = travel.stages[0]
-  
-  if today >= first_stage.start_date:
-    return first_stage.start_date
-  
-  return None
+
+  return first_stage.start_date
 
 
 def compute_finished_at(travel: Travel, today: date) -> date | None:
@@ -92,10 +89,7 @@ def compute_finished_at(travel: Travel, today: date) -> date | None:
   
   last_stage = travel.stages[-1]
   
-  if today > last_stage.end_date:
-    return last_stage.end_date
-  
-  return None
+  return last_stage.end_date
 
 
 def build_travel_response(travel: Travel) -> TravelResponse:
