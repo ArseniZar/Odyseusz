@@ -81,14 +81,22 @@ async def get_country(
   return country
 
 
-@router.patch("/{country_id}", response_model=CountryProfileResponse)
+@router.put("/{country_id}", response_model=CountryProfilePublicDetailResponse)
 async def update_country(
   country_id: int,
   country_update: CountryProfileUpdate,
   country: CountryProfile = Depends(verify_editor_country_access),
   db: AsyncSession = Depends(get_db)
 ):
-  """Update a country profile (editor with access only)."""
+  """
+  Update a country profile (editor with access only).
+  
+  This endpoint updates:
+  - Description field
+  - Replaces all consulate associations with the provided list
+  
+  Note: name and country_code cannot be changed.
+  """
   updated_country = await update_country_profile(db, country_id, country_update)
   if not updated_country:
     raise HTTPException(

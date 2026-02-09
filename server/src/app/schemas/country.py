@@ -49,11 +49,10 @@ class ConsulateCreate(ConsulateBase):
   country_profile_id: int
 
 
-# Update schemas
+# Update schemas (PUT - full replacement)
 class CountryProfileUpdate(BaseModel):
-  name: str | None = Field(None, min_length=1, max_length=255)
-  country_code: str | None = Field(None, min_length=2, max_length=2, pattern="^[A-Z]{2}$")
-  description: str | None = Field(None, min_length=1)
+  description: str = Field(..., min_length=1)
+  consulate_ids: list[int] = []
 
 
 class ConsulateUpdate(BaseModel):

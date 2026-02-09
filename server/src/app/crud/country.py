@@ -123,18 +123,29 @@ async def update_country_profile(
   country_id: int,
   country_update: CountryProfileUpdate
 ) -> CountryProfile | None:
-  """Update country profile."""
-  country = await get_country_profile_by_id(db, country_id)
+  """Update country profile with full replacement (PUT)."""
+  country = await get_country_profile_with_details(db, country_id)
   if not country:
     return None
 
-  update_data = country_update.model_dump(exclude_unset=True)
-  for key, value in update_data.items():
-    setattr(country, key, value)
+  # Update description
+  country.description = country_update.description
+  
+  # Clear existing consulate associations
+  country.consulates.clear()
+  await db.flush()
+  
+  # Add new consulate associations
+  if country_update.consulate_ids:
+    for consulate_id in country_update.consulate_ids:
+      consulate = await get_consulate_by_id(db, consulate_id)
+      if consulate:
+        country.consulates.append(consulate)
 
   await db.commit()
-  await db.refresh(country)
-  return country
+  
+  # Reload with full details
+  return await get_country_profile_with_details(db, country_id)
 
 
 async def delete_country_profile(db: AsyncSession, country_id: int) -> bool:
