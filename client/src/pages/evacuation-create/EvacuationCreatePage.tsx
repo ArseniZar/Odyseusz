@@ -7,7 +7,7 @@ import { informationSectionConfig } from "./config/informationSection.config";
 import { EvacuationSection } from "./components/EvacuationSection/EvacuationSection";
 import { evacuationSectionConfig } from "./config/evacuationSection.config";
 import { useFieldArray, useForm } from "react-hook-form";
-import type {EvacuationFormValues,PointFormValues} from "./EvacuationCreatePage.types";
+import type {AreaFormValues, EvacuationFormValues,PointFormValues} from "./EvacuationCreatePage.types";
 
 const Assistants = [
   {
@@ -49,6 +49,17 @@ const defaultPoint: PointFormValues = {
         .defaultValue?.longitude ?? null,
   },
 };
+const defaultArea:AreaFormValues= {
+  coordinates: {
+    latitude:
+      evacuationSectionConfig.areasForm.area.coordinates.defaultValue
+        ?.latitude ?? null,
+    longitude:
+      evacuationSectionConfig.areasForm.area.coordinates.defaultValue
+        ?.longitude ?? null,
+  },
+  radius: evacuationSectionConfig.areasForm.area.radius.defaultValue ?? null,
+};
 
 
 export const EvacuationCreatePage = (): JSX.Element => {
@@ -61,12 +72,8 @@ export const EvacuationCreatePage = (): JSX.Element => {
         description: null,
         activateImmediately: false,
       },
-      areaForm: {
-        coordinates: {
-          latitude: null,
-          longitude: null,
-        },
-        radius: null,
+      areasForm: {
+        areas: [defaultArea],
       },
       colectionPointsForm: {
         points: [defaultPoint],
@@ -75,6 +82,11 @@ export const EvacuationCreatePage = (): JSX.Element => {
         assistants: Assistants.map((a) => ({ ...a, isActive: null })),
       },
     },
+  });
+
+  const {fields: fieldsArea,append: appendArea,remove: removeArea} = useFieldArray({
+    control,
+    name: "areasForm.areas",
   });
 
   const {fields: fieldsPoint,append: appendPoint,remove: removePoint} = useFieldArray({
@@ -115,8 +127,13 @@ export const EvacuationCreatePage = (): JSX.Element => {
             <EvacuationSection
               infoText={{evacuationSectionConfig:evacuationSectionConfig,informationSectionConfig:informationSectionConfig}}
               control={control}
+              fieldsAreas={fieldsArea}
               fieldsPoints={fieldsPoint}
               fieldsAssistans={fieldsAssistant}
+              onAddArea={() => appendArea(defaultArea)}
+              onRemoveArea={(index) => {
+                fieldsArea.length > 1 && removeArea(index);
+              }}
               onAddPoint={() => appendPoint(defaultPoint)}
               onRemovePoint={(index) => {
                 fieldsPoint.length > 1 && removePoint(index);

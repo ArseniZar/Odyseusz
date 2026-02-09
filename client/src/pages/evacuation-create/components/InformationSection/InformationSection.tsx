@@ -5,6 +5,7 @@ import { GeneralInformation } from "./components/GeneralInformation/GeneralInfor
 import { FormButtons } from "@/components/FormButtons";
 import { PointInformation } from "./components/PointInformation/PointInformation";
 import { AssistantInformation } from "./components/AssistantInformation/AssistantInformation";
+import { AreaInformation } from "./components/AreaInformation/AreaInformation";
 
 // prettier-ignore
 export const InformationSection = ({infoText, evacuation, onCancel,onSubmit}:InformationSectionProps): JSX.Element => {
@@ -19,8 +20,15 @@ export const InformationSection = ({infoText, evacuation, onCancel,onSubmit}:Inf
             name={evacuation.generalInfoForm.name} 
             description={evacuation.generalInfoForm.description} 
             reason={evacuation.generalInfoForm.reason} 
-            radius={evacuation.areaForm.radius} 
           />
+          {evacuation.areasForm.areas.map((area, index) => (
+            <AreaInformation 
+              key={index}
+              areaNumber={index + 1}
+              infoText={infoText.area} 
+              radius={area.radius} 
+            />
+          ))}
           {evacuation.colectionPointsForm.points.map((point, index) => (
             <PointInformation 
               key={index}

@@ -9,7 +9,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
       placeholder: "Wpisz nazwę ewakuacji",
       tooltipText: "Nazwa ewakuacji widoczna dla wszystkich użytkowników",
       validate: (value: any) => {
-        if(value == null || value.trim() === ""){
+        if (value == null || value.trim() === "") {
           return "Nazwa ewakuacji jest wymagana";
         }
         return true;
@@ -21,7 +21,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
       placeholder: "Wpisz powód ewakuacji",
       tooltipText: "Powód ewakuacji widoczny dla wszystkich użytkowników",
       validate: (value: any) => {
-        if(value == null || value.trim() === ""){
+        if (value == null || value.trim() === "") {
           return "Powód ewakuacji jest wymagany";
         }
         return true;
@@ -33,7 +33,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
       placeholder: "Wpisz opis ewakuacji",
       tooltipText: "Opis ewakuacji widoczny dla wszystkich użytkowników",
       validate: (value: any) => {
-        if(value == null || value.trim() === ""){
+        if (value == null || value.trim() === "") {
           return "Opis ewakuacji jest wymagany";
         }
         return true;
@@ -45,46 +45,51 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
       defaultValue: false,
       tooltipText:
         "Jeśli zaznaczone, ewakuacja zostanie aktywowana natychmiast po utworzeniu",
-      validate: (value: any) => {
-      },
+      validate: (value: any) => {},
     },
   },
-  areaForm: {
+  areasForm: {
     title: "Obszar ewakuacji",
-    coordinates: {
-      label: "Współrzędne (szerokość, długość)",
-      defaultValue: null,
-      placeholder: "Wybierz współrzędne obszaru ewakuacji na mapie",
-      tooltipText: "Współrzędne środka obszaru ewakuacji",
-      validate: (value: any) => {
-        const { latitude, longitude } = value;
-        if (typeof latitude !== "number" || latitude < -90 || latitude > 90) {
-          return "Nieprawidłowa szerokość geograficzna (-90 do 90)";
-        }
-        if (
-          typeof longitude !== "number" ||
-          longitude < -180 ||
-          longitude > 180
-        ) {
-          return "Nieprawidłowa długość geograficzna (-180 do 180)";
-        }
-        return true;
+    area: {
+      titleArea: "Obszar ewakuacji",
+      coordinates: {
+        label: "Współrzędne (szerokość, długość)",
+        defaultValue: null,
+        placeholder: "Wybierz współrzędne obszaru ewakuacji na mapie",
+        tooltipText: "Współrzędne środka obszaru ewakuacji",
+        validate: (value: any) => {
+          const { latitude, longitude } = value;
+          if (typeof latitude !== "number" || latitude < -90 || latitude > 90) {
+            return "Nieprawidłowa szerokość geograficzna (-90 do 90)";
+          }
+          if (
+            typeof longitude !== "number" ||
+            longitude < -180 ||
+            longitude > 180
+          ) {
+            return "Nieprawidłowa długość geograficzna (-180 do 180)";
+          }
+          return true;
+        },
+      },
+      radius: {
+        label: "Promień (km)",
+        defaultValue: null,
+        placeholder: "np. 5",
+        tooltipText: "Promień obszaru ewakuacji w kilometrach",
+        validate: (value: any) => {
+          if (value == null) {
+            return "Promień obszaru ewakuacji jest wymagany";
+          }
+          if (typeof value !== "number" || value <= 0) {
+            return "Promień musi być dodatnią liczbą";
+          }
+          return true;
+        },
       },
     },
-    radius: {
-      label: "Promień (km)",
-      defaultValue: null,
-      placeholder: "np. 5",
-      tooltipText: "Promień obszaru ewakuacji w kilometrach",
-      validate: (value: any) => {
-        if( value == null ){
-          return "Promień obszaru ewakuacji jest wymagany";
-        }
-        if (typeof value !== "number" || value <= 0) {
-          return "Promień musi być dodatnią liczbą";
-        }
-        return true;
-      },
+    addButton: {
+      label: "Dodaj obszar ewakuacji",
     },
   },
   collectionPointsForm: {
@@ -98,7 +103,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
         tooltipText:
           "Nazwa miejsca zbiórki widoczna dla wszystkich użytkowników",
         validate: (value: any) => {
-          if(value == null || value.trim() === ""){
+          if (value == null || value.trim() === "") {
             return "Nazwa miejsca zbiórki jest wymagana";
           }
           return true;
@@ -111,7 +116,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
         tooltipText:
           "Opis miejsca zbiórki widoczny dla wszystkich użytkowników",
         validate: (value: any) => {
-          if(value == null || value.trim() === ""){
+          if (value == null || value.trim() === "") {
             return "Opis miejsca zbiórki jest wymagany";
           }
           return true;
@@ -150,8 +155,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
         type: "checkbox",
         defaultValue: null,
         tooltipText: "Status aktywności asystenta ewakuacji",
-        validate: (value: any) => {
-        },
+        validate: (value: any) => {},
       },
     },
   },
