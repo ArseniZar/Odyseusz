@@ -177,7 +177,7 @@ async def update_evacuation(
   from app.models.user import EvacuationAssistantProfile
   from datetime import datetime, timezone
   
-  evacuation = await get_evacuation_by_id(db, evacuation_id)
+  evacuation = await get_evacuation_with_details(db, evacuation_id)
   if not evacuation:
     return None
 
