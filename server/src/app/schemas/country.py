@@ -23,12 +23,13 @@ class CountryProfileCreate(CountryProfileBase):
   pass
 
 
-# Public response schema (without danger_level)
+# Public response schema (with danger_level)
 class CountryProfilePublicResponse(BaseModel):
   id: int
   name: str
   country_code: str
   description: str
+  danger_level: DangerLevel
   created_at: datetime
   updated_at: datetime
 
@@ -36,7 +37,7 @@ class CountryProfilePublicResponse(BaseModel):
     from_attributes = True
 
 
-# Public response with consulates (without danger_level)
+# Public response with consulates (with danger_level)
 class CountryProfilePublicDetailResponse(CountryProfilePublicResponse):
   consulates: list["ConsulateResponse"] = []
 
@@ -53,7 +54,6 @@ class CountryProfileUpdate(BaseModel):
   name: str | None = Field(None, min_length=1, max_length=255)
   country_code: str | None = Field(None, min_length=2, max_length=2, pattern="^[A-Z]{2}$")
   description: str | None = Field(None, min_length=1)
-  danger_level: DangerLevel | None = None
 
 
 class ConsulateUpdate(BaseModel):

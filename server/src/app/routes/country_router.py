@@ -33,8 +33,7 @@ async def list_countries(
   db: AsyncSession = Depends(get_db)
 ):
   """
-  List countries with their consulates (public endpoint).
-  Returns countries without danger_level information.
+  List countries with their consulates and danger levels (public endpoint).
   
   - If all=true (default): Returns all countries (public access)
   - If all=false: Returns only countries the authenticated editor can edit (requires authentication)
@@ -71,8 +70,7 @@ async def get_country(
   db: AsyncSession = Depends(get_db)
 ):
   """
-  Get country details with consulates (public endpoint).
-  Returns country without danger_level information.
+  Get country details with consulates and danger level (public endpoint).
   """
   country = await get_country_profile_with_details(db, country_id)
   if not country:
