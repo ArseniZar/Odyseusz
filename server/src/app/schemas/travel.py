@@ -4,11 +4,10 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class TravelStatus(str, Enum):
-	"""Travel status enumeration (computed, not stored)."""
-	PLANNED = "planned"  # Travel is planned but not started
-	ONGOING = "ongoing"  # Travel is currently in progress
-	COMPLETED = "completed"  # Travel has been completed
-	CANCELLED = "cancelled"  # Travel has been cancelled
+	PLANNED = "planned"
+	ONGOING = "ongoing"
+	COMPLETED = "completed"
+	CANCELLED = "cancelled"
 
 
 # Base schemas

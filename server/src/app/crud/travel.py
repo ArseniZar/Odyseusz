@@ -100,7 +100,7 @@ async def update_travel(
 	"""Update travel with full replacement of stages."""
 	from app.models.location import Location
 	
-	travel = await get_travel_by_id(db, travel_id)
+	travel = await get_travel_with_stages(db, travel_id)
 	if not travel:
 		return None
 	
