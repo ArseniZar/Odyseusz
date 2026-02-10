@@ -5,6 +5,7 @@ import {iconCross} from "@/assets/"
 //prettier-ignore
 export const Input = ({type = "text", label, placeholder ="", value, error, tooltipText, className ="", classInput ="", ref = null, onChange, onFocus, onBlur}: InputProps): JSX.Element => {
   const stringValue = value == null ? "" : String(value);
+
   return (
     <div className={`relative flex flex-col gap-2 group ${className}`}>
       <label className="ml-2 text-lg tracking-wide">{label}</label>
@@ -16,6 +17,7 @@ export const Input = ({type = "text", label, placeholder ="", value, error, tool
         <div className={`flex flex-row items-center rounded-2xl border-2 border-black/10 shadow-xl focus-within:border-blue-600 ${error ? "border-red-500" : ""} ${classInput}`}>
           <input
             className={` min-w-0 h-full w-full flex-1 py-3 px-4 outline-none `}
+            {...((type === "checkbox" && value) ? { checked:true } : {})}
             placeholder={placeholder}
             value={stringValue}
             type={type}

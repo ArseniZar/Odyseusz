@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import Logo from "./components/Logo/Logo";
 import { NavItem } from "./components/NavItem/NavItem";
 import {iconAccount, iconMaps} from "@/assets/";
-import { routesConfig } from "@/types/rotes";
+import { routesConfig } from "@/types/rotes/rotes";
 const navItems = [
   { title: "Home", href: "/" },
 
@@ -13,7 +13,8 @@ const navItems = [
   { title: "Archiwum ewakuacji", href: routesConfig.EVACUATIONS_READ.path },
 
   { title: "Archiwum profili kraju", href: routesConfig.PROFILE_COUNTRY_READ.path , },
-  { title: "Edytuj profil kraju", href: routesConfig.PROFILE_COUNTRY_EDIT.path.replace(":profileId", "1") },
+
+  { title: "Zaloguj się", href: routesConfig.AUTH_LOGIN.path },
 ];
 
 const navItemsRight = [
