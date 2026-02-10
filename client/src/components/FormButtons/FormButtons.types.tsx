@@ -1,4 +1,4 @@
-import type { Information } from "@/types/all_types";
+import type { Information } from "@/types/config";
 
 export interface FormButtonsProps<T extends Information> {
   infoText: T;
