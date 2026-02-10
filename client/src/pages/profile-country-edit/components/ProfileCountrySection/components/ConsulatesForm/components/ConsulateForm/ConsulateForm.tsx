@@ -4,7 +4,7 @@ import { Input } from "@/components/Input";
 import type { ConsulateFormProps } from "./ConsulateForm.types";
 import { formatDate } from "@/utils/formatDate";
 
-export const ConsulateForm = ({infoText, consulateNumber, control,index}:ConsulateFormProps): JSX.Element => {
+export const ConsulateForm = ({infoText, control,index}:ConsulateFormProps): JSX.Element => {
     const consulate = useWatch({
         control,
         name: `consulatesForm.consulates.${index}`,

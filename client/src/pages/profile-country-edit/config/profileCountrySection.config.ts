@@ -25,7 +25,7 @@ export const profileCountrySectionConfig: ProfileCountrySectionConfig = {
         defaultValue: false,
         tooltipText:
           "Zaznacz, jeśli konsulat jest aktywny i powinien być widoczny na profilu kraju.",
-        validate: (value: any) => {},
+        validate: (_value: any) => {},
       },
     },
   },

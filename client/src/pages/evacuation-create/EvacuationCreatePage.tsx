@@ -7,6 +7,7 @@ import {informationSectionConfigCreate,informationSectionConfigEdit} from "./con
 import { EvacuationSection } from "./components/EvacuationSection/EvacuationSection";
 import { evacuationSectionConfig } from "./config/evacuationSection.config";
 import { useFieldArray, useForm } from "react-hook-form";
+import { ClipLoader } from "react-spinners";
 import type {
   AreaFormValues,
   AssistantFormValues,
@@ -129,6 +130,7 @@ export const EvacuationCreatePage = (): JSX.Element => {
 
     if (status === 404) {
       alert("Nie znaleziono zasobu.");
+      navigate(routesConfig.EVACUATIONS_READ.path, { replace: true });
       return false;
     }
 
@@ -198,16 +200,14 @@ export const EvacuationCreatePage = (): JSX.Element => {
     setLoading(true);
     try {
       const evacuation: Evacuation = mapEvacuationResponseToDomain(await getEvacuation(id));
-      console.log(evacuation);
-
       if (evacuation.canEdit) {
         const assistants: Assistant[] = (await listEvacuationAssistants()).map(mapEvacuationAssistantResponseToDomain);
-        reset(resetFormData(evacuation, assistants));
-    }
-    else {
-      alert("Ta ewakuacja nie jest edytowalna przez tego cordynatora.");
-      navigate(routesConfig.EVACUATIONS_READ.path, { replace: true });
-    }
+        reset(resetFormData(evacuation,assistants));
+      }
+      else {
+        alert("Ta ewakuacja nie jest edytowalna przez tego cordynatora.");
+        navigate(routesConfig.EVACUATIONS_READ.path, { replace: true });
+      }
     } catch (error) {
       handleError(error);
     } finally {
@@ -216,14 +216,18 @@ export const EvacuationCreatePage = (): JSX.Element => {
   };
 
   const fetchAssistants = async () => {
+    setLoading(true);
     try {
       const assistants: Assistant[] = (await listEvacuationAssistants()).map(
         mapEvacuationAssistantResponseToDomain,
       );
       reset(resetDefaultForm(assistants));
     } catch (error) {
-      handleError(error, "Nie można pobrać listy asystentów.");
       reset(defaultEvacuation);
+      handleError(error, "Nie można pobrać listy asystentów.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -261,13 +265,21 @@ export const EvacuationCreatePage = (): JSX.Element => {
       }
     } catch (error) {
       handleError(error)
-      alert("Nie można zapisać ewakuacji. Spróbuj ponownie.");
     }
   });
 
   const onCancel = () => {
     navigateBack();
   };
+
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-(--main-bg-color)">
+        <ClipLoader color="var(--main-text-color)" size={60} />
+        <p className="mt-4 font-geologica text-lg opacity-70">{"........"}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col">

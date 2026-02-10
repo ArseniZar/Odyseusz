@@ -6,7 +6,7 @@ import { ConsulateInformation } from "./components/ConsulateInformation/Consulat
 import { GeneralInformation } from "./components/GeneralInformation/GeneralInformation";
 import { getFlagUrl } from "@/utils/getFlagImage";
 
-export const ProfileCountryInformation =({infoText, name,description, consulates,isEditable, countryCode, dangerLevel, dataUpdate ,onEdit}: ProfileCountryInformationProps):JSX.Element => {
+export const ProfileCountryInformation =({infoText, name,description, consulates,canEdit, countryCode, dangerLevel, dataUpdate ,onEdit}: ProfileCountryInformationProps):JSX.Element => {
     const [isOpen, setIsOpen] = useState(false);
     return(
         <div className="flex flex-none flex-col  gap-5 border border-black/10 shadow-xl rounded-2xl">
@@ -16,11 +16,11 @@ export const ProfileCountryInformation =({infoText, name,description, consulates
                     <p className="font-medium text-xl">{infoText.dangerLevel.label}:<span className="font-light ml-1">{infoText.dangerLevel.options[dangerLevel]} </span></p>
                     <p className="font-medium text-lg"> {infoText.name.label}:<span className="font-light ml-1">{name}</span></p>
                 </div>
-                <button className={`flex-1 h-full opacity-0 hover:opacity-30 transition-opacity ${infoText.showButtons.details.some((item) => isEditable  === item)  ? "visible" : "invisible"}`} onClick={() => setIsOpen(prev => !prev)}>
+                <button className={`flex-1 h-full opacity-0 hover:opacity-30 transition-opacity ${infoText.showButtons.details.some((item) => canEdit  === item)  ? "visible" : "invisible"}`} onClick={() => setIsOpen(prev => !prev)}>
                     <p className="font-medium text-lg"> {infoText.profileCountryButtons.details.label} </p>
                 </button>
                 <div className="flex flex-row gap-3 justify-center">
-                    <Button label={infoText.profileCountryButtons.edit.label}  onClick={onEdit} classButton={`bg-black/90 ${infoText.showButtons.edit.some((item) => isEditable === item)  ? "block" : "hidden"}`} classText="text-white"/>
+                    <Button label={infoText.profileCountryButtons.edit.label}  onClick={onEdit} classButton={`bg-black/90 ${infoText.showButtons.edit.some((item) => canEdit === item)  ? "block" : "hidden"}`} classText="text-white"/>
                 </div>
             </div>
             <div className={`${isOpen ? "block" : "hidden"} px-5 pb-5 flex-1 flex flex-col gap-4`}>

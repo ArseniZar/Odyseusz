@@ -17,14 +17,25 @@ export const EvacuationInformation =({infoText, status, name, areas,assistants,c
                     <p className="font-medium text-xl">{infoText.status.label}:<span className="font-light ml-1">{infoText.status.options[status]} </span></p>
                     <p className="font-medium text-lg"> {infoText.name.label}:<span className="font-light ml-1">{name}</span></p>
                 </div>
-                <button className={`flex-1 h-full opacity-0 hover:opacity-30 transition-opacity ${infoText.showButtons.details.some((item) => status === item)  ? "visible" : "invisible"}`} onClick={() => setIsOpen(prev => !prev)}>
+                <button className={`flex-1 h-full opacity-0 hover:opacity-30 transition-opacity ${infoText.showButtons.details.status.some((item) => status === item)  ? "visible" : "invisible"}`} onClick={() => setIsOpen(prev => !prev)}>
                     <p className="font-medium text-lg"> {infoText.evacuationButtons.details.label} </p>
                 </button>
                 <div className="flex flex-row gap-3 justify-center">
-                    <Button label={infoText.evacuationButtons.active.label}  onClick={onActive} classButton={`bg-black/90 ${ (canEdit && infoText.showButtons.active.some((item) => status === item))  ? "block" : "hidden"}`} classText="text-white"/>
-                    <Button label={infoText.evacuationButtons.cancel.label}  onClick={onCancel} classButton={`bg-black/90 ${ (canEdit && infoText.showButtons.cancel.some((item) => status === item)) ? "block" : "hidden"}`} classText="text-white"/>
-                    <Button label={infoText.evacuationButtons.edit.label}  onClick={onEdit} classButton={`bg-black/90 ${(canEdit && infoText.showButtons.edit.some((item) => status === item)) ? "block" : "hidden"}`} classText="text-white"/>
-                    <Button label={infoText.evacuationButtons.delete.label}  onClick={onDelete} classButton={`bg-black/90 ${(canEdit && infoText.showButtons.delete.some((item) => status === item)) ? "block" : "hidden"}`} classText="text-white"/>
+                    <Button label={infoText.evacuationButtons.active.label}  onClick={onActive} classButton={`bg-black/90 
+                        ${infoText.showButtons.active.status.includes(status) && infoText.showButtons.active.isEdit.includes(canEdit) 
+                        ? "block" : "hidden"}`} classText="text-white"/>
+
+                    <Button label={infoText.evacuationButtons.cancel.label}  onClick={onCancel} classButton={`bg-black/90 
+                        ${infoText.showButtons.cancel.status.includes(status) && infoText.showButtons.cancel.isEdit.includes(canEdit) 
+                        ? "block" : "hidden"}`} classText="text-white"/>
+
+                    <Button label={infoText.evacuationButtons.edit.label}  onClick={onEdit} classButton={`bg-black/90 
+                        ${infoText.showButtons.edit.status.includes(status) && infoText.showButtons.edit.isEdit.includes(canEdit) 
+                        ? "block" : "hidden"}`} classText="text-white"/>
+
+                    <Button label={infoText.evacuationButtons.delete.label}  onClick={onDelete} classButton={`bg-black/90 
+                        ${infoText.showButtons.delete.status.includes(status) && infoText.showButtons.delete.isEdit.includes(canEdit) 
+                        ? "block" : "hidden"}`} classText="text-white"/>
                 </div>
             </div>
             <div className={`${isOpen ? "block" : "hidden"} px-5 pb-5 flex-1 flex flex-col gap-4`}>

@@ -3,7 +3,7 @@ import type { AssistantFormProps } from "./AssistantForm.types";
 import { Controller, useWatch } from "react-hook-form";
 import { Input } from "@/components/Input";
 
-export const AssistantForm = ({infoText, assistantNumber, control,index}:AssistantFormProps): JSX.Element => {
+export const AssistantForm = ({infoText, control,index}:AssistantFormProps): JSX.Element => {
     const assistant = useWatch({
         control,
         name: `assistantsForm.assistants.${index}`,
