@@ -87,41 +87,42 @@ def build_evacuation_response(evacuation: Evacuation) -> dict:
 # Evacuation CRUD endpoints
 @router.get("/", response_model=list[EvacuationDetailResponse])
 async def list_evacuations(
-  all: bool = Query(True, description="If false, returns only evacuations of the logged-in coordinator"),
   skip: int = Query(0, ge=0),
   limit: int = Query(100, ge=1, le=1000),
   current_user: User = Depends(get_current_active_user),
   db: AsyncSession = Depends(get_db)
 ):
   """
-  List evacuations with all data (areas, assembly points, assistants).
+  List all evacuations with all data (areas, assembly points, assistants).
   
-  - If all=true (default): Returns all evacuations (any authenticated user)
-  - If all=false: Returns only evacuations of the authenticated coordinator (requires coordinator role)
+  Each evacuation includes a 'can_edit' field indicating whether the current user can edit it.
+  Only coordinators can edit their own evacuations.
   """
-  if all:
-    # Return all evacuations
-    evacuations = await get_all_evacuations(db, skip, limit, active_only=False)
-  else:
-    # Return only coordinator's evacuations
-    if current_user.role != UserRole.COORDINATOR:
-      raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="Only coordinators can filter their evacuations with all=false"
-      )
-    
+  # Get all evacuations
+  evacuations = await get_all_evacuations(db, skip, limit, active_only=False)
+  
+  # Get coordinator profile if user is a coordinator
+  coordinator_profile = None
+  if current_user.role == UserRole.COORDINATOR:
     result = await db.execute(
       select(CoordinatorProfile).where(CoordinatorProfile.user_id == current_user.id)
     )
     coordinator_profile = result.scalar_one_or_none()
-    if not coordinator_profile:
-      raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail="Coordinator profile not found"
-      )
-    evacuations = await get_evacuations_by_coordinator(db, coordinator_profile.id, skip, limit)
   
-  return [build_evacuation_response(evacuation) for evacuation in evacuations]
+  # Build response with can_edit field
+  response = []
+  for evacuation in evacuations:
+    evacuation_dict = build_evacuation_response(evacuation)
+    
+    # Check if current user can edit this evacuation
+    can_edit = False
+    if coordinator_profile and evacuation.coordinator_id == coordinator_profile.id:
+      can_edit = True
+    
+    evacuation_dict["can_edit"] = can_edit
+    response.append(evacuation_dict)
+  
+  return response
 
 
 @router.get("/assistants", response_model=list[EvacuationAssistantResponse])

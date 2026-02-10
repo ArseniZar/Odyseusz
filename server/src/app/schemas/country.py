@@ -40,6 +40,7 @@ class CountryProfilePublicResponse(BaseModel):
 # Public response with consulates (with danger_level)
 class CountryProfilePublicDetailResponse(CountryProfilePublicResponse):
   consulates: list["ConsulateResponse"] = []
+  can_edit: bool = False
 
   class Config:
     from_attributes = True

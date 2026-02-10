@@ -26,31 +26,41 @@ router = APIRouter()
 
 @router.get("/", response_model=list[CountryProfilePublicDetailResponse])
 async def list_countries(
-  all: bool = Query(True, description="If false, returns only countries the logged-in editor can edit"),
   skip: int = Query(0, ge=0),
   limit: int = Query(100, ge=1, le=1000),
   current_editor: Optional[EditorProfile] = Depends(get_optional_current_editor),
   db: AsyncSession = Depends(get_db)
 ):
   """
-  List countries with their consulates and danger levels (public endpoint).
+  List all countries with their consulates and danger levels (public endpoint).
   
-  - If all=true (default): Returns all countries (public access)
-  - If all=false: Returns only countries the authenticated editor can edit (requires authentication)
+  Each country includes a 'can_edit' field indicating whether the current user can edit it.
   """
-  if all:
-    # Return all countries (public access)
-    countries = await get_all_country_profiles(db, skip, limit)
-  else:
-    # Return only countries the editor has access to
-    if not current_editor:
-      raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Authentication required when all=false"
-      )
-    countries = await get_editor_country_profiles(db, current_editor.id, skip, limit)
+  # Get all countries
+  countries = await get_all_country_profiles(db, skip, limit)
   
-  return countries
+  # Build response with can_edit field
+  response = []
+  for country in countries:
+    country_dict = {
+      "id": country.id,
+      "name": country.name,
+      "country_code": country.country_code,
+      "description": country.description,
+      "danger_level": country.danger_level,
+      "created_at": country.created_at,
+      "updated_at": country.updated_at,
+      "consulates": country.consulates,
+      "can_edit": False
+    }
+    
+    # Check if current editor can edit this country
+    if current_editor:
+      country_dict["can_edit"] = country in current_editor.country_profiles
+    
+    response.append(country_dict)
+  
+  return response
 
 
 @router.get("/consulates", response_model=list[ConsulateResponse])

@@ -134,6 +134,7 @@ class EvacuationDetailResponse(EvacuationResponse):
   areas: list[EvacuationAreaResponse] = []
   assembly_points: list[AssemblyPointResponse] = []
   assistants: list[EvacuationAssistantResponse] = []
+  can_edit: bool = False
 
   class Config:
     from_attributes = True
