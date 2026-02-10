@@ -1,5 +1,6 @@
 import type { Option } from "@/components/Select";
-import type { DangerLevel, DateFormat, FilterFieldConfig } from "@/types/all_types";
+import type { DateFormat, FilterFieldConfig } from "@/types/config";
+import type { DangerLevel } from "@/types/domain/profileCountry";
 
 
 export interface FilterSectionConfig {

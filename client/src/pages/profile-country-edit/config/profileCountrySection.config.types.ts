@@ -1,4 +1,4 @@
-import type { FormFieldConfig } from "@/types/all_types";
+import type { FormFieldConfig } from "@/types/config";
 
 export interface ProfileCountrySectionConfig {
   generalInfoForm: {

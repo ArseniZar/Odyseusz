@@ -1,9 +1,9 @@
 import type { InformationSectionConfig } from "../../config/informationSection.config.types";
-import type { ProfileCountryValues } from "../../ProfileCountryEditPage.types";
+import type { ProfileCountryFormValues } from "@/types/forms/profileCountry";
 
 export interface InformationSectionProps {
   infoText: InformationSectionConfig;
-  profileCountry: ProfileCountryValues;
+  profileCountry: ProfileCountryFormValues;
   onCancel: () => void;
   onSubmit: () => void;
 

@@ -1,4 +1,4 @@
-import type { AreaFormValues } from "../../../../EvacuationCreatePage.types";
+import type { AreaFormValues } from "@/types/forms/evacuation";
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
 export interface AreaInformationProps {

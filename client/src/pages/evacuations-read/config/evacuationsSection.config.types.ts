@@ -1,4 +1,4 @@
-import type { InformationFieldConfig } from "@/types/domain/forms";
+import type { InformationFieldConfig } from "@/types/config";
 import type {EvacuationStatus} from "@/types/domain/evacuation";
 
 export interface EvacuationsSectionConfig {

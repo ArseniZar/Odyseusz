@@ -1,5 +1,6 @@
 import type { Option } from "@/components/Select";
-import type { DateFormat, FilterFieldConfig, InformationFieldConfig, TripStatus } from "@/types/all_types";
+import type { DateFormat, FilterFieldConfig, InformationFieldConfig } from "@/types/config";
+import type { TripStatus } from "@/types/domain/trip";
 
 export interface FilterSectionConfig {
   status: FilterFieldConfig<TripStatus[]> & { options: Option<TripStatus>[] };

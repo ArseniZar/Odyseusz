@@ -1,4 +1,4 @@
-import { useEffect, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
@@ -12,181 +12,10 @@ import { evacuationsSectionConfig } from "./config/evacuationsSection.config";
 import { FilterSection } from "./components/FilterSection/FilterSection";
 import { EvacuationsSection } from "./components/EvacuationsSection/EvacuationsSection";
 import type { Evacuation } from "@/types/domain/evacuation";
-
-export const mockEvacuations: Evacuation[] = [
-  {
-    id: 1,
-    status: "ACTIVE",
-    name: "Evacuation – Industrial Zone",
-    reason: "Chemical leak detected",
-    description:
-      "Emergency evacuation due to hazardous chemical spill in the industrial area.",
-    areas: [
-      {
-        coordinates: {
-          latitude: 52.520008,
-          longitude: 13.404954,
-        },
-        radius: 1500,
-      },
-    ],
-    collectionPoints: [
-      {
-        id: 101,
-        name: "Central Stadium",
-        description: "Main evacuation assembly point",
-        coordinates: {
-          latitude: 52.522,
-          longitude: 13.409,
-        },
-      },
-      {
-        id: 102,
-        name: "City Park Entrance",
-        description: "Secondary collection point near the park",
-        coordinates: {
-          latitude: 52.518,
-          longitude: 13.398,
-        },
-      },
-    ],
-    assistants: [
-      {
-        id: 201,
-        name: "Anna Müller",
-        workingHours: "08:00 - 16:00",
-        phone: "+49 170 1234567",
-        email: "anna.mueller@example.com",
-      },
-      {
-        id: 202,
-        name: "Max Schmidt",
-        workingHours: "16:00 - 00:00",
-        phone: "+49 170 7654321",
-        email: "max.schmidt@example.com",
-      },
-    ],
-    dataUpdate: new Date("2026-01-20"),
-    dataLastActivated: new Date("2026-01-21"),
-  },
-  {
-    id: 2,
-    status: "ACTIVE",
-    name: "Evacuation – Riverside Area",
-    reason: "Flood risk",
-    description:
-      "Preventive evacuation due to rising water levels in the river.",
-    areas: [
-      {
-        coordinates: {
-          latitude: 48.137154,
-          longitude: 11.576124,
-        },
-        radius: 2500,
-      },
-    ],
-    collectionPoints: [
-      {
-        id: 103,
-        name: "Community Hall North",
-        description: "Indoor assembly point",
-        coordinates: {
-          latitude: 48.14,
-          longitude: 11.58,
-        },
-      },
-    ],
-    assistants: [
-      {
-        id: 203,
-        name: "Laura Fischer",
-        workingHours: "07:00 - 15:00",
-        phone: "+49 151 9876543",
-        email: "laura.fischer@example.com",
-      },
-    ],
-    dataUpdate: new Date("2026-01-18"),
-    dataLastActivated: new Date("2026-01-19"),
-  },
-  {
-    id: 3,
-    status: "CANCELLED",
-    name: "Evacuation – Old Town",
-    reason: "Gas leak (false alarm)",
-    description: "Evacuation cancelled after inspection confirmed no danger.",
-    areas: [
-      {
-        coordinates: {
-          latitude: 50.110924,
-          longitude: 8.682127,
-        },
-        radius: 1000,
-      },
-    ],
-    collectionPoints: [
-      {
-        id: 104,
-        name: "Market Square",
-        description: "Central town square",
-        coordinates: {
-          latitude: 50.111,
-          longitude: 8.68,
-        },
-      },
-    ],
-    assistants: [],
-    dataUpdate: new Date("2026-01-17"),
-    dataLastActivated: null,
-  },
-  {
-    id: 4,
-    status: "ACTIVE",
-    name: "Evacuation – Airport Zone",
-    reason: "Security threat",
-    description:
-      "Temporary evacuation of airport perimeter due to security alert.",
-    areas: [
-      {
-        coordinates: {
-          latitude: 51.47002,
-          longitude: -0.454295,
-        },
-        radius: 3000,
-      },
-    ],
-    collectionPoints: [
-      {
-        id: 105,
-        name: "Terminal Parking Area",
-        description: "Outdoor parking area used as collection point",
-        coordinates: {
-          latitude: 51.471,
-          longitude: -0.45,
-        },
-      },
-      {
-        id: 106,
-        name: "Cargo Terminal Gate",
-        description: "Secondary point near cargo terminal",
-        coordinates: {
-          latitude: 51.468,
-          longitude: -0.46,
-        },
-      },
-    ],
-    assistants: [
-      {
-        id: 204,
-        name: "James Brown",
-        workingHours: "09:00 - 18:00",
-        phone: "+44 7700 900123",
-        email: "james.brown@example.com",
-      },
-    ],
-    dataUpdate: new Date("2026-01-22"),
-    dataLastActivated: new Date("2026-01-23"),
-  },
-];
+import { HttpError } from "@/service/http/request";
+import { deleteEvacuation, listEvacuations, updateEvacuation } from "@/service/api/evacuation";
+import { mapEvacuationActiveToApi, mapEvacuationCancelToApi, mapEvacuationResponseToDomain } from "@/utils/mappers";
+import type { EvacuationUpdate } from "@/types/api/evacuation";
 
 const defalutFilter: FilterValues = {
   status: filterSectionConfig.status.defaultValue,
@@ -194,15 +23,137 @@ const defalutFilter: FilterValues = {
 };
 
 export const EvacuationsReadPage = (): JSX.Element => {
+  const [evacuations, setEvacuations] = useState<Evacuation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const isFetchingRef = useRef(false);
+
+  const handleError = (
+    error: unknown,
+    fallbackMessage = "Wystąpił błąd",
+  ): boolean => {
+    const status =
+      error instanceof HttpError
+        ? error.status
+        : ((error as any)?.response?.status ?? (error as any)?.status);
+
+    const detail =
+      error instanceof HttpError
+        ? error.detail
+        : ((error as any)?.response?.data?.detail ?? (error as any)?.message);
+
+    if (status === 401) {
+      alert("Aby kontynuować, najpierw zaloguj się.");
+      navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+      return true;
+    }
+
+    if (status === 403) {
+      alert("Brak uprawnień do wykonania operacji.");
+      navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+      return false;
+    }
+
+    if (status === 404) {
+      alert("Nie znaleziono zasobu.");
+      return false;
+    }
+
+    if (status && status >= 500) {
+      alert("Błąd serwera. Spróbuj ponownie później.");
+      return false;
+    }
+
+    alert(detail || fallbackMessage);
+    navigate(routesConfig.NOT_FOUND.path, { replace: true });
+    return false;
+  };
+
+  const fetchEvacuation = async (showLoader: boolean = true) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    if (showLoader) setLoading(true);
+    try {
+      const evacuation: Evacuation[] = (await listEvacuations()).map(mapEvacuationResponseToDomain);
+      setEvacuations(evacuation);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      isFetchingRef.current = false;
+      if (showLoader) setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvacuation(true);
+    const intervalId = setInterval(() => {
+      fetchEvacuation(false);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const { control, watch } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
   });
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Форма изменилась:", watch());
-  }, [watch()]);
+  const onDelete = async (evacuationId: number) => {
+      const confirmed = window.confirm("Czy na pewno chcesz usunąć tę ewakuację?");
+      if (!confirmed) return;
+  
+      try {
+        await deleteEvacuation(evacuationId);
+        alert("evakuacja została usunięta.");
+      } catch (error) {
+        handleError(error);
+      } finally {
+        fetchEvacuation();
+      }
+    };
+
+   const onEdit = (evacuationId: number) => {
+    navigate(routesConfig.EVACUATION_EDIT.path.replace(":evacuationId", String(evacuationId)));
+  };
+
+  const onCancel = async (evacuationId: number) => {
+      const confirmed = window.confirm("Czy na pewno chcesz anulować tę ewakuację?");
+      if (!confirmed) return;
+  
+      try {
+        const evacuation = evacuations.find((evacuation) => evacuation.id === evacuationId);
+        if (evacuation) {
+          const payload: EvacuationUpdate = mapEvacuationCancelToApi(evacuation);
+          await updateEvacuation(evacuation.id, payload);
+          alert("Ewakuacja została anulowana.");
+        } else {
+          alert(" Nie można znaleźć ewakuacji do anulowania.");
+        }
+      } catch (error) {
+        handleError(error);
+      } finally {
+        fetchEvacuation();
+      }
+    };
+  
+  const onActive = async (evacuationId: number) => {
+    const confirmed = window.confirm("Czy na pewno chcesz aktywować tę ewakuację?");
+    if (!confirmed) return;
+
+    try {
+      const evacuation = evacuations.find((evacuation) => evacuation.id === evacuationId);
+      if (evacuation) {
+        const payload: EvacuationUpdate = mapEvacuationActiveToApi(evacuation);
+        await updateEvacuation(evacuation.id, payload);
+        alert("Ewakuacja została aktywowana.");
+      } else {
+        alert(" Nie można znaleźć ewakuacji do aktywowania.");
+      }
+    } catch (error) {
+      handleError(error);
+    } finally {
+      fetchEvacuation();
+    }
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -218,19 +169,11 @@ export const EvacuationsReadPage = (): JSX.Element => {
             />
             <EvacuationsSection
               infoText={evacuationsSectionConfig}
-              evacuations={mockEvacuations}
-              onActive={function (evacuationId: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              onCancel={function (evacuationId: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              onDelete={function (evacuationId: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              onEdit={function (evacuationId: number): void {
-                throw new Error("Function not implemented.");
-              }}
+              evacuations={evacuations}
+              onActive={onActive}
+              onCancel={onCancel}
+              onDelete={onDelete}
+              onEdit={onEdit}
             />
           </div>
         </div>

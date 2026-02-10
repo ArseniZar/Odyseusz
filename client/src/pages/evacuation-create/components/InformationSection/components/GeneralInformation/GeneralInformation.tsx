@@ -12,12 +12,10 @@ export const GeneralInformation = ({infoText, description, name, reason}: Genera
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <p className="font-medium text-xl border-b pb-3">  {infoText.reason.label}:
-          <Markdown text={reason}/>
-        </p>
-        <p className="font-medium text-xl border-b pb-3">  {infoText.description.label}:
+        <p className="font-medium text-xl border-b pb-3">  {infoText.reason.label}: <span className="font-light"> {reason} </span> </p> 
+        <div className="font-medium text-xl border-b pb-3">  {infoText.description.label}:
           <Markdown text={description}/>
-        </p>
+        </div>
       </div>
     </div>
   );

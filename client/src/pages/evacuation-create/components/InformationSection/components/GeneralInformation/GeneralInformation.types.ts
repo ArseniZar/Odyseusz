@@ -1,4 +1,5 @@
-import type { EvacuationFormValues } from "@/pages/evacuation-create/EvacuationCreatePage.types";
+
+import type { EvacuationFormValues } from "@/types/forms/evacuation";
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
 export interface  GeneralInformationProps {

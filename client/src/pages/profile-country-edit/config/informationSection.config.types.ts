@@ -1,5 +1,4 @@
-import type { BaseFormButtonKey, Information } from "@/types/all_types";
-import type { InformationFieldConfig } from "@/types/all_types";
+import type { BaseFormButtonKey, Information, InformationFieldConfig} from "@/types/config";
 
 export interface InformationSectionConfig extends Information {
   title: string;

@@ -1,4 +1,4 @@
-import type { AssistantFormValues } from "../../../../EvacuationCreatePage.types";
+import type { AssistantFormValues } from "@/types/forms/evacuation";
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
 export interface AssistantInformationProps {

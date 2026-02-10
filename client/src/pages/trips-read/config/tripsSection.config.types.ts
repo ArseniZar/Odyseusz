@@ -1,4 +1,5 @@
-import type { InformationFieldConfig, TripStatus } from "@/types/all_types";
+import type { InformationFieldConfig } from "@/types/config";
+import type {TripStatus } from "@/types/domain/trip";
 
 
 export interface TripsSectionConfig {
@@ -6,6 +7,14 @@ export interface TripsSectionConfig {
   status: TripInformationFieldConfig & {options:  Record<TripStatus, string>};
   dateRange: TripInformationFieldConfig;
   numberOfStages: TripInformationFieldConfig;
+  stage: {
+    title: string;
+    latitude: TripInformationFieldConfig;
+    longitude: TripInformationFieldConfig;
+    dateRange: TripInformationFieldConfig;
+    numberOfPeople: TripInformationFieldConfig;
+
+  }
   tripButtons: Record<TripButtonKey, TripInformationFieldConfig>;
   showButtons: Record<TripButtonKey, TripStatus[]>
 }

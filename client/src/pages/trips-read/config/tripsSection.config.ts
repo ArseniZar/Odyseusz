@@ -32,6 +32,21 @@ export const tripsSectionConfig: TripsSectionConfig = {
       label: "Anuluj"
     }
   },
+  stage: {
+    title: "Etap",
+    latitude: {
+      label: "Szerokość",
+    },
+    longitude: {
+      label: "Długość",
+    },
+    dateRange: {
+      label: "Okres",
+    },
+    numberOfPeople: {
+      label: "Liczba osób",
+    }
+  },
   showButtons: {
     edit: ["NOT_STARTED"],
     delete: ["NOT_STARTED"],

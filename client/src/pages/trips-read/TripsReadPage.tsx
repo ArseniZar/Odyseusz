@@ -1,4 +1,4 @@
-import { useEffect, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -13,166 +13,17 @@ import { filterSectionConfig } from "./config/filterSection.config";
 import { pageConfig } from "./config/page.config";
 
 import type { FilterValue } from "./TripsReadPage.types";
-import type { Trip } from "@/types/all_types";
-import { routesConfig } from "@/types/rotes";
+import type { Trip } from "@/types/domain/trip";
+import { routesConfig } from "@/types/rotes/rotes";
+import {
+  mapTravelResponseToDomain,
+  mapTripToCancelToApi,
+} from "@/utils/mappers/tripMapper";
+import { deleteTravel, listTravels, updateTravel } from "@/service/api/trip";
+import type { TravelUpdate } from "@/types/api/travel";
+import { HttpError } from "@/service/http/request";
 
-
-export const sampleTrips: Trip[] = [
-  {
-    id: 1,
-    status: "ACTIVE",
-    startDate: new Date("2026-01-10"),
-    endDate: new Date("2026-01-15"),
-    cancel: false,
-    numberOfStages: 2,
-    stages: [
-      {
-        id: 1,
-        dateRange: {
-          startDate: new Date("2026-01-10"),
-          endDate: new Date("2026-01-11"),
-        },
-        coordinates: {
-          latitude: 50.0647,
-          longitude: 19.945,
-        },
-        numberOfPeople: 5,
-      },
-      {
-        id: 2,
-        dateRange: {
-          startDate: new Date("2026-01-12"),
-          endDate: new Date("2026-01-15"),
-        },
-        coordinates: {
-          latitude: 50.0677,
-          longitude: 19.942,
-        },
-        numberOfPeople: 5,
-      },
-    ],
-    dataUpdate: new Date("2026-01-05"),
-  },
-  {
-    id: 2,
-    status: "CANCELLED",
-    startDate: new Date("2026-02-01"),
-    endDate: new Date("2026-02-05"),
-    cancel: true,
-    numberOfStages: 1,
-    stages: [
-      {
-        id: 1,
-        dateRange: {
-          startDate: new Date("2026-02-01"),
-          endDate: new Date("2026-02-05"),
-        },
-        coordinates: {
-          latitude: 51.1079,
-          longitude: 17.0385,
-        },
-        numberOfPeople: 3,
-      },
-    ],
-    dataUpdate: new Date("2026-01-20"),
-  },
-  {
-    id: 3,
-    status: "FINISHED",
-    startDate: new Date("2025-12-20"),
-    endDate: new Date("2025-12-25"),
-    cancel: false,
-    numberOfStages: 3,
-    stages: [
-      {
-        id: 1,
-        dateRange: {
-          startDate: new Date("2025-12-20"),
-          endDate: new Date("2025-12-21"),
-        },
-        coordinates: {
-          latitude: 52.2297,
-          longitude: 21.0122,
-        },
-        numberOfPeople: 2,
-      },
-      {
-        id: 2,
-        dateRange: {
-          startDate: new Date("2025-12-22"),
-          endDate: new Date("2025-12-23"),
-        },
-        coordinates: {
-          latitude: 52.237,
-          longitude: 21.0175,
-        },
-        numberOfPeople: 2,
-      },
-      {
-        id: 3,
-        dateRange: {
-          startDate: new Date("2025-12-24"),
-          endDate: new Date("2025-12-25"),
-        },
-        coordinates: {
-          latitude: 52.23,
-          longitude: 21.01,
-        },
-        numberOfPeople: 2,
-      },
-    ],
-    dataUpdate: new Date("2025-12-15"),
-  },
-  {
-    id: 4,
-    status: "NOT_STARTED",
-    startDate: new Date("2026-03-01"),
-    endDate: new Date("2026-03-05"),
-    cancel: false,
-    numberOfStages: 1,
-    stages: [
-      {
-        id: 1,
-        dateRange: {
-          startDate: new Date("2026-03-01"),
-          endDate: new Date("2026-03-05"),
-        },
-        coordinates: {
-          latitude: 53.1325,
-          longitude: 23.1688,
-        },
-        numberOfPeople: 4,
-      },
-    ],
-    dataUpdate: new Date("2026-02-20"),
-  },
-  {
-    id: 5,
-    status: "NOT_STARTED",
-    startDate: new Date("2026-03-10"),
-    endDate: new Date("2026-03-15"),
-    cancel: false,
-    numberOfStages: 1,
-    stages: [
-      {
-        id: 1,
-        dateRange: {
-          startDate: new Date("2026-03-10"),
-          endDate: new Date("2026-03-15"),
-        },
-        coordinates: {
-          latitude: 54.352,
-          longitude: 18.6466,
-        },
-        numberOfPeople: 6,
-      },
-    ],
-    dataUpdate: new Date("2026-02-25"),
-  },
-];
-
-
-const defalutFilter:FilterValue = {
+const defalutFilter: FilterValue = {
   numberOfStages: filterSectionConfig.numberOfStages.defaultValue,
   status: filterSectionConfig.status.defaultValue,
   startDate: filterSectionConfig.startDate.defaultValue,
@@ -180,17 +31,123 @@ const defalutFilter:FilterValue = {
 };
 
 export const TripsReadPage = (): JSX.Element => {
+  const [trips, setTrips] = useState<Trip[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const isFetchingRef = useRef(false);
+
+  const handleError = (
+    error: unknown,
+    fallbackMessage = "Wystąpił błąd",
+  ): boolean => {
+    const status =
+      error instanceof HttpError
+        ? error.status
+        : ((error as any)?.response?.status ?? (error as any)?.status);
+
+    const detail =
+      error instanceof HttpError
+        ? error.detail
+        : ((error as any)?.response?.data?.detail ?? (error as any)?.message);
+
+    if (status === 401) {
+      alert("Aby kontynuować, najpierw zaloguj się.");
+      navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+      return true;
+    }
+
+    if (status === 403) {
+      alert("Brak uprawnień do wykonania operacji.");
+      navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+      return false;
+    }
+
+    if (status === 404) {
+      alert("Nie znaleziono zasobu.");
+      return false;
+    }
+
+    if (status && status >= 500) {
+      alert("Błąd serwera. Spróbuj ponownie później.");
+      return false;
+    }
+
+    alert(detail || fallbackMessage);
+    navigate(routesConfig.NOT_FOUND.path, { replace: true });
+    return false;
+  };
+
+  const fetchTravel = async (showLoader: boolean = true) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    if (showLoader) setLoading(true);
+    try {
+      const travels: Trip[] = (await listTravels()).map(
+        mapTravelResponseToDomain,
+      );
+      setTrips(travels);
+    } catch (error) {
+        handleError(error);
+    } finally {
+      isFetchingRef.current = false;
+      if (showLoader) setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTravel(true);
+    const intervalId = setInterval(() => {
+      fetchTravel(false);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const { control, watch } = useForm<FilterValue>({
     mode: "all",
-    defaultValues: defalutFilter
+    defaultValues: defalutFilter,
   });
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    console.log("Форма изменилась:", watch());
-  }, [watch()]);
 
-  
+  const onDelete = async (tripId: number) => {
+    const confirmed = window.confirm("Czy na pewno chcesz usunąć tę podróż?");
+    if (!confirmed) return;
+
+    try {
+      await deleteTravel(tripId);
+      alert("Podróż została usunięta.");
+    } catch (error) {
+      handleError(error);
+    } finally {
+      fetchTravel();
+    }
+  };
+
+  const onEdit = (tripId: number) => {
+    navigate(routesConfig.TRIP_EDIT.path.replace(":tripId", String(tripId)));
+  };
+
+  const onCancel = async (tripId: number) => {
+    const confirmed = window.confirm("Czy na pewno chcesz anulować tę podróż?");
+    if (!confirmed) return;
+
+    try {
+      const trip = trips.find((trip) => trip.id === tripId);
+      if (trip) {
+        const payload: TravelUpdate = mapTripToCancelToApi(trip);
+        await updateTravel(trip.id, payload);
+        alert("Podróż została anulowana.");
+      } else {
+        alert("Nie znaleziono podróży. Odśwież stronę.");
+      }
+    } catch (error) {
+      handleError(error);
+    } finally {
+      fetchTravel();
+    }
+  };
+
+  const onCreate = () => {
+    navigate(routesConfig.TRIP_CREATE.path);
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -202,23 +159,14 @@ export const TripsReadPage = (): JSX.Element => {
             <FilterSection
               infoText={filterSectionConfig}
               control={control}
-              onCreate={() => navigate(routesConfig.TRIP_CREATE.path)}
+              onCreate={onCreate}
             />
             <TripsSection
               infoText={tripsSectionConfig}
-              trips={sampleTrips}
-              onDelete={function (tripId: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              onEdit={function (tripId: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              onShowDetails={function (tripId: number): void {
-                throw new Error("Function not implemented.");
-              }}
-              onCancel={function (tripId: number): void {
-                throw new Error("Function not implemented."); 
-              }}
+              trips={trips}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              onCancel={onCancel}
             />
           </div>
         </div>

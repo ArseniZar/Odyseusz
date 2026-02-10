@@ -1,4 +1,5 @@
-import type { Coordinates, DataRange, FormFieldConfig } from "@/types/all_types";
+import type { FormFieldConfig } from "@/types/config";
+import type { Coordinates, DataRange } from "@/types/domain/common";
 
 export interface StagesSectionConfig {
   title: string;

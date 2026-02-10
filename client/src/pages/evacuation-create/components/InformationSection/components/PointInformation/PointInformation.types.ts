@@ -1,4 +1,4 @@
-import type { PointFormValues } from "../../../../EvacuationCreatePage.types";
+import type { PointFormValues } from "@/types/forms/evacuation";
 import type { InformationSectionConfig } from "../../../../config/informationSection.config.types";
 
 export interface PointInformationProps {

@@ -12,7 +12,7 @@ export const AreaForm = ({areaNumber,control,index,infoText,onDelete}: AreaFormP
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={`flex-none flex flex-col gap-5 rounded-2xl border border-black/10 shadow-xl ${errors.colectionPointsForm?.points?.[index] ? "border-red-500" : ""}`}>
+    <div className={`flex-none flex flex-col gap-5 rounded-2xl border border-black/10 shadow-xl ${errors.areasForm?.areas?.[index] ? "border-red-500" : ""}`}>
       <AreaHeader
         title={infoText.titleArea}
         areaNumber={areaNumber}

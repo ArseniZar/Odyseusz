@@ -1,4 +1,4 @@
-import { useEffect, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
 import { pageConfig } from "./config/page.config";
@@ -9,86 +9,11 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ProfileCountriesSection } from "./components/ProfileCountriesSection/ProfileCountriesSection";
 import { profileCountriesSectionConfig } from "./config/profileCountriesSection.config";
-import type { ProfileCountry } from "@/types/all_types";
-
-const mockProfileCountries: ProfileCountry[] = [
-  {
-    id: 1,
-    name: "Polska",
-    isEditable: true,
-    dangerLevel: "LOW",
-    description: "Standardowy kraj, niskie ryzyko",
-    countryCode: "PL",
-    consulates: [
-      {
-        id: 1,
-        address: "ul. Wiejska 10, Warszawa",
-        phone: "+48 22 123 45 67",
-        email: "consulate@pl.gov.pl",
-        website: "https://pl.gov.pl",
-        dataUpdate: new Date("2026-01-01"),
-      },
-    ],
-    dataUpdate: new Date("2026-01-01"),
-  },
-  {
-    id: 2,
-    name: "Niemcy",
-    isEditable: false,
-    dangerLevel: "MEDIUM",
-    description: "Kraj średniego ryzyka, zalecane ostrożność",
-    countryCode: "DE",
-    consulates: [
-      {
-        id: 2,
-        address: "Unter den Linden 12, Berlin",
-        phone: "+49 30 123 456",
-        email: "consulate@de.gov.de",
-        website: "https://de.gov.de",
-        dataUpdate: new Date("2026-01-02"),
-      },
-    ],
-    dataUpdate: new Date("2026-01-02"),
-  },
-  {
-    id: 3,
-    name: "Francja",
-    isEditable: true,
-    dangerLevel: "HIGH",
-    description: "Wysokie ryzyko, wymagana szczególna ostrożność",
-    countryCode: "FR",
-    consulates: [
-      {
-        id: 3,
-        address: "10 Rue de la Paix, Paryż",
-        phone: "+33 1 2345 6789",
-        email: "consulate@fr.gov.fr",
-        website: "https://fr.gov.fr",
-        dataUpdate: new Date("2026-01-03"),
-      },
-    ],
-    dataUpdate: new Date("2026-01-03"),
-  },
-  {
-    id: 4,
-    name: "Ukraina",
-    isEditable: false,
-    dangerLevel: "EXTREME",
-    description: "Kraj o krytycznym poziomie zagrożenia",
-    countryCode: "UA",
-    consulates: [
-      {
-        id: 4,
-        address: "Khreshchatyk 22, Kijów",
-        phone: "+380 44 123 4567",
-        email: "consulate@ua.gov.ua",
-        website: "https://ua.gov.ua",
-        dataUpdate: new Date("2026-01-04"),
-      },
-    ],
-    dataUpdate: new Date("2026-01-04"),
-  },
-];
+import type { ProfileCountry } from "@/types/domain";
+import { HttpError } from "@/service/http/request";
+import { routesConfig } from "@/types/rotes";
+import { listCountryProfiles } from "@/service/api/country";
+import { mapCountryProfileResponseToDomain } from "@/utils/mappers/countryMapper";
 
 const defalutFilter: FilterValues = {
   status: filterSectionConfig.status.defaultValue,
@@ -97,15 +22,83 @@ const defalutFilter: FilterValues = {
 };
 
 export const ProfileCountryReadPage = (): JSX.Element => {
+  const [profiles, setProfiles] = useState<ProfileCountry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const isFetchingRef = useRef(false);
+  
+  const handleError = (
+      error: unknown,
+      fallbackMessage = "Wystąpił błąd",
+    ): boolean => {
+      const status =
+        error instanceof HttpError
+          ? error.status
+          : ((error as any)?.response?.status ?? (error as any)?.status);
+  
+      const detail =
+        error instanceof HttpError
+          ? error.detail
+          : ((error as any)?.response?.data?.detail ?? (error as any)?.message);
+  
+      if (status === 401) {
+        alert("Aby kontynuować, najpierw zaloguj się.");
+        navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+        return true;
+      }
+  
+      if (status === 403) {
+        alert("Brak uprawnień do wykonania operacji.");
+        navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+        return false;
+      }
+  
+      if (status === 404) {
+        alert("Nie znaleziono zasobu.");
+        return false;
+      }
+  
+      if (status && status >= 500) {
+        alert("Błąd serwera. Spróbuj ponownie później.");
+        return false;
+      }
+  
+      alert(detail || fallbackMessage);
+      navigate(routesConfig.NOT_FOUND.path, { replace: true });
+      return false;
+    };
+
+  const fetchProfileCountry = async (showLoader: boolean = true) => {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    if (showLoader) setLoading(true);
+    try {
+      const profileCountries: ProfileCountry[] = (await listCountryProfiles()).map(mapCountryProfileResponseToDomain);
+      setProfiles(profileCountries);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      isFetchingRef.current = false;
+      if (showLoader) setLoading(false);
+    }
+  };
+
+   useEffect(() => {
+    fetchProfileCountry(true);
+    const intervalId = setInterval(() => {
+      fetchProfileCountry(false);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const { control, watch } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
   });
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Форма изменилась:", watch());
-  }, [watch()]);
+  const onEdit = (profileCountryId: number) => {
+    navigate(routesConfig.PROFILE_COUNTRY_EDIT.path.replace(":profileId", String(profileCountryId)));
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -117,10 +110,8 @@ export const ProfileCountryReadPage = (): JSX.Element => {
             <FilterSection infoText={filterSectionConfig} control={control} />
             <ProfileCountriesSection
               infoText={profileCountriesSectionConfig}
-              profilesCountries={mockProfileCountries}
-              onEdit={function (profileCountryId: number): void {
-                throw new Error("Function not implemented.");
-              }}
+              profilesCountries={profiles}
+              onEdit={onEdit}
             />
           </div>
         </div>
