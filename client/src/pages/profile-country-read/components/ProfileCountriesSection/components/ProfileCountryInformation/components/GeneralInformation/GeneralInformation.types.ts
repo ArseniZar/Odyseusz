@@ -1,4 +1,4 @@
-import type { ProfileCountry } from "@/types/all_types";
+import type { ProfileCountry } from "@/types/domain/profileCountry";
 import type { ProfileContriesSectionConfig } from "../../../../../../config/profileCountriesSection.config.types";
 
 type ProfileCountryInfo = Pick<ProfileCountry, 'description' | 'countryCode' | 'dataUpdate'>;

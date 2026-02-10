@@ -1,4 +1,4 @@
-import { ProfileCountryInformation } from "./components/EvacuationInformation/ProfileCountryInformation";
+import { ProfileCountryInformation } from "./components/ProfileCountryInformation/ProfileCountryInformation";
 import type { JSX } from "react";
 import type { ProfileCountriesSectionProps } from "./ProfileCountriesSection.types";
 
@@ -16,7 +16,7 @@ export const ProfileCountriesSection = ({ infoText, profilesCountries, onEdit}: 
             countryCode={profileCountry.countryCode}
             consulates={profileCountry.consulates}
             dataUpdate={profileCountry.dataUpdate}
-            isEditable={profileCountry.isEditable}
+            isEditable={profileCountry.canEdit}
             onEdit={() => onEdit(profileCountry.id)}           
             />
         ))}

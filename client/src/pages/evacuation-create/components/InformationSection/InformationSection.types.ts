@@ -1,5 +1,6 @@
+import type { EvacuationFormValues } from "@/types/forms/evacuation";
 import type { InformationSectionConfig } from "../../config/informationSection.config.types";
-import type { EvacuationFormValues } from "../../EvacuationCreatePage.types";
+
 
 export interface InformationSectionProps {
   infoText: InformationSectionConfig;

@@ -1,4 +1,4 @@
-import type { TripStatus } from "@/types/all_types";
+import type { TripStatus } from "@/types/domain/trip";
 
 
 export interface FilterValue {

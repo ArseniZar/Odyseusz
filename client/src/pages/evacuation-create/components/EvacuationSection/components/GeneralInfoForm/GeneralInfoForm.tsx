@@ -39,12 +39,11 @@ export const GeneralInfoForm = ({control,infoText, isActive}: GeneralInfoFormPro
           validate: infoText.reason.validate,
         }}
         render={({ field, fieldState: { error } }) => (
-          <TextareaInput
+          <Input
             label={infoText.reason.label}
             placeholder={infoText.reason.placeholder}
             tooltipText={infoText.reason.tooltipText}
             error={error?.message}
-            classTextarea="h-20"
             value={field.value}
             onChange={(value) => {
               field.onChange(value === "" ? null : value);

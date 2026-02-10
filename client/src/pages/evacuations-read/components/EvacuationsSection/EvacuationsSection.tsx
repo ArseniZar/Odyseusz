@@ -10,6 +10,7 @@ export const EvacuationsSection = ({ infoText, evacuations, onActive, onCancel, 
           <EvacuationInformation
             key={evacuation.id}
             infoText={infoText}
+            canEdit={evacuation.canEdit}
             status={evacuation.status}
             name={evacuation.name}
             areas={evacuation.areas}

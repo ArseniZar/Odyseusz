@@ -1,4 +1,4 @@
-import type { DangerLevel } from "@/types/all_types";
+import type { DangerLevel } from "@/types/domain/profileCountry";
 
 export interface FilterValues {
   status: DangerLevel[] | null;      

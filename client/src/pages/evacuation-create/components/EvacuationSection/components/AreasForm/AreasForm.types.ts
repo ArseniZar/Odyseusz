@@ -1,5 +1,5 @@
 import type { EvacuationSectionConfig } from "../../../../config/evacuationSection.types";
-import type { EvacuationFormValues } from "../../../../EvacuationCreatePage.types";
+import type { EvacuationFormValues } from "@/types/forms/evacuation";
 import type { Control, FieldArrayWithId } from "react-hook-form";
 
 export interface AreasFormProps {

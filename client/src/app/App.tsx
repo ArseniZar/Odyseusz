@@ -1,11 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { routesConfig } from "@/types/rotes";
+import { routesConfig } from "@/types/rotes/rotes";
 import { TripCreatePage } from "@/pages/trip-create";
 import { TripsReadPage } from "@/pages/trips-read";  
 import { EvacuationCreatePage } from "@/pages/evacuation-create";
 import { EvacuationsReadPage } from "@/pages/evacuations-read";
 import { ProfileCountryEditPage } from "@/pages/profile-country-edit";
 import { ProfileCountryReadPage } from "@/pages/profile-country-read";
+import { NotFoundPage } from "@/pages/not-found";
+import { LoginPage } from "@/pages/login";
 
 // import { RegisterPage } from "../pages/register/ui/RegisterPage";
 // import AllTripsPage from "../pages/all-trips/ui/AllTripPage";
@@ -22,11 +24,18 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path={routesConfig.TRIP_CREATE.path} element={<TripCreatePage/>} />
+          <Route path={routesConfig.TRIP_EDIT.path} element={<TripCreatePage/>} />
           <Route path={routesConfig.TRIPS_READ.path}  element={<TripsReadPage/>}/>
+
           <Route path={routesConfig.EVACUATION_CREATE.path} element={<EvacuationCreatePage/>}/>
+          <Route path={routesConfig.EVACUATION_EDIT.path} element={<EvacuationCreatePage/>}/>
           <Route path={routesConfig.EVACUATIONS_READ.path} element={<EvacuationsReadPage/>}/>
+
           <Route path={routesConfig.PROFILE_COUNTRY_EDIT.path} element={<ProfileCountryEditPage/>}/>
           <Route path={routesConfig.PROFILE_COUNTRY_READ.path} element={<ProfileCountryReadPage/>}/>
+          
+          <Route path={routesConfig.AUTH_LOGIN.path} element={<LoginPage/>} />
+          <Route path={routesConfig.NOT_FOUND.path} element={<NotFoundPage/>} />
         </Routes>
       </BrowserRouter>
     </>

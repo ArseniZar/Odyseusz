@@ -1,5 +1,5 @@
 import type { Coordinates } from "@/types/domain/common";
-import type { FormFieldConfig } from "@/types/domain/forms";
+import type { FormFieldConfig } from "@/types/config";
 
 export interface EvacuationSectionConfig {
   generalInfoForm: {

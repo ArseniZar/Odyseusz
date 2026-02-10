@@ -9,9 +9,9 @@ export const PointInformation = ({pointNumber, infoText, name , description, coo
       <div className="flex flex-col font-light">
         <p className="font-medium text-lg"> {infoText.name.label}:<span className="font-light ml-1"> {name} </span></p>
         <p className="font-medium text-lg"> {infoText.latitude.label}/{infoText.longitude.label}:<span className="font-light ml-1"> {coordinates.latitude} / {coordinates.longitude} </span></p>
-        <p className="font-medium text-lg">  {infoText.description.label}:
+        <div className="font-medium text-lg">  {infoText.description.label}:
           <Markdown text={description}/>
-        </p>
+        </div>
       </div>
     </div>
   );

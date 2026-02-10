@@ -1,4 +1,5 @@
-import type { DangerLevel, InformationFieldConfig, ProfileCountry } from "@/types/all_types";
+import type { InformationFieldConfig } from "@/types/config";
+import type { DangerLevel, ProfileCountry } from "@/types/domain/profileCountry";
 
 export interface ProfileContriesSectionConfig {
   dangerLevel: ProfileCountryInformationFieldConfig & {
