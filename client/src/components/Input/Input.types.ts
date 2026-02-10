@@ -1,5 +1,5 @@
 export interface InputProps {
-  type?: "checkbox" | "text";
+  type?: "checkbox" | "text" | "password" | "email";
   label: string;
   placeholder?: string;
   value?: any;
