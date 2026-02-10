@@ -156,7 +156,11 @@ async def get_evacuation(
   current_user: User = Depends(get_current_active_user),
   db: AsyncSession = Depends(get_db)
 ):
-  """Get a specific evacuation with all data (areas, assembly points, assistants)."""
+  """
+  Get a specific evacuation with all data (areas, assembly points, assistants).
+  
+  Includes a 'can_edit' field indicating whether the current user can edit this evacuation.
+  """
   evacuation = await get_evacuation_with_details(db, evacuation_id)
   if not evacuation:
     raise HTTPException(
@@ -164,19 +168,25 @@ async def get_evacuation(
       detail="Evacuation not found"
     )
   
-  # Coordinators can only see their own evacuations
+  # Get coordinator profile if user is a coordinator
+  coordinator_profile = None
   if current_user.role == UserRole.COORDINATOR:
     result = await db.execute(
       select(CoordinatorProfile).where(CoordinatorProfile.user_id == current_user.id)
     )
     coordinator_profile = result.scalar_one_or_none()
-    if not coordinator_profile or evacuation.coordinator_id != coordinator_profile.id:
-      raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="You do not have access to this evacuation"
-      )
   
-  return build_evacuation_response(evacuation)
+  # Build response with can_edit field
+  evacuation_dict = build_evacuation_response(evacuation)
+  
+  # Check if current user can edit this evacuation
+  can_edit = False
+  if coordinator_profile and evacuation.coordinator_id == coordinator_profile.id:
+    can_edit = True
+  
+  evacuation_dict["can_edit"] = can_edit
+  
+  return evacuation_dict
 
 
 @router.post("/", response_model=EvacuationDetailResponse, status_code=status.HTTP_201_CREATED)

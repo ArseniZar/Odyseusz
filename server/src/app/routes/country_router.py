@@ -77,10 +77,13 @@ async def list_all_consulates(
 @router.get("/{country_id}", response_model=CountryProfilePublicDetailResponse)
 async def get_country(
   country_id: int,
+  current_editor: Optional[EditorProfile] = Depends(get_optional_current_editor),
   db: AsyncSession = Depends(get_db)
 ):
   """
   Get country details with consulates and danger level (public endpoint).
+  
+  Includes a 'can_edit' field indicating whether the current user can edit this country.
   """
   country = await get_country_profile_with_details(db, country_id)
   if not country:
@@ -88,7 +91,25 @@ async def get_country(
       status_code=status.HTTP_404_NOT_FOUND,
       detail="Country not found"
     )
-  return country
+  
+  # Build response with can_edit field
+  country_dict = {
+    "id": country.id,
+    "name": country.name,
+    "country_code": country.country_code,
+    "description": country.description,
+    "danger_level": country.danger_level,
+    "created_at": country.created_at,
+    "updated_at": country.updated_at,
+    "consulates": country.consulates,
+    "can_edit": False
+  }
+  
+  # Check if current editor can edit this country
+  if current_editor:
+    country_dict["can_edit"] = country in current_editor.country_profiles
+  
+  return country_dict
 
 
 @router.put("/{country_id}", response_model=CountryProfilePublicDetailResponse)
