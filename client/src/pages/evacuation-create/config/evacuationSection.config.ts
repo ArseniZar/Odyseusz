@@ -45,7 +45,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
       defaultValue: false,
       tooltipText:
         "Jeśli zaznaczone, ewakuacja zostanie aktywowana natychmiast po utworzeniu",
-      validate: (value: any) => {},
+      validate: (_value: any) => {return true;},
     },
   },
   areasForm: {
@@ -155,7 +155,7 @@ export const evacuationSectionConfig: EvacuationSectionConfig = {
         type: "checkbox",
         defaultValue: null,
         tooltipText: "Status aktywności asystenta ewakuacji",
-        validate: (value: any) => {},
+        validate: (_value: any) => {},
       },
     },
   },

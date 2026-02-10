@@ -14,6 +14,7 @@ import { HttpError } from "@/service/http/request";
 import { routesConfig } from "@/types/rotes";
 import { listCountryProfiles } from "@/service/api/country";
 import { mapCountryProfileResponseToDomain } from "@/utils/mappers/countryMapper";
+import { ClipLoader } from "react-spinners";
 
 const defalutFilter: FilterValues = {
   status: filterSectionConfig.status.defaultValue,
@@ -91,7 +92,7 @@ export const ProfileCountryReadPage = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { control, watch } = useForm<FilterValues>({
+  const { control } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
   });
@@ -100,6 +101,15 @@ export const ProfileCountryReadPage = (): JSX.Element => {
     navigate(routesConfig.PROFILE_COUNTRY_EDIT.path.replace(":profileId", String(profileCountryId)));
   };
 
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-(--main-bg-color)">
+        <ClipLoader color="var(--main-text-color)" size={60} />
+        <p className="mt-4 font-geologica text-lg opacity-70">{"........"}</p>
+      </div>
+    );
+  }
+  
   return (
     <div className="h-screen flex flex-col">
       <Header />

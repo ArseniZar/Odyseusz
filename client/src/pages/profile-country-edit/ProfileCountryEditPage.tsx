@@ -24,6 +24,7 @@ import type {
   ProfileCountryFormValues,
 } from "@/types/forms/profileCountry";
 import type { CountryProfileUpdate } from "@/types/api/country";
+import { ClipLoader } from "react-spinners";
 
 const defaultProfileCountry: ProfileCountryFormValues = {
   id: 0,
@@ -162,7 +163,14 @@ export const ProfileCountryEditPage = (): JSX.Element => {
 
   const onCancel = () => { navigateBack(); };
 
-  
+   if (loading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-(--main-bg-color)">
+        <ClipLoader color="var(--main-text-color)" size={60} />
+        <p className="mt-4 font-geologica text-lg opacity-70">{"........"}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col">

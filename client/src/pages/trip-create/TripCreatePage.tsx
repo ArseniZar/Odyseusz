@@ -26,6 +26,7 @@ import {
   mapTripFormValueToDomainEdit,
 } from "@/utils/mappers/tripMapper";
 import { HttpError } from "@/service/http/request";
+import { ClipLoader } from "react-spinners";
 
 const defaultTrip: TripFormValue = {
   id: null,
@@ -67,12 +68,13 @@ export const TripCreatePage = ({}: TripCreatePageProps): JSX.Element => {
 
     if (status === 403) {
       alert("Brak uprawnień do wykonania operacji.");
-       navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
+      navigate(routesConfig.AUTH_LOGIN.path, { replace: true });
       return false;
     }
 
     if (status === 404) {
       alert("Nie znaleziono zasobu.");
+      navigate(routesConfig.TRIPS_READ.path, { replace: true });
       return false;
     }
 
@@ -146,6 +148,14 @@ export const TripCreatePage = ({}: TripCreatePageProps): JSX.Element => {
 
   const onCancel = () => { navigateBack(); };
   
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-(--main-bg-color)">
+        <ClipLoader color="var(--main-text-color)" size={60} />
+        <p className="mt-4 font-geologica text-lg opacity-70">{"........"}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col">

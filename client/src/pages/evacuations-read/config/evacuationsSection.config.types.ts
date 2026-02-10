@@ -1,5 +1,5 @@
 import type { InformationFieldConfig } from "@/types/config";
-import type {EvacuationStatus} from "@/types/domain/evacuation";
+import type {Evacuation, EvacuationStatus} from "@/types/domain/evacuation";
 
 export interface EvacuationsSectionConfig {
   iconEvacuation: string;
@@ -33,7 +33,7 @@ export interface EvacuationsSectionConfig {
     email: EvacuationInformationFieldConfig;
   };
   evacuationButtons: Record<EvacuationButtonKey,EvacuationInformationFieldConfig>;
-  showButtons: Record<EvacuationButtonKey, EvacuationStatus[]>;
+  showButtons: Record<EvacuationButtonKey, {status:EvacuationStatus[],isEdit:Evacuation["canEdit"][]} >;
 }
 
 type EvacuationInformationFieldConfig = Pick<InformationFieldConfig, "label">;

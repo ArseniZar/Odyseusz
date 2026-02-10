@@ -22,6 +22,7 @@ import {
 import { deleteTravel, listTravels, updateTravel } from "@/service/api/trip";
 import type { TravelUpdate } from "@/types/api/travel";
 import { HttpError } from "@/service/http/request";
+import { ClipLoader } from "react-spinners";
 
 const defalutFilter: FilterValue = {
   numberOfStages: filterSectionConfig.numberOfStages.defaultValue,
@@ -102,7 +103,7 @@ export const TripsReadPage = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { control, watch } = useForm<FilterValue>({
+  const { control } = useForm<FilterValue>({
     mode: "all",
     defaultValues: defalutFilter,
   });
@@ -149,6 +150,15 @@ export const TripsReadPage = (): JSX.Element => {
     navigate(routesConfig.TRIP_CREATE.path);
   };
 
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-(--main-bg-color)">
+        <ClipLoader color="var(--main-text-color)" size={60} />
+        <p className="mt-4 font-geologica text-lg opacity-70">{"........"}</p>
+      </div>
+    );
+  }
+  
   return (
     <div className="h-screen flex flex-col">
       <Header />

@@ -16,7 +16,7 @@ export const ProfileCountriesSection = ({ infoText, profilesCountries, onEdit}: 
             countryCode={profileCountry.countryCode}
             consulates={profileCountry.consulates}
             dataUpdate={profileCountry.dataUpdate}
-            isEditable={profileCountry.canEdit}
+            canEdit={profileCountry.canEdit}
             onEdit={() => onEdit(profileCountry.id)}           
             />
         ))}

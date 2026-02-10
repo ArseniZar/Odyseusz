@@ -1,6 +1,6 @@
 import type { ProfileCountrySectionConfig } from "../../../../../../config/profileCountrySection.config.types";
 import type { InformationSectionConfig } from "../../../../../../config/informationSection.config.types";
-import type { ProfileCountryValues } from "../../../../../../ProfileCountryEditPage.types";
+import type { ProfileCountryFormValues } from "@/types/forms/profileCountry";
 import type { Control } from "react-hook-form";
 
 export interface ConsulateFormProps {
@@ -10,5 +10,5 @@ export interface ConsulateFormProps {
     informationSectionConfig:InformationSectionConfig["consulate"];
   };
   index: number;
-  control: Control<ProfileCountryValues>;
+  control: Control<ProfileCountryFormValues>;
 }

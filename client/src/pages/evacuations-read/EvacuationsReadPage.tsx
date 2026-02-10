@@ -16,6 +16,7 @@ import { HttpError } from "@/service/http/request";
 import { deleteEvacuation, listEvacuations, updateEvacuation } from "@/service/api/evacuation";
 import { mapEvacuationActiveToApi, mapEvacuationCancelToApi, mapEvacuationResponseToDomain } from "@/utils/mappers";
 import type { EvacuationUpdate } from "@/types/api/evacuation";
+import { ClipLoader } from "react-spinners";
 
 const defalutFilter: FilterValues = {
   status: filterSectionConfig.status.defaultValue,
@@ -92,7 +93,7 @@ export const EvacuationsReadPage = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { control, watch } = useForm<FilterValues>({
+  const { control } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
   });
@@ -155,6 +156,15 @@ export const EvacuationsReadPage = (): JSX.Element => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex flex-col items-center justify-center bg-(--main-bg-color)">
+        <ClipLoader color="var(--main-text-color)" size={60} />
+        <p className="mt-4 font-geologica text-lg opacity-70">{"........"}</p>
+      </div>
+    );
+  }
+  
   return (
     <div className="h-screen flex flex-col">
       <Header />

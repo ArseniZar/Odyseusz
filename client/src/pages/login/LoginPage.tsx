@@ -1,5 +1,4 @@
 import { type JSX } from "react";
-import { useNavigate } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 
 import { Header } from "@/components/Header";
@@ -7,7 +6,6 @@ import { Title } from "@/components/Title";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
 
-import { routesConfig } from "@/types/rotes/rotes";
 import { login } from "@/service/api/auth";
 import { setTokens } from "@/service/auth/token";
 import { HttpError } from "@/service/http/request";
@@ -18,7 +16,6 @@ interface LoginForm {
 }
 
 export const LoginPage = (): JSX.Element => {
-  const navigate = useNavigate();
 
   const { control, handleSubmit, formState } = useForm<LoginForm>({
     mode: "all",

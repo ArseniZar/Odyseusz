@@ -18,7 +18,7 @@ export interface ProfileContriesSectionConfig {
     dataUpdate: ProfileCountryInformationFieldConfig;
   }
   profileCountryButtons: Record<ProfileCountryButtonKey,ProfileCountryInformationFieldConfig>;
-  showButtons: Record<ProfileCountryButtonKey, ProfileCountry["isEditable"][]>;
+  showButtons: Record<ProfileCountryButtonKey, ProfileCountry["canEdit"][]>;
 }
 
 type ProfileCountryInformationFieldConfig = Pick<InformationFieldConfig, "label">;

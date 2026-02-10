@@ -1,5 +1,5 @@
 
-import type { TripFormValue } from "../../TripCreatePage.types";
+import type { TripFormValue } from "@/types/forms/trip";
 import type { InformationSectionConfig } from "../../config/informationSection.config.types";
 
 export interface InformationSectionProps {

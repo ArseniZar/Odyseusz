@@ -88,10 +88,10 @@ export const evacuationsSectionConfig: EvacuationsSectionConfig = {
     },
   },
   showButtons: {
-    cancel: ["ACTIVE"],
-    details: ["ACTIVE", "CANCELLED"],
-    active: ["CANCELLED"],
-    delete: ["CANCELLED"],
-    edit: ["CANCELLED"]
+    cancel: {status:["ACTIVE"], isEdit:[true]},
+    details: {status:["ACTIVE", "CANCELLED"],isEdit:[true]},
+    active: {status:["CANCELLED"],isEdit:[true]},
+    delete: {status:["CANCELLED"],isEdit:[true]},
+    edit: {status:["CANCELLED"],isEdit:[true]},
   },
 };

@@ -52,7 +52,7 @@ return (
         rules={{
           validate: infoText.coordinates.validate
         }}
-        render={({ field, fieldState: { error } }) => (
+        render={({ field, fieldState: {  } }) => (
           <MapPicker
             label={infoText.coordinates.label}
             tooltipText={infoText.coordinates.tooltipText}
