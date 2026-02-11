@@ -8,6 +8,8 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import db_manager
 from app.models.country import CountryProfile, DangerLevel
+from app.models.user import User, EditorProfile, UserRole
+from app.core.security import get_password_hash
 
 
 async def add_sample_countries():
@@ -133,6 +135,86 @@ async def add_sample_countries():
       result = await session.execute(select(CountryProfile))
       all_countries = result.scalars().all()
       print(f"\nTotal countries in database: {len(all_countries)}")
+      
+      # Create an EditorProfile account
+      print(f"\n{'='*60}")
+      print("Creating Editor account...")
+      print(f"{'='*60}")
+      
+      # Check if editor already exists
+      editor_email = "editor@odyseusz.com"
+      result = await session.execute(
+        select(User).where(User.email == editor_email)
+      )
+      existing_editor = result.scalar_one_or_none()
+      
+      if existing_editor:
+        print(f"Editor account with email {editor_email} already exists.")
+        editor_user = existing_editor
+      else:
+        # Create editor user
+        editor_user = User(
+          email=editor_email,
+          password_hash=get_password_hash("editor123"),
+          first_name="John",
+          last_name="Editor",
+          role=UserRole.EDITOR.value,
+          is_active=True
+        )
+        session.add(editor_user)
+        await session.flush()  # Flush to get the user ID
+        
+        # Create editor profile
+        editor_profile = EditorProfile(
+          user_id=editor_user.id
+        )
+        session.add(editor_profile)
+        await session.flush()  # Flush to get the profile ID
+        
+        print(f"✓ Created editor user: {editor_email}")
+        print(f"  Password: editor123")
+        print(f"  Name: {editor_user.first_name} {editor_user.last_name}")
+      
+      # Get the editor profile with eager loading of country_profiles
+      from sqlalchemy.orm import selectinload
+      result = await session.execute(
+        select(EditorProfile)
+        .where(EditorProfile.user_id == editor_user.id)
+        .options(selectinload(EditorProfile.country_profiles))
+      )
+      editor_profile = result.scalar_one()
+      
+      # Select 3 countries to assign to the editor (Poland, Germany, France)
+      countries_to_assign = ["PL", "DE", "FR"]
+      assigned_countries = []
+      
+      # Get existing country codes already assigned to editor
+      existing_country_codes = {country.country_code for country in editor_profile.country_profiles}
+      
+      for country_code in countries_to_assign:
+        result = await session.execute(
+          select(CountryProfile).where(CountryProfile.country_code == country_code)
+        )
+        country = result.scalar_one_or_none()
+        
+        if country:
+          # Check if already assigned
+          if country_code not in existing_country_codes:
+            editor_profile.country_profiles.append(country)
+            assigned_countries.append(country)
+            print(f"✓ Assigned country: {country.name} ({country.country_code})")
+          else:
+            print(f"  Country {country.name} ({country.country_code}) already assigned to editor")
+      
+      # Commit the editor and country assignments
+      await session.commit()
+      
+      print(f"\n{'='*60}")
+      print(f"Editor account setup complete!")
+      print(f"Email: {editor_email}")
+      print(f"Password: editor123")
+      print(f"Assigned countries: {len(assigned_countries)}")
+      print(f"{'='*60}")
       
   except Exception as e:
     print(f"Error: {e}")

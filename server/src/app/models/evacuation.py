@@ -55,13 +55,13 @@ class EvacuationArea(Base):
 
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   evacuation_id: Mapped[int] = mapped_column(Integer, ForeignKey("evacuations.id", ondelete="CASCADE"), nullable=False, index=True)
-  location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"), nullable=False)
+  location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id", ondelete="CASCADE"), nullable=False)
   radius: Mapped[int] = mapped_column(Integer, nullable=False)  # in kilometers
   created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
   # Relationships
   evacuation: Mapped["Evacuation"] = relationship(back_populates="areas")
-  location: Mapped["Location"] = relationship()
+  location: Mapped["Location"] = relationship(cascade="all, delete")
 
   def __repr__(self) -> str:
     return f"<EvacuationArea(id={self.id}, evacuation_id={self.evacuation_id}, radius={self.radius}m)>"
@@ -73,14 +73,14 @@ class AssemblyPoint(Base):
 
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   evacuation_id: Mapped[int] = mapped_column(Integer, ForeignKey("evacuations.id", ondelete="CASCADE"), nullable=False, index=True)
-  location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"), nullable=False)
+  location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id", ondelete="CASCADE"), nullable=False)
   name: Mapped[str] = mapped_column(String(255), nullable=False)
   description: Mapped[str | None] = mapped_column(Text, nullable=True)
   created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
   # Relationships
   evacuation: Mapped["Evacuation"] = relationship(back_populates="assembly_points")
-  location: Mapped["Location"] = relationship()
+  location: Mapped["Location"] = relationship(cascade="all, delete")
 
   def __repr__(self) -> str:
     return f"<AssemblyPoint(id={self.id}, name={self.name}, evacuation_id={self.evacuation_id})>"

@@ -25,11 +25,11 @@ class TravelStage(Base):
 
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
   travel_id: Mapped[int] = mapped_column(Integer, ForeignKey("travels.id", ondelete="CASCADE"), nullable=False, index=True)
-  location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id"), nullable=False)
+  location_id: Mapped[int] = mapped_column(Integer, ForeignKey("locations.id", ondelete="CASCADE"), nullable=False)
   start_date: Mapped[date] = mapped_column(Date, nullable=False)
   end_date: Mapped[date] = mapped_column(Date, nullable=False)
   people_count: Mapped[int] = mapped_column(Integer, nullable=False)
 
   # Relationships
   travel: Mapped["Travel"] = relationship(back_populates="stages")
-  location: Mapped["Location"] = relationship()
+  location: Mapped["Location"] = relationship(cascade="all, delete")

@@ -26,11 +26,7 @@ class ExternalAPIClient:
         raise
   
   async def get_country(self, country_id: str) -> Optional[dict]:
-    """
-    Get country information by ID.
-    Note: The external API doesn't have an endpoint for individual countries,
-    so we fetch all and filter.
-    """
+    """Get country information by ID."""
     try:
       countries = await self.get_countries()
       for country in countries:

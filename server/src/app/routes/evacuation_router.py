@@ -94,9 +94,6 @@ async def list_evacuations(
 ):
   """
   List all evacuations with all data (areas, assembly points, assistants).
-  
-  Each evacuation includes a 'can_edit' field indicating whether the current user can edit it.
-  Only coordinators can edit their own evacuations.
   """
   # Get all evacuations
   evacuations = await get_all_evacuations(db, skip, limit, active_only=False)
