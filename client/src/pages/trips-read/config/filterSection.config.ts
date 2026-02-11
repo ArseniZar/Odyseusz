@@ -35,7 +35,7 @@ export const filterSectionConfig: FilterSectionConfig = {
     tooltipText: "Filtruj od tej daty",
     validate: (value: any) => {
       if (value !== null) {
-        if (typeof value === "string") return "error";
+        if (typeof value === "string") return "Nieprawidłowy format daty";
       }
       return true;
     },
@@ -47,7 +47,7 @@ export const filterSectionConfig: FilterSectionConfig = {
     tooltipText: "Filtruj do tej daty",
     validate: (value: any) => {
       if (value !== null) {
-        if (typeof value === "string") return "error";
+        if (typeof value === "string") return "Nieprawidłowy format daty";
       }
       return true;
     },

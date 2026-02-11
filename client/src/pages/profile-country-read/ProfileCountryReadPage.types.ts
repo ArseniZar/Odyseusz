@@ -1,7 +1,9 @@
 import type { DangerLevel } from "@/types/domain/profileCountry";
 
 export interface FilterValues {
-  status: DangerLevel[] | null;      
-  lastUpdateDate: Date | null | string;
+  dangerLevel: DangerLevel[] | null;      
+  startLastUpdateDate: Date | null | string;
+  endLastUpdateDate: Date | null | string;
   isEditable: boolean;
+  nameCountry: string | null;
 }

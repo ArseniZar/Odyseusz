@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
@@ -17,10 +17,13 @@ import { deleteEvacuation, listEvacuations, updateEvacuation } from "@/service/a
 import { mapEvacuationActiveToApi, mapEvacuationCancelToApi, mapEvacuationResponseToDomain } from "@/utils/mappers";
 import type { EvacuationUpdate } from "@/types/api/evacuation";
 import { ClipLoader } from "react-spinners";
+import _ from "lodash";
 
 const defalutFilter: FilterValues = {
   status: filterSectionConfig.status.defaultValue,
-  lastUpdateDate: filterSectionConfig.lastUpdateDate.defaultValue,
+  startLastUpdateDate: filterSectionConfig.startLastUpdateDate.defaultValue,
+  endLastUpdateDate: filterSectionConfig.endLastUpdateDate.defaultValue,
+  isEditable: filterSectionConfig.isEditable.defaultValue,
 };
 
 export const EvacuationsReadPage = (): JSX.Element => {
@@ -29,10 +32,7 @@ export const EvacuationsReadPage = (): JSX.Element => {
   const navigate = useNavigate();
   const isFetchingRef = useRef(false);
 
-  const handleError = (
-    error: unknown,
-    fallbackMessage = "Wystąpił błąd",
-  ): boolean => {
+  const handleError = (error: unknown,fallbackMessage = "Wystąpił błąd"): boolean => {
     const status =
       error instanceof HttpError
         ? error.status
@@ -70,6 +70,37 @@ export const EvacuationsReadPage = (): JSX.Element => {
     return false;
   };
 
+  const filterData = (data: Evacuation[], filters: FilterValues): Evacuation[] => {
+    return _.filter(data, (item) => {
+      if (filters.status && filters.status.length > 0 && !filters.status.includes(item.status)) {
+        return false;
+      }
+
+      if (filters.startLastUpdateDate && filters.startLastUpdateDate instanceof Date && item.dataLastActivated) {
+        const filterDate = filters.startLastUpdateDate;
+        const itemDate = item.dataLastActivated;
+        if (itemDate <= filterDate) {
+          return false;
+        }
+      }
+
+      if (filters.endLastUpdateDate && filters.endLastUpdateDate instanceof Date && item.dataLastActivated) {
+        const filterDate = filters.endLastUpdateDate;
+        const itemDate = item.dataLastActivated;
+        if (itemDate >= filterDate) {
+          return false;
+        }
+      }
+
+
+      if (filters.isEditable && item.canEdit !== filters.isEditable) {
+        return false;
+      }
+
+    return true;
+    });
+  }
+
   const fetchEvacuation = async (showLoader: boolean = true) => {
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
@@ -89,14 +120,23 @@ export const EvacuationsReadPage = (): JSX.Element => {
     fetchEvacuation(true);
     const intervalId = setInterval(() => {
       fetchEvacuation(false);
-    }, 1000);
+    }, 5000);
     return () => clearInterval(intervalId);
   }, []);
 
-  const { control } = useForm<FilterValues>({
+
+  const { control, watch } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
   });
+
+  const filters = watch(); 
+
+  const filteredEvacuations = useMemo(() => {
+    return filterData(evacuations, filters);
+  }, [evacuations, filters]);
+
+
 
   const onDelete = async (evacuationId: number) => {
       const confirmed = window.confirm("Czy na pewno chcesz usunąć tę ewakuację?");
@@ -179,7 +219,7 @@ export const EvacuationsReadPage = (): JSX.Element => {
             />
             <EvacuationsSection
               infoText={evacuationsSectionConfig}
-              evacuations={evacuations}
+              evacuations={filteredEvacuations}
               onActive={onActive}
               onCancel={onCancel}
               onDelete={onDelete}

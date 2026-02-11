@@ -13,11 +13,23 @@ export const filterSectionConfig: FilterSectionConfig = {
       { value: "EXTREME", label: "Krytyczny" },
     ],
   },
-  lastUpdateDate: {
-    label: "Data ost. aktualizacji",
+  startLastUpdateDate: {
+    label: "Data od ost. aktualizacji",
     defaultValue: null,
     placeholder: "dd/mm/yyyy",
     tooltipText: "Filtruj od tej daty",
+    validate: (value: any) => {
+      if (value !== null) {
+        if (typeof value === "string") return "error";
+      }
+      return true;
+    },
+  },
+  endLastUpdateDate: {
+    label: "Data do ost. aktualizacji",
+    defaultValue: null,
+    placeholder: "dd/mm/yyyy",
+    tooltipText: "Filtruj do tej daty",
     validate: (value: any) => {
       if (value !== null) {
         if (typeof value === "string") return "error";
@@ -29,8 +41,14 @@ export const filterSectionConfig: FilterSectionConfig = {
     label: "Tylko Edytowalne",
     defaultValue: false,
     placeholder: "Wybierz opcję",
-    tooltipText: "Filtruj według możliwości edycji",
-    },
-
+    tooltipText: "Pokaż tylko profile, które można edytować",
+  },
+  nameCountry: {
+    label: "Nazwa kraju",
+    defaultValue: "",
+    placeholder: "Wpisz nazwę kraju",
+    tooltipText: "Filtruj według nazwy kraju",
+  },
+  
   formatDate: "dd/MM/yyyy",
 };

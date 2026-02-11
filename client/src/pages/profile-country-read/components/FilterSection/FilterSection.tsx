@@ -13,23 +13,42 @@ export const FilterSection = ({infoText,control}: FilterSectionProps): JSX.Eleme
     <section className="w-full flex flex-col px-10 justify-between">
       <div className="flex flex-col gap-6">
         <div className="w-full flex flex-row-reverse items-start justify-between">
-
           <div className="w-4/5 flex flex-row gap-10 justify-end">
             <Controller
-              name="lastUpdateDate"
+              name={`nameCountry`}
               control={control}
               shouldUnregister={false}
               rules={{
-                validate: infoText.lastUpdateDate.validate
+                validate: infoText.nameCountry.validate,
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <Input
+                  label={infoText.nameCountry.label}
+                  placeholder={infoText.nameCountry.placeholder}
+                  tooltipText={infoText.nameCountry.tooltipText}
+                  error={error?.message}
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value === "" ? null : value);
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="startLastUpdateDate"
+              control={control}
+              shouldUnregister={false}
+              rules={{
+                validate: infoText.startLastUpdateDate.validate
               }}
               render={({ field, fieldState: { error }}) => { 
                 const [inputValue, setInputValue] = useState(field.value instanceof Date && isValid(field.value) ? format(field.value, infoText.formatDate) : "");
                 return(
                   <Input
                     className="w-3/14"
-                    label={infoText.lastUpdateDate.label}
-                    placeholder={infoText.lastUpdateDate.placeholder}
-                    tooltipText={infoText.lastUpdateDate.tooltipText}
+                    label={infoText.startLastUpdateDate.label}
+                    placeholder={infoText.startLastUpdateDate.placeholder}
+                    tooltipText={infoText.startLastUpdateDate.tooltipText}
                     error={error?.message}
                     value={inputValue}
                     onChange={(v) => {
@@ -43,7 +62,34 @@ export const FilterSection = ({infoText,control}: FilterSectionProps): JSX.Eleme
               }}
             />
             <Controller
-              name="status"
+              name="endLastUpdateDate"
+              control={control}
+              shouldUnregister={false}
+              rules={{
+                validate: infoText.endLastUpdateDate.validate
+              }}
+              render={({ field, fieldState: { error }}) => { 
+                const [inputValue, setInputValue] = useState(field.value instanceof Date && isValid(field.value) ? format(field.value, infoText.formatDate) : "");
+                return(
+                  <Input
+                    className="w-3/14"
+                    label={infoText.endLastUpdateDate.label}
+                    placeholder={infoText.endLastUpdateDate.placeholder}
+                    tooltipText={infoText.endLastUpdateDate.tooltipText}
+                    error={error?.message}
+                    value={inputValue}
+                    onChange={(v) => {
+                      const limited = v.replace(/[^0-9/]/g, "").slice(0, 10);
+                      setInputValue(limited);
+                      const parsed = parse(limited, infoText.formatDate, new Date());
+                      field.onChange(limited === "" ? null : isValid(parsed) ? parsed : limited);
+                    }}
+                  />
+                )
+              }}
+            />
+            <Controller
+              name="dangerLevel"
               control={control}
               shouldUnregister={false}
               rules={{

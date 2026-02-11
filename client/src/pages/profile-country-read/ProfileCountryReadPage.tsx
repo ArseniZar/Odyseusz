@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { Header } from "@/components/Header";
 import { Title } from "@/components/Title";
 import { pageConfig } from "./config/page.config";
@@ -15,11 +15,14 @@ import { routesConfig } from "@/types/rotes";
 import { listCountryProfiles } from "@/service/api/country";
 import { mapCountryProfileResponseToDomain } from "@/utils/mappers/countryMapper";
 import { ClipLoader } from "react-spinners";
+import _ from "lodash";
 
 const defalutFilter: FilterValues = {
-  status: filterSectionConfig.status.defaultValue,
-  lastUpdateDate: filterSectionConfig.lastUpdateDate.defaultValue,
+  dangerLevel: filterSectionConfig.status.defaultValue,
+  startLastUpdateDate: filterSectionConfig.startLastUpdateDate.defaultValue,
+  endLastUpdateDate: filterSectionConfig.endLastUpdateDate.defaultValue,  
   isEditable: filterSectionConfig.isEditable.defaultValue,
+  nameCountry: filterSectionConfig.nameCountry.defaultValue,
 };
 
 export const ProfileCountryReadPage = (): JSX.Element => {
@@ -28,10 +31,7 @@ export const ProfileCountryReadPage = (): JSX.Element => {
   const navigate = useNavigate();
   const isFetchingRef = useRef(false);
   
-  const handleError = (
-      error: unknown,
-      fallbackMessage = "Wystąpił błąd",
-    ): boolean => {
+  const handleError = (error: unknown,fallbackMessage = "Wystąpił błąd",): boolean => {
       const status =
         error instanceof HttpError
           ? error.status
@@ -69,6 +69,48 @@ export const ProfileCountryReadPage = (): JSX.Element => {
       return false;
     };
 
+  const filterData = (data: ProfileCountry[], filters: FilterValues): ProfileCountry[] => {
+      return _.filter(data, (item) => {
+        if (filters.dangerLevel && filters.dangerLevel.length > 0 && !filters.dangerLevel.includes(item.dangerLevel)) {
+          return false;
+        }
+  
+        if (filters.startLastUpdateDate && filters.startLastUpdateDate instanceof Date) {
+          const filterDate = filters.startLastUpdateDate;
+          const itemDate = item.dataUpdate;
+          if (itemDate <= filterDate) {
+            return false;
+          }
+        }
+  
+        if (filters.endLastUpdateDate && filters.endLastUpdateDate instanceof Date) {
+          const filterDate = filters.endLastUpdateDate;
+          const itemDate = item.dataUpdate;
+          if (itemDate >= filterDate) {
+            return false;
+          }
+        }
+  
+  
+        if (filters.isEditable && item.canEdit !== filters.isEditable) {
+          return false;
+        }
+        
+        if (filters.nameCountry) {
+        const search = filters.nameCountry.trim().toLowerCase();
+        const matchesName = item.name.trim().toLowerCase().includes(search);
+        const matchesCode = item.countryCode.trim().toLowerCase().includes(search);
+
+          if (!matchesName && !matchesCode) {
+            return false; 
+          }
+        }
+
+
+      return true;
+      });
+    }
+
   const fetchProfileCountry = async (showLoader: boolean = true) => {
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
@@ -92,10 +134,17 @@ export const ProfileCountryReadPage = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { control } = useForm<FilterValues>({
+  const { control, watch } = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
-  });
+  }); 
+
+  const filters = watch(); 
+  
+    const filteredProfileCountries = useMemo(() => {
+      return filterData(profiles, filters);
+    }, [profiles, filters]);
+  
 
   const onEdit = (profileCountryId: number) => {
     navigate(routesConfig.PROFILE_COUNTRY_EDIT.path.replace(":profileId", String(profileCountryId)));
@@ -120,7 +169,7 @@ export const ProfileCountryReadPage = (): JSX.Element => {
             <FilterSection infoText={filterSectionConfig} control={control} />
             <ProfileCountriesSection
               infoText={profileCountriesSectionConfig}
-              profilesCountries={profiles}
+              profilesCountries={filteredProfileCountries}
               onEdit={onEdit}
             />
           </div>
