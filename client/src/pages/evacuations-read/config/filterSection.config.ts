@@ -11,18 +11,35 @@ export const filterSectionConfig: FilterSectionConfig = {
       { value: "CANCELLED", label: "Nie Atywna" },
     ],
   },
-  lastUpdateDate: {
-    label: "Data ost. aktywacji",
+  startLastUpdateDate: {
+    label: "Data od ost. aktywacji",
     defaultValue: null,
     placeholder: "dd/mm/yyyy",
     tooltipText: "Filtruj od tej daty",
     validate: (value: any) => {
       if (value !== null) {
-        if (typeof value === "string") return "error";
+        if (typeof value === "string") return "Nieprawidłowy format daty";
       }
       return true;
     },
   },
+  endLastUpdateDate: {
+    label: "Data do ost. aktywacji",
+    defaultValue: null,
+    placeholder: "dd/mm/yyyy",
+    tooltipText: "Filtruj do tej daty",
+    validate: (value: any) => {
+      if (value !== null) {
+        if (typeof value === "string") return "Nieprawidłowy format daty";
+      }
+      return true;
+    },
+  },
+  isEditable:{
+    label: "Tylko Edytowalne",
+    defaultValue: false,
+    tooltipText: "Pokaż tylko ewakuacje, które można edytować",
+  }, 
   formatDate: "dd/MM/yyyy",
   evacuationsButtons: {
     create: {

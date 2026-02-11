@@ -53,7 +53,7 @@ export const TripCreatePage = ({}: TripCreatePageProps): JSX.Element => {
   const { tripId } = useParams<{ tripId: string }>();
   const isEditMode = Boolean(tripId);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(isEditMode);
 
   
   const handleError = (error: unknown, fallbackMessage = "Wystąpił błąd"): boolean => {

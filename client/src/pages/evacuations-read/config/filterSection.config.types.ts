@@ -4,7 +4,9 @@ import type { InformationFieldConfig, DateFormat, FilterFieldConfig } from "@/ty
 
 export interface FilterSectionConfig {
   status: FilterFieldConfig<EvacuationStatus[]> & { options: Option<EvacuationStatus>[] };
-  lastUpdateDate: FilterFieldConfig<Date>;
+  startLastUpdateDate: FilterFieldConfig<Date>;
+  endLastUpdateDate: FilterFieldConfig<Date>;
+  isEditable: FilterFieldConfig<boolean> & { defaultValue: boolean };
   formatDate: DateFormat;
   evacuationsButtons: Record<EvacuationButtonKey, FilterInformationFieldConfig>;
 }

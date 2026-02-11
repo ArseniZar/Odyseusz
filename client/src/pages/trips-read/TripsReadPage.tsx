@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useMemo, useRef, useState, type JSX } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ import { tripsSectionConfig } from "./config/tripsSection.config";
 import { filterSectionConfig } from "./config/filterSection.config";
 import { pageConfig } from "./config/page.config";
 
-import type { FilterValue } from "./TripsReadPage.types";
+import type { FilterValues } from "./TripsReadPage.types";
 import type { Trip } from "@/types/domain/trip";
 import { routesConfig } from "@/types/rotes/rotes";
 import {
@@ -23,8 +23,9 @@ import { deleteTravel, listTravels, updateTravel } from "@/service/api/trip";
 import type { TravelUpdate } from "@/types/api/travel";
 import { HttpError } from "@/service/http/request";
 import { ClipLoader } from "react-spinners";
+import _ from "lodash";
 
-const defalutFilter: FilterValue = {
+const defalutFilter: FilterValues = {
   numberOfStages: filterSectionConfig.numberOfStages.defaultValue,
   status: filterSectionConfig.status.defaultValue,
   startDate: filterSectionConfig.startDate.defaultValue,
@@ -37,10 +38,7 @@ export const TripsReadPage = (): JSX.Element => {
   const navigate = useNavigate();
   const isFetchingRef = useRef(false);
 
-  const handleError = (
-    error: unknown,
-    fallbackMessage = "Wystąpił błąd",
-  ): boolean => {
+  const handleError = (error: unknown,fallbackMessage = "Wystąpił błąd"): boolean => {
     const status =
       error instanceof HttpError
         ? error.status
@@ -78,6 +76,36 @@ export const TripsReadPage = (): JSX.Element => {
     return false;
   };
 
+  const filterData = (data: Trip[], filters: FilterValues): Trip[] => {
+      return _.filter(data, (item) => {
+        if (filters.status && filters.status.length > 0 && !filters.status.includes(item.status)) {
+          return false;
+        }
+  
+        if (filters.startDate && filters.startDate instanceof Date) {
+          const filterDate = filters.startDate;
+          const itemDate = item.startDate;
+          if (itemDate <= filterDate) {
+            return false;
+          }
+        }
+  
+        if (filters.endDate && filters.endDate instanceof Date) {
+          const filterDate = filters.endDate;
+          const itemDate = item.endDate;
+          if (itemDate >= filterDate) {
+            return false;
+          }
+        }
+  
+        if (filters.numberOfStages && filters.numberOfStages > 0 && item.stages.length !== filters.numberOfStages) {
+          return false;
+        }
+  
+      return true;
+      });
+    }
+
   const fetchTravel = async (showLoader: boolean = true) => {
     if (isFetchingRef.current) return;
     isFetchingRef.current = true;
@@ -103,10 +131,17 @@ export const TripsReadPage = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const { control } = useForm<FilterValue>({
+  const { control , watch} = useForm<FilterValues>({
     mode: "all",
     defaultValues: defalutFilter,
   });
+
+
+ const filters = watch(); 
+
+  const filteredTrips = useMemo(() => {
+    return filterData(trips, filters);
+  }, [trips, filters]);
 
   const onDelete = async (tripId: number) => {
     const confirmed = window.confirm("Czy na pewno chcesz usunąć tę podróż?");
@@ -173,7 +208,7 @@ export const TripsReadPage = (): JSX.Element => {
             />
             <TripsSection
               infoText={tripsSectionConfig}
-              trips={trips}
+              trips={filteredTrips}
               onDelete={onDelete}
               onEdit={onEdit}
               onCancel={onCancel}
