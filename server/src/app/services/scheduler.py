@@ -22,10 +22,10 @@ async def scheduled_country_update():
 
 def start_scheduler():
 	"""Start the scheduler with the country update job."""
-	# Schedule job to run daily at 6:00 AM
+	# Schedule job to run daily
 	scheduler.add_job(
 		scheduled_country_update,
-		trigger=CronTrigger(hour=6, minute=0),
+		trigger=CronTrigger(hour=15, minute=51),
 		id="update_country_danger_levels",
 		name="Update country danger levels from external API",
 		replace_existing=True

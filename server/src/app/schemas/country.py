@@ -56,6 +56,11 @@ class CountryProfileUpdate(BaseModel):
   consulate_ids: list[int] = []
 
 
+# Partial update schema for danger level (used by scheduler)
+class CountryProfileDangerLevelUpdate(BaseModel):
+  danger_level: DangerLevel
+
+
 class ConsulateUpdate(BaseModel):
   address: str | None = Field(None, min_length=1, max_length=500)
   email: EmailStr | None = None

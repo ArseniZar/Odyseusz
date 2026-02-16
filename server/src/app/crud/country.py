@@ -5,6 +5,7 @@ from app.models.country import CountryProfile, Consulate
 from app.schemas.country import (
   CountryProfileCreate,
   CountryProfileUpdate,
+  CountryProfileDangerLevelUpdate,
   ConsulateCreate,
   ConsulateUpdate
 )
@@ -121,13 +122,20 @@ async def create_country_profile(
 async def update_country_profile(
   db: AsyncSession,
   country_id: int,
-  country_update: CountryProfileUpdate
+  country_update: CountryProfileUpdate | CountryProfileDangerLevelUpdate
 ) -> CountryProfile | None:
-  """Update country profile with full replacement (PUT)."""
+  """Update country profile with full replacement (PUT) or danger level update."""
   country = await get_country_profile_with_details(db, country_id)
   if not country:
     return None
 
+  # Check if this is a danger level update
+  if isinstance(country_update, CountryProfileDangerLevelUpdate):
+    country.danger_level = country_update.danger_level.value
+    await db.commit()
+    return await get_country_profile_with_details(db, country_id)
+  
+  # Otherwise, it's a full profile update
   # Update description
   country.description = country_update.description
   

@@ -2,7 +2,7 @@ import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.crud.country import get_all_country_profiles, update_country_profile
 from app.services.external_api_client import external_api_client
-from app.schemas.country import CountryProfileUpdate
+from app.schemas.country import CountryProfileDangerLevelUpdate
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ async def update_country_danger_levels(db: AsyncSession) -> dict:
 							await update_country_profile(
 								db,
 								country.id,
-								CountryProfileUpdate(danger_level=new_danger_level)
+								CountryProfileDangerLevelUpdate(danger_level=new_danger_level)
 							)
 							stats["updated"] += 1
 							logger.info(f"Updated {country.name}: {country.danger_level} -> {new_danger_level}")
