@@ -1,8 +1,11 @@
 import type { BaseFormButtonKey, Information, InformationFieldConfig} from "@/types/config";
+import type { DangerLevel } from "@/types/domain/profileCountry";
 
 export interface InformationSectionConfig extends Information {
   title: string;
-  dangerLevel: FormInformationFieldConfig;
+  dangerLevel: FormInformationFieldConfig & {
+    options: Record<DangerLevel, string>;
+  };
   name: FormInformationFieldConfig;
   description: FormInformationFieldConfig;
   countryCode: FormInformationFieldConfig;

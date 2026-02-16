@@ -11,7 +11,7 @@ export const GeneralInformation = ({infoText,description, countryCode, name, dat
         <img className="w-20 h-20" src={getFlagUrl(countryCode)} alt="iconFlag" />
         <div className="flex flex-col gap-1">
           <p className="font-medium text-xl"> {infoText.name.label}: <span className="font-light"> {name} </span></p>
-          <p className="font-medium text-xl"> {infoText.dangerLevel.label}: <span className="font-light text-lg"> {dangerLevel}</span></p>
+          <p className="font-medium text-xl"> {infoText.dangerLevel.label}: <span className="font-light text-lg"> {infoText.dangerLevel.options[dangerLevel]}</span></p>
         </div>
       </div>
       <div className="flex flex-col gap-4">

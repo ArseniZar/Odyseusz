@@ -11,6 +11,12 @@ export const informationSectionConfig: InformationSectionConfig = {
   },
   dangerLevel : {
     label: "Poziom zagrożenia",
+    options: {
+      EXTREME: "Krytyczny",
+      HIGH: "Wysoki",
+      MEDIUM: "Średni",
+      LOW: "Niski",
+    },
   },
   description: {
     label: "Opis",
